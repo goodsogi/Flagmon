@@ -1,15 +1,16 @@
 package com.gntsoft.flagmon;
 
-import java.util.ArrayList;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
-
 import com.pluslibrary.server.PlusOnGetDataListener;
+
+import java.util.ArrayList;
 
 public class MainListFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
@@ -33,17 +34,28 @@ public class MainListFragment extends FMCommonFragment implements
         ListView list = (ListView) mActivity
                 .findViewById(R.id.list_main);
 
-        if(list==null) return;
+        if (list == null) return;
         list.setAdapter(new MainListAdapter(mActivity,
                 getSampleDatas()));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                goToDetail();
+            }
+        });
 
 
     }
 
-    private ArrayList<MainListModel>  getSampleDatas() {
+    private void goToDetail() {
+        Intent intent = new Intent(mActivity, DetailActivity.class);
+        startActivity(intent);
+    }
+
+    private ArrayList<MainListModel> getSampleDatas() {
         ArrayList<MainListModel> datas = new ArrayList<>();
 
-        for(int i=0; i< 20; i++) {
+        for (int i = 0; i < 20; i++) {
             MainListModel data = new MainListModel();
             data.setTitle("YTN뉴스");
             data.setContent("세월호 침몰 사건");
@@ -52,10 +64,10 @@ public class MainListFragment extends FMCommonFragment implements
             data.setPinCount("15");
             data.setRegisterDate("2014.04.01 12:30");
             data.setImg(R.drawable.sandarapark);
-datas.add(data);
+            datas.add(data);
         }
 
-return datas;
+        return datas;
     }
 
 

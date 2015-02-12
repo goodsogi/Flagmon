@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/navigation_bar_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="27.5dp"
+            android:layout_height="27.5dp"
+            android:background="@drawable/back_btn" />
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="이전"
+            android:textColor="#ffffff" />
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="산다라박"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:background="@drawable/bt_0009" />
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_marginRight="77.5dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="247dp">
+
+        <ImageView
+            android:id="@+id/main_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/sandarapark" />
+
+        <View
+            android:id="@+id/main_img_bar"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:layout_marginTop="221dp"
+            android:background="#50575a5a" />
+
+
+        <ImageView
+            android:id="@+id/reply_icon"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_alignTop="@id/main_img_bar"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/p05_box_icon_0001" />
+
+        <TextView
+            android:id="@+id/reply"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_alignTop="@id/reply_icon"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@id/reply_icon"
+            android:gravity="center"
+            android:text="50"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/pin_icon"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_alignTop="@id/reply"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/reply"
+            android:src="@drawable/p05_box_icon_0002" />
+
+        <TextView
+            android:id="@+id/pin"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_alignTop="@id/pin_icon"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@id/pin_icon"
+            android:gravity="center"
+            android:text="15"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/viewCount"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_alignTop="@id/pin"
+            android:layout_marginLeft="150dp"
+            android:layout_toRightOf="@id/pin"
+            android:gravity="center"
+            android:text="조회수 2335"
+            android:textColor="#ffffff"
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="26dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:text="2014.04.16 12:30"
+        android:textColor="#394b71" />
+
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="7dp"
+        android:lines="3"
+        android:gravity="center"
+        android:text="박산다라는 어린 시절 무역업에 종사하는 아버지를 따라 대한민국에서 필리핀으로 이민을 가서 생활한다. 학교 행사에서 만난, 연예계에서 활동 중이던 친구가 필리핀 방송국 ABS-CBN의 스타 서클 퀘스트라고 하는 스타가 되기 위한 서바이벌 쇼의 오디션에 응시해 볼 것을 권하여 산다라는 쇼에 참가하게 된다. 최종 다섯 명이 확정되는 마지막 탈락자 선발전에서 약 50만 통의 휴대전화 문자 득표를 기록하였고, 이는 여성 출연자 사상 최대의 기록이었다. 쇼 전체를 통틀어 적어도 2백만여 통의 문자 득표를 획득했다고 추정된다." />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+android:layout_marginTop="20dp"
+        android:background="#f7f8fa"
+        android:gravity="center"
+        android:text="근거리 다른 사진"
+        android:textColor="#627185" />
+
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:horizontalSpacing="5dp"
+        android:verticalSpacing="5dp"
+        android:numColumns="5"
+        android:stretchMode="columnWidth" />
+
+
+</LinearLayout>
