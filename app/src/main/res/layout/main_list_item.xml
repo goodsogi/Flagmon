@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="4dp"
+        android:textSize="13sp"
+        android:layout_toRightOf="@id/img"
+        android:textColor="#4781b6" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:layout_below="@id/title"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@id/img"
+        android:textStyle="bold"
+        android:textColor="#000000" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:layout_below="@id/content"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_toRightOf="@id/img"
+        android:background="#eff1f3" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_below="@id/content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="12dp"
+        android:layout_toRightOf="@id/img"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="#878fa1" />
+
+    <ImageView
+        android:id="@+id/reply_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginLeft="30dp"
+        android:layout_alignTop="@id/time"
+        android:layout_toRightOf="@id/time"
+        android:src="@drawable/reply" />
+
+    <TextView
+        android:id="@+id/reply"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_alignTop="@id/reply_icon"
+        android:layout_marginLeft="2dp"
+        android:layout_toRightOf="@id/reply_icon"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="#878fa1" />
+    <ImageView
+        android:id="@+id/pin_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginLeft="20dp"
+        android:layout_alignTop="@id/reply"
+        android:layout_toRightOf="@id/reply"
+        android:src="@drawable/pin" />
+    <TextView
+        android:id="@+id/pin"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_alignTop="@id/pin_icon"
+        android:layout_marginLeft="2dp"
+        android:layout_toRightOf="@id/pin_icon"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="#878fa1" />
+
+    <TextView
+        android:id="@+id/registerDate"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_alignTop="@id/pin"
+        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@id/pin"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="#878fa1" />
+
+
+</RelativeLayout>

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/home/johnny/AndroidStudioProjects/FlagMon5/plusLibrary/src/main/assets"><file name="nanum.ttf" path="/home/johnny/AndroidStudioProjects/FlagMon5/plusLibrary/src/main/assets/nanum.ttf"/></source></dataSet><dataSet config="release"><source path="/home/johnny/AndroidStudioProjects/FlagMon5/plusLibrary/src/release/assets"/></dataSet></merger>

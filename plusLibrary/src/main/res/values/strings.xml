@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PlusLibrary</string>
+    <string name="loading_message">잠시만 기다려주세요</string>
+    <string name="not_connected_internet">인터넷에 연결되지 않았습니다</string>
+    <string name="location_popup_title">알림</string>
+    <string name="turn_on_location_service">위치서비스를 사용하기 위해서 설정에서 on 시키세요</string>
+    <string name="confirm">확인</string>
+
+</resources>
