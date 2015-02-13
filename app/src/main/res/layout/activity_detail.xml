@@ -72,6 +72,7 @@
             android:layout_height="26dp"
             android:layout_alignTop="@id/main_img_bar"
             android:layout_marginLeft="30dp"
+            android:onClick="goToReply"
             android:src="@drawable/p05_box_icon_0001" />
 
         <TextView
@@ -83,6 +84,7 @@
             android:layout_toRightOf="@id/reply_icon"
             android:gravity="center"
             android:text="50"
+            android:onClick="goToReply"
             android:textColor="#ffffff"
             android:textSize="12sp" />
 

@@ -1,7 +1,9 @@
 package com.gntsoft.flagmon;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -42,6 +44,12 @@ public class DetailActivity extends Activity {
 
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new DetailGridviewAdapter(this, imgs));
+    }
+
+    public void goToReply(View v) {
+        Intent intent = new Intent(this, ReplyActivity.class);
+        startActivity(intent); 
+
     }
 
 }

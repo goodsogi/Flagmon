@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="46dp"
+    android:background="#e0e9ec"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/tab_neighbor"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/neighbor_btn_selector"
+        android:onClick="changeTab" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/tab_friend"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/friend_btn_selector"
+        android:onClick="changeTab" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/tab_myalbum"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/myalbum_btn_selector"
+        android:onClick="changeTab" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/tab_setting"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/setting_btn_selector"
+        android:onClick="changeTab" />
+
+    <View
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+</LinearLayout>

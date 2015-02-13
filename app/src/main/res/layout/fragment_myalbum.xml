@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/p10_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="86dp"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="88dp"
+            android:layout_height="34dp"
+            android:background="@drawable/join_btn_selector" />
+
+        <Button
+            android:layout_width="88dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="80dp"
+            android:background="@drawable/login_btn_selector" />
+    </LinearLayout>
+</FrameLayout>

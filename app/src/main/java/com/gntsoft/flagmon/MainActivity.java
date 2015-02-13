@@ -1,37 +1,16 @@
 package com.gntsoft.flagmon;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.FrameLayout;
 
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 
-public class MainActivity extends FragmentActivity  {
-
+public class MainActivity extends FragmentActivity {
 
 
     @Override
@@ -39,24 +18,114 @@ public class MainActivity extends FragmentActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        showMainTopBar();
         showMap();
+        setNeighbotSelected();
 
     }
 
+    private void showMainTopBar() {
+        FrameLayout topBarContainer = (FrameLayout) findViewById(R.id.container_top_bar);
+        topBarContainer.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View topBar = inflater.inflate(R.layout.top_bar_main,null);
+        topBarContainer.addView(topBar);
+    }
+
+    private void setNeighbotSelected() {
+        Button neighbor = (Button) findViewById(R.id.tab_neighbor);
+        neighbor.setSelected(true);
+    }
+
+    public void changeTab(View v) {
+        Button neighbor = (Button) findViewById(R.id.tab_neighbor);
+        Button friend = (Button) findViewById(R.id.tab_friend);
+        Button myalbum = (Button) findViewById(R.id.tab_myalbum);
+        Button setting = (Button) findViewById(R.id.tab_setting);
+
+        neighbor.setSelected(false);
+        friend.setSelected(false);
+        myalbum.setSelected(false);
+        setting.setSelected(false);
 
 
+        switch (v.getId()) {
+            case R.id.tab_neighbor:
+                neighbor.setSelected(true);
+                showMainTopBar();
+                showNeighbor();
+                break;
+            case R.id.tab_friend:
+                friend.setSelected(true);
+                showInviteTopBar();
+                showFriend();
+                break;
+            case R.id.tab_myalbum:
+                myalbum.setSelected(true);
+                showInviteTopBar();
+                showMyalbum();
+                break;
+            case R.id.tab_setting:
+                setting.setSelected(true);
+                showInviteTopBar();
+                showSetting();
+                break;
 
+
+        }
+
+
+    }
+
+    private void showInviteTopBar() {
+        FrameLayout topBarContainer = (FrameLayout) findViewById(R.id.container_top_bar);
+        topBarContainer.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View inviteTopBar = inflater.inflate(R.layout.top_bar_invite,null);
+        topBarContainer.addView(inviteTopBar);
+    }
+
+    private void showNeighbor() {
+        Button menu = (Button) findViewById(R.id.navi_menu);
+        if (menu.isSelected()) {
+            //menu.setSelected(false);
+            showList();
+
+        } else {
+           // menu.setSelected(true);
+            showMap();
+        }
+    }
+
+    private void showFriend() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container_main, new FriendFragment())
+                .commit();
+    }
+
+    private void showMyalbum() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container_main, new MyalbumFragment())
+                .commit();
+    }
+
+    private void showSetting() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container_main, new SettingFragment())
+                .commit();
+    }
 
     public void toggleMenu(View v) {
 
-       if(v.isSelected()) {
-           v.setSelected(false);
-           showMap();
-       } else {
-           v.setSelected(true);
-           showList();
-       }
+        if (v.isSelected()) {
+            v.setSelected(false);
+            showMap();
+        } else {
+            v.setSelected(true);
+            showList();
+        }
 
     }
 
