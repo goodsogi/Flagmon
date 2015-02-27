@@ -14,6 +14,7 @@
         <Button
             android:layout_width="27.5dp"
             android:layout_height="27.5dp"
+            android:onClick="goBack"
             android:background="@drawable/back_btn" />
 
         <TextView
@@ -38,6 +39,7 @@
         <Button
             android:layout_width="54dp"
             android:layout_height="54dp"
+            android:onClick="goToUserPage"
             android:background="@drawable/bt_0009" />
 
         <View
@@ -51,12 +53,32 @@
         android:layout_width="match_parent"
         android:layout_height="247dp">
 
-        <ImageView
-            android:id="@+id/main_img"
+        <FrameLayout
+            android:id="@+id/container_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sandarapark" />
+            android:layout_height="match_parent"/>
+
+        <!--<com.google.android.gms.maps.MapView-->
+            <!--android:id="@+id/mapview_detail"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"/>-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/main_img"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@drawable/sandarapark" />-->
+        
+        <Button
+            android:layout_width="63dp"
+            android:layout_height="63dp"
+            android:background="@drawable/map_photo_selector"
+            android:layout_marginTop="153dp"
+            android:layout_marginLeft="6dp"
+            android:onClick="changeMapPhoto"
+            />
+        
 
         <View
             android:id="@+id/main_img_bar"
@@ -95,6 +117,7 @@
             android:layout_alignTop="@id/reply"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/reply"
+            android:onClick="doPin"
             android:src="@drawable/p05_box_icon_0002" />
 
         <TextView

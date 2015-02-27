@@ -35,11 +35,13 @@
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/reply_input"
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:hint="로그인 후 덧글을 남길 수 있습니다."
+            android:onClick="goToLogin"
             android:textSize="12sp"
             android:gravity="center" />
 

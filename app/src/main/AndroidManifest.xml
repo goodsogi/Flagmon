@@ -30,7 +30,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
              android:theme="@style/noTheme" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,12 +38,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".login.LoginActivity"
+            android:theme="@style/noTheme" android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".DetailActivity"
+            android:name=".login.FindPasswordActivity"
             android:theme="@style/noTheme" android:screenOrientation="portrait"/>
         <activity
-            android:name=".ReplyActivity"
+            android:name=".login.SignUpActivity"
+            android:theme="@style/noTheme" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".login.PolicyActivity"
+            android:theme="@style/noTheme" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".login.SecondSignUpActivity"
+            android:theme="@style/noTheme" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".detail.DetailActivity"
+            android:theme="@style/noTheme" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".detail.ImageViewerActivity"
+            android:theme="@style/noTheme" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".reply.ReplyActivity"
+            android:theme="@style/noTheme" android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".user.UserPageActivity"
             android:theme="@style/noTheme" android:screenOrientation="portrait"/>
     </application>
 

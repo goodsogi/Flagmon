@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical"
+    android:layout_width="match_parent" android:paddingLeft="27dp" android:paddingRight="27dp"
+    android:layout_height="match_parent" android:background="@drawable/p12_bg" android:gravity="center">
+
+
+
+    <EditText
+        android:id="@+id/userSex"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:drawableRight="@drawable/p12_bg_icon0003"
+        android:hint="회원님의 성별은?"
+        android:textColorHint="#ffffff"
+        />
+
+    <EditText
+        android:id="@+id/userAge"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:drawableRight="@drawable/p12_bg_icon0003"
+        android:hint="회원님의 나이는?"
+        android:inputType="number"
+        android:layout_marginTop="37dp"
+        android:textColorHint="#ffffff"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp" android:orientation="horizontal" android:gravity="center">
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/p12_icon_01"
+            />
+        <TextView
+            android:id="@+id/text_service"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content" android:text="서비스 이용약관"
+            android:textColor="#ffffff"
+            android:clickable="true"
+            android:onClick="showPolicy"
+            />
+        <CheckBox
+            android:id="@+id/checkbox_service"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:button="@drawable/checkbox_button_selector"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp" android:orientation="horizontal" android:gravity="center">
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/p12_icon_01"
+            />
+        <TextView
+            android:id="@+id/text_privacy"
+            android:layout_width="190dp" android:clickable="true"
+            android:layout_height="wrap_content" android:text="개인정보 취급방침" android:onClick="showPolicy"
+            android:textColor="#ffffff"
+            />
+        <CheckBox
+            android:id="@+id/checkbox_privacy"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:button="@drawable/checkbox_button_selector"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp" android:orientation="horizontal" android:gravity="center">
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/p12_icon_01"
+            />
+        <TextView
+            android:id="@+id/text_location"
+            android:layout_width="190dp" android:clickable="true"
+            android:layout_height="wrap_content" android:text="위치기반 서비스 이용약관"
+            android:textColor="#ffffff" android:onClick="showPolicy"
+            />
+        <CheckBox
+            android:id="@+id/checkbox_location"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:button="@drawable/checkbox_button_selector"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/finishSignup"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:enabled="false"
+        android:onClick="finishSignUp"
+        android:background="@drawable/finish_button_selector"
+        android:layout_marginTop="30dp"
+        />
+
+
+</LinearLayout>

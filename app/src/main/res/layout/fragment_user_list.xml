@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ListView
+        android:id="@+id/list_user"
+        android:layout_width="match_parent"
+        android:layout_height="0px" android:layout_weight="1" android:background="#ffffff"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:text="친구를 맺으면 65개의 게시물을 함께 나눌 수 있습니다."
+        android:gravity="center"
+        android:textColor="#455068"
+        android:background="#e3eaec"
+        />
+
+
+</LinearLayout>
