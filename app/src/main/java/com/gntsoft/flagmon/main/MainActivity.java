@@ -1,6 +1,10 @@
 package com.gntsoft.flagmon.main;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -8,17 +12,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.login.LoginActivity;
+import com.gntsoft.flagmon.login.LoginFragment;
 import com.gntsoft.flagmon.myalbum.MyalbumFragment;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.search.SearchActivity;
 import com.gntsoft.flagmon.setting.SettingFragment;
 import com.gntsoft.flagmon.login.SignUpActivity;
 import com.gntsoft.flagmon.friend.FriendFragment;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusToaster;
 
 
 public class MainActivity extends FragmentActivity {
 
+
+    private boolean login;
+    private int itemDatas;
+    private int mainContentType;
+    String [] mapOptionDatas = {"인기순","최근 등록순"};
+    String [] listOptionDatas = {"인기순","최근 등록순","거리순"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,18 +79,15 @@ public class MainActivity extends FragmentActivity {
                 break;
             case R.id.tab_friend:
                 friend.setSelected(true);
-                showInviteTopBar();
-                showFriend();
+                if(isLogin()) showFriend(); else showLogin(FMConstants.TAB_FRIEND);
                 break;
             case R.id.tab_myalbum:
                 myalbum.setSelected(true);
-                showInviteTopBar();
-                showMyalbum();
+                if(isLogin()) showMyalbum(); else showLogin(FMConstants.TAB_MYALBUM);
                 break;
             case R.id.tab_setting:
                 setting.setSelected(true);
-                showInviteTopBar();
-                showSetting();
+                if(isLogin()) showSetting(); else showLogin(FMConstants.TAB_SETTING);
                 break;
 
 
@@ -85,14 +96,19 @@ public class MainActivity extends FragmentActivity {
 
     }
 
-    private void showInviteTopBar() {
-        FrameLayout topBarContainer = (FrameLayout) findViewById(R.id.container_top_bar);
-        topBarContainer.removeAllViews();
+    private void showLogin(int tabName) {
 
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View inviteTopBar = inflater.inflate(R.layout.top_bar_invite,null);
-        topBarContainer.addView(inviteTopBar);
+        Bundle bundle = new Bundle();
+        bundle.putInt(FMConstants.KEY_TAB_NAME, tabName);
+        LoginFragment fragment = new LoginFragment();
+        fragment.setArguments(bundle);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container_main, fragment)
+                .commit();
+
     }
+
+
 
     private void showNeighbor() {
         Button menu = (Button) findViewById(R.id.navi_menu);
@@ -137,7 +153,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void showList() {
-
+        mainContentType = FMConstants.CONTENT_LIST;
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_main, new MainListFragment())
                 .commit();
@@ -146,6 +162,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void showMap() {
+        mainContentType = FMConstants.CONTENT_MAP;
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_main, new MapFragment())
                 .commit();
@@ -159,6 +176,63 @@ public class MainActivity extends FragmentActivity {
         startActivity(intent);
     }
 
+    public void showSortPopup(View v) {
+        PlusClickGuard.doIt(v);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("정렬방식을 선택해주세요.");
+        ab.setItems(getItemDatas(), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                doSort(whichButton);
+
+            }
+        }).setNegativeButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+        ab.show();
+    }
+
+    private void doSort(int whichButton) {
+
+
+        switch (whichButton) {
+            case 0: sortByPopular();
+                break;
+
+            case 1: sortByRecent();
+                break;
+
+            case 2:sortByDistance();
+                break;
+
+        }
+    }
+
+    private void sortByDistance() {
+        PlusToaster.doIt(this,"준비중...");
+        //구현!!
+    }
+
+    private void sortByRecent() {
+        PlusToaster.doIt(this,"준비중...");
+        //구현!!
+    }
+
+    private void sortByPopular() {
+        PlusToaster.doIt(this,"준비중...");
+        //구현!!
+    }
+
+
+    public void goToSearch(View v) {
+        PlusClickGuard.doIt(v);
+
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(FMConstants.KEY_MAIN_CONTENT_TYPE,mainContentType);
+        startActivity(intent);
+    }
 
     public void signUp(View v) {
         PlusClickGuard.doIt(v);
@@ -168,4 +242,16 @@ public class MainActivity extends FragmentActivity {
     }
 
 
+    public boolean isLogin() {
+
+        SharedPreferences sharedPreference = getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreference.getBoolean(FMConstants.KEY_IS_LOGIN, false);
+    }
+
+    public String[] getItemDatas() {
+
+
+        return mainContentType == FMConstants.CONTENT_MAP? mapOptionDatas:listOptionDatas;
+    }
 }

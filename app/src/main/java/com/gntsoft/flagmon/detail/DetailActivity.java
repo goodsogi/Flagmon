@@ -2,8 +2,10 @@ package com.gntsoft.flagmon.detail;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,9 +15,11 @@ import android.graphics.PorterDuffXfermode;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginActivity;
 import com.gntsoft.flagmon.reply.ReplyActivity;
@@ -25,6 +29,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusToaster;
 
 import java.util.ArrayList;
 
@@ -37,14 +42,29 @@ public class DetailActivity extends Activity {
     private GoogleMap mGoogleMap;
     private ImageView mMainImage;
 
+    String [] menuItems = {"신고하기", "URL 복사"};
+    private boolean login;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         makeGridView();
         showMainPhoto();
+        checkLogin();
         //addListenerToMainImage();
       }
+
+    private void checkLogin() {
+        if (isLogin()) showMenuButton();
+
+    }
+
+    private void showMenuButton() {
+        Button menuButton = (Button) findViewById(R.id.menu_detail);
+        menuButton.setVisibility(View.VISIBLE);
+
+    }
 
 //    private void addListenerToMainImage() {
 //        mMainImage = (ImageView) findViewById(R.id.main_img);
@@ -174,6 +194,47 @@ public class DetailActivity extends Activity {
 
     }
 
+    public void showMenuPopup(View v) {
+
+        PlusClickGuard.doIt(v);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("선택해주세요.");
+        ab.setItems(menuItems, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                doMenu(whichButton);
+
+            }
+        }).setNegativeButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+        ab.show();
+
+    }
+
+    private void doMenu(int whichButton) {
+        switch(whichButton) {
+            case 0:
+                doReport();
+                break;
+            case 1:
+                copyUrl();
+                break;
+        }
+    }
+
+    private void copyUrl() {
+        PlusToaster.doIt(this, "준비중...");
+        //구현!!
+    }
+
+    private void doReport() {
+        PlusToaster.doIt(this, "준비중...");
+        //구현!!
+    }
+
     private void goToLogin() {
 
 
@@ -181,4 +242,9 @@ public class DetailActivity extends Activity {
         startActivity(intent);
     }
 
+    public boolean isLogin() {
+        SharedPreferences sharedPreference = getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreference.getBoolean(FMConstants.KEY_IS_LOGIN, false);
+    }
 }

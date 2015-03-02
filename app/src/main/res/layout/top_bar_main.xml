@@ -21,11 +21,13 @@
     <Button
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:onClick="goToSearch"
         android:background="@drawable/search_btn_selector" />
 
     <Button
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:onClick="showSortPopup"
         android:background="@drawable/option_btn_selector" />
 
 

@@ -1,7 +1,9 @@
 package com.gntsoft.flagmon.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MotionEvent;
@@ -10,6 +12,7 @@ import android.widget.EditText;
 
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusStringEmailChecker;
 import com.pluslibrary.utils.PlusToaster;
@@ -20,10 +23,12 @@ import java.util.regex.Pattern;
 /**
  * Created by johnny on 15. 2. 27.
  */
-public class LoginActivity  extends Activity {
+public class LoginActivity  extends Activity implements PlusOnGetDataListener {
     final int DRAWABLE_LEFT = 0;
     final int DRAWABLE_TOP = 1;
     final int DRAWABLE_RIGHT = 2;
+    final int DO_LOGIN = 77;
+
     final int DRAWABLE_BOTTOM = 3;
     private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z]+)(?=.*[!@#$%^*+=-]|.*[0-9]+).{8,16}$";
 
@@ -32,6 +37,28 @@ public class LoginActivity  extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         addButtonListener();
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case DO_LOGIN:
+                //!!로그인 성공 실패 처리
+                saveLoginInfo();
+                break;
+        }
+
+    }
+
+    private void saveLoginInfo() {
+
+        SharedPreferences sharedPreference = getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = sharedPreference.edit();
+        e.putBoolean(FMConstants.KEY_IS_LOGIN, true);
+        e.commit();
     }
 
     private void addButtonListener() {

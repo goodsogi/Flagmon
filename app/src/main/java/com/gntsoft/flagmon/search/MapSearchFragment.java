@@ -1,9 +1,6 @@
-package com.gntsoft.flagmon.main;
+package com.gntsoft.flagmon.search;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -23,7 +20,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.gntsoft.flagmon.FMCommonFragment;
-import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -39,13 +35,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pluslibrary.server.PlusOnGetDataListener;
-import com.pluslibrary.utils.PlusOnClickListener;
-import com.pluslibrary.utils.PlusToaster;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-public class MapFragment extends FMCommonFragment implements
+public class MapSearchFragment extends FMCommonFragment implements
         PlusOnGetDataListener, LocationListener {
     private static final long DELAY_TIME = 1000 * 10;
     private GoogleMap mGoogleMap;
@@ -56,7 +47,7 @@ public class MapFragment extends FMCommonFragment implements
     private MapView mMapView;
     private Button mMyLocationButton;
 
-    public MapFragment() {
+    public MapSearchFragment() {
         // TODO Auto-generated constructor stub
     }
 
@@ -67,75 +58,21 @@ public class MapFragment extends FMCommonFragment implements
         //refreshList();
         // getCurrentLocation();
 
-        showSampleMarkers();
-        checkLogin();
-    }
-
-    private void checkLogin() {
-        if (isLogin()) showTreasureButton();
-
-    }
-
-    private void showTreasureButton() {
-        Button treasureButton = (Button) mActivity.findViewById(R.id.treasureBox);
-        treasureButton.setVisibility(View.VISIBLE);
-        treasureButton.setOnClickListener(new PlusOnClickListener() {
-            @Override
-            protected void doIt() {
-                findTreasure();
-            }
-        });
-    }
-
-    private void findTreasure() {
-        //구현!!
-        PlusToaster.doIt(mActivity,"준비중...");
-    }
-
-    public boolean isLogin() {
-        SharedPreferences sharedPreference = mActivity.getSharedPreferences(
-                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreference.getBoolean(FMConstants.KEY_IS_LOGIN, false);
+        showSampleMarker();
     }
 
 
-    private void showSampleMarkers() {
-        //샘플용 위치와 마커 이미지
-        ArrayList<LatLng> positions = new ArrayList<>();
+    private void showSampleMarker() {
 
-        Random random = new Random();
+        double lat = 36.986828;
+        double lng = 127.936019;
+        LatLng position = new LatLng(lat, lng);
 
-
-        for (int i = 0; i < 20; i++) {
-            positions.add(new LatLng(37.587140 + random.nextInt(10) / 10f, 126.994357 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(36.817490 + random.nextInt(10) / 10f, 128.627411 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(35.862362 + random.nextInt(10) / 10f, 128.585926 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(35.185497 + random.nextInt(10) / 10f, 129.023048 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(35.415269 + random.nextInt(10) / 10f, 127.391928 + random.nextInt(10) / 10f));
-        }
-
-
-        ArrayList<Integer> imgs = new ArrayList<>();
-
-
-        imgs.add(R.drawable.sandarapark);
-        imgs.add(R.drawable.sandarapark2);
-        imgs.add(R.drawable.sandarapark3);
-        imgs.add(R.drawable.sandarapark4);
-        imgs.add(R.drawable.sandarapark5);
-
-
-        LatLng position = null;
-        for (int i = 0; i < 100; i++) {
-            mGoogleMap.addMarker(new MarkerOptions().position(positions.get(i)).snippet("" + i)
-                    .icon(getMarKerImg(imgs.get(i % 5))).anchor(0f, 1.0f));
-            //마커 클릭처리 필요!!
-        }
+        mGoogleMap.addMarker(new MarkerOptions().position(position)
+                .icon(getMarKerImg(R.drawable.sandarapark)).anchor(0f, 1.0f));
     }
 
     private BitmapDescriptor getMarKerImg(int imgId) {
-
-        //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
         //마스킹
         Bitmap original = BitmapFactory.decodeResource(getResources(), imgId);
         Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
@@ -180,7 +117,7 @@ public class MapFragment extends FMCommonFragment implements
 
 
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 7);
-                    mGoogleMap.animateCamera(cameraUpdate);
+                    mGoogleMap.moveCamera(cameraUpdate);
 
                     mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
@@ -280,7 +217,7 @@ public class MapFragment extends FMCommonFragment implements
                 if (!mIsGpsCatched) {
 
                     mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                            0, 0, MapFragment.this);
+                            0, 0, MapSearchFragment.this);
                 }
 
             }
@@ -290,7 +227,7 @@ public class MapFragment extends FMCommonFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map,
+        View rootView = inflater.inflate(R.layout.fragment_map_search,
                 container, false);
         setUpMap(savedInstanceState, rootView);
         return rootView;
@@ -299,33 +236,15 @@ public class MapFragment extends FMCommonFragment implements
     @Override
     protected void addListenerButton() {
         // TODO Auto-generated method stub
-        mMyLocationButton = (Button) mActivity.findViewById(R.id.my_location);
-        mMyLocationButton.setOnClickListener(new PlusOnClickListener() {
-            @Override
-            protected void doIt() {
-                if (!mMyLocationButton.isSelected()) {
-
-                    showAlertDialog();
-
-                }
-            }
-        });
-    }
-
-    private void showAlertDialog() {
-        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
-        ab.setTitle("GPS 기능을 활성화 하시겠습니까?");
-        ab.setNegativeButton("아니오",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                }).setPositiveButton("예", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                getCurrentLocation();
-            }
-        });
-        ab.show();
+//        mMyLocationButton = (Button) mActivity.findViewById(R.id.my_location);
+//        mMyLocationButton.setOnClickListener(new PlusOnClickListener() {
+//            @Override
+//            protected void doIt() {
+//                if (!mMyLocationButton.isSelected()) {
+//                    getCurrentLocation();
+//                }
+//            }
+//        });
     }
 
     @Override
