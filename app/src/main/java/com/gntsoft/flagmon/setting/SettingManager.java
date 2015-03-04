@@ -28,8 +28,7 @@ public class SettingManager {
             showLogin(FMConstants.TAB_SETTING);
         } else {
 
-            showMainTopBar(); //수정!!
-            addButtonListener();
+            showSettingTopBar(); //수정!!
             showSettingFragment();
         }
     }
@@ -46,15 +45,7 @@ public class SettingManager {
 
     }
 
-    private void addButtonListener() {
-        Button naviMenu = (Button) mActivity.findViewById(R.id.naviMenu);
-        naviMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleMenu(v);
-            }
-        });
-    }
+
 
     private void toggleMenu(View v) {
 //        if (v.isSelected()) {
@@ -75,13 +66,13 @@ public class SettingManager {
 
 
 
-    private void showMainTopBar() {
+    private void showSettingTopBar() {
         FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
         topBarContainer.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(mActivity);
-        View inviteTopBar = inflater.inflate(R.layout.top_bar_neighbor, null);
-        topBarContainer.addView(inviteTopBar);
+        View settingBar = inflater.inflate(R.layout.top_bar_setting, null);
+        topBarContainer.addView(settingBar);
     }
 
 

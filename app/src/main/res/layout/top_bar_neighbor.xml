@@ -6,12 +6,11 @@
     android:orientation="horizontal">
 
     <Button
-        android:id="@+id/navi_menu"
+        android:id="@+id/naviMenu"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginLeft="5dp"
-        android:background="@drawable/menu_btn_selector"
-         />
+        android:background="@drawable/menu_btn_selector" />
 
     <View
         android:layout_width="0px"
@@ -22,8 +21,8 @@
         android:id="@+id/search"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:onClick="goToSearch"
-        android:background="@drawable/search_btn_selector" />
+        android:background="@drawable/search_btn_selector"
+        android:onClick="goToSearch" />
 
     <Button
         android:id="@+id/sort"

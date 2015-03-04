@@ -144,8 +144,8 @@
                 android:layout_height="26dp"
                 android:layout_marginRight="30dp"
                 android:background="@drawable/p05_box_icon_0003"
-                android:visibility="gone"
-                android:onClick="showMenuPopup" />
+                android:onClick="showMenuPopup"
+                android:visibility="gone" />
 
 
         </LinearLayout>

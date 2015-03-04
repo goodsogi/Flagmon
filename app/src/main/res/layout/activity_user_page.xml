@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -12,8 +14,8 @@
         <Button
             android:layout_width="27.5dp"
             android:layout_height="27.5dp"
-            android:onClick="goBack"
-            android:background="@drawable/back_btn" />
+            android:background="@drawable/back_btn"
+            android:onClick="goBack" />
 
         <TextView
             android:layout_width="50dp"
@@ -69,18 +71,17 @@
             android:id="@+id/tab_add_friend"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/add_friend_btn_selector"
             android:layout_marginRight="18dp"
+            android:background="@drawable/add_friend_btn_selector"
             android:onClick="addFriend" />
-
 
 
         <Button
             android:id="@+id/tab_sort"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/sort_btn_selector"
             android:layout_marginRight="8dp"
+            android:background="@drawable/sort_btn_selector"
             android:onClick="sortContent" />
 
 

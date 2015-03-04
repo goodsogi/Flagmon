@@ -23,14 +23,14 @@ public class NeighborListAdapter extends FMCommonAdapter<NeighborListModel> {
 
 
     public NeighborListAdapter(Context context, ArrayList<NeighborListModel> datas) {
-        super(context, R.layout.main_list_item, datas);
+        super(context, R.layout.neighbor_list_item, datas);
 
     }
 
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.main_list_item,
+            convertView = mLayoutInflater.inflate(R.layout.neighbor_list_item,
                     parent, false);
         }
 

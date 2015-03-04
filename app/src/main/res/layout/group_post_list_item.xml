@@ -16,9 +16,9 @@
         android:layout_height="18dp"
         android:layout_marginLeft="6dp"
         android:layout_marginTop="4dp"
-        android:textSize="13sp"
         android:layout_toRightOf="@id/img"
-        android:textColor="#4781b6" />
+        android:textColor="#4781b6"
+        android:textSize="13sp" />
 
     <TextView
         android:id="@+id/content"
@@ -29,8 +29,8 @@
         android:layout_marginTop="2dp"
         android:layout_toRightOf="@id/img"
         android:lines="2"
-        android:textStyle="bold"
-        android:textColor="#000000" />
+        android:textColor="#000000"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="match_parent"
@@ -49,16 +49,16 @@
         android:layout_marginLeft="13dp"
         android:layout_marginTop="12dp"
         android:layout_toRightOf="@id/img"
-        android:textSize="12sp"
         android:gravity="center"
-        android:textColor="#878fa1" />
+        android:textColor="#878fa1"
+        android:textSize="12sp" />
 
     <ImageView
         android:id="@+id/reply_icon"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:layout_marginLeft="30dp"
         android:layout_alignTop="@id/time"
+        android:layout_marginLeft="30dp"
         android:layout_toRightOf="@id/time"
         android:src="@drawable/reply" />
 
@@ -69,17 +69,19 @@
         android:layout_alignTop="@id/reply_icon"
         android:layout_marginLeft="2dp"
         android:layout_toRightOf="@id/reply_icon"
-        android:textSize="12sp"
         android:gravity="center"
-        android:textColor="#878fa1" />
+        android:textColor="#878fa1"
+        android:textSize="12sp" />
+
     <ImageView
         android:id="@+id/pin_icon"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:layout_marginLeft="20dp"
         android:layout_alignTop="@id/reply"
+        android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/reply"
         android:src="@drawable/pin" />
+
     <TextView
         android:id="@+id/pin"
         android:layout_width="wrap_content"
@@ -87,9 +89,9 @@
         android:layout_alignTop="@id/pin_icon"
         android:layout_marginLeft="2dp"
         android:layout_toRightOf="@id/pin_icon"
-        android:textSize="12sp"
         android:gravity="center"
-        android:textColor="#878fa1" />
+        android:textColor="#878fa1"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/registerDate"
@@ -98,9 +100,9 @@
         android:layout_alignTop="@id/pin"
         android:layout_marginLeft="50dp"
         android:layout_toRightOf="@id/pin"
-        android:textSize="12sp"
         android:gravity="center"
-        android:textColor="#878fa1" />
+        android:textColor="#878fa1"
+        android:textSize="12sp" />
 
 
 </RelativeLayout>

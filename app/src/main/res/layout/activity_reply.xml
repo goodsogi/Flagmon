@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -26,7 +28,10 @@
     <ListView
         android:id="@+id/list_reply"
         android:layout_width="match_parent"
-        android:layout_height="0px" android:layout_weight="1" android:background="#ffffff"/>
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:background="#ffffff" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -38,22 +43,21 @@
             android:id="@+id/reply_input"
             android:layout_width="0px"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:hint="로그인 후 덧글을 남길 수 있습니다."
             android:onClick="goToLogin"
-            android:textSize="12sp"
-            android:gravity="center" />
+            android:textSize="12sp" />
 
         <Button
             android:layout_width="45dp"
             android:layout_height="27dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="5dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/send_btn_selector"
-             />
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/send_btn_selector" />
 
 
     </LinearLayout>

@@ -61,7 +61,7 @@ public class InviteFriendFragment extends FMCommonFragment {
 
     }
 
-    public void goToFindFriend(View v) {
+    private void goToFindFriend(View v) {
         PlusClickGuard.doIt(v);
 
         Intent intent = new Intent(mActivity, FindFriendActivity.class);

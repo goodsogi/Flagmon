@@ -15,14 +15,14 @@
         <Button
             android:layout_width="88dp"
             android:layout_height="34dp"
-            android:onClick="signUp"
-            android:background="@drawable/join_btn_selector" />
+            android:background="@drawable/join_btn_selector"
+            android:onClick="signUp" />
 
         <Button
             android:layout_width="88dp"
             android:layout_height="34dp"
             android:layout_marginLeft="80dp"
-            android:onClick="logIn"
-            android:background="@drawable/login_btn_selector" />
+            android:background="@drawable/login_btn_selector"
+            android:onClick="logIn" />
     </LinearLayout>
 </FrameLayout>

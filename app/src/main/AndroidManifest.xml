@@ -77,6 +77,17 @@
         <activity
             android:name=".friend.ChooseFriendActivity"
             android:theme="@style/noTheme" android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".myalbum.PostActivity"
+            android:theme="@style/noTheme" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".myalbum.PostLocationActivity"
+            android:theme="@style/noTheme" android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".myalbum.GroupPostActivity"
+            android:theme="@style/noTheme" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

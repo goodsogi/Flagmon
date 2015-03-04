@@ -13,9 +13,8 @@ public class LoginChecker {
     public static boolean doIt(Activity activity) {
         SharedPreferences sharedPreference = activity.getSharedPreferences(
                 FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        //return sharedPreference.getBoolean(FMConstants.KEY_IS_LOGIN, false);
+        return sharedPreference.getBoolean(FMConstants.KEY_IS_LOGIN, false);
 
-        //테스트
-        return true;
+
     }
 }
