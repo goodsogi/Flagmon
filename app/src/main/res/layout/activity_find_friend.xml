@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/navigation_bar_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="27.5dp"
+            android:layout_height="27.5dp"
+            android:background="@drawable/back_btn"
+            android:onClick="goBack" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="친구찾기"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#ffffff" />
+
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="친구 찾기"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:textColor="#657487"
+android:paddingLeft="13dp"
+        android:background="#eff1f3"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="Facebook에서 친구 찾기"
+        android:drawableLeft="@drawable/facebook"
+        android:gravity="center_vertical"
+        android:textColor="#000000"
+        android:paddingLeft="10dp"
+        android:onClick="findFriendOnFacebook"
+        android:drawablePadding="5dp"
+        android:background="#ffffff"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="Twitter에서 친구 찾기"
+        android:drawableLeft="@drawable/twitter"
+        android:gravity="center_vertical"
+        android:textColor="#000000"
+        android:paddingLeft="10dp"
+        android:drawablePadding="5dp"
+        android:onClick="findFriendOnTwitter"
+        android:background="#ffffff"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="연락처로부터 친구 찾기"
+        android:drawableLeft="@drawable/contact"
+        android:gravity="center_vertical"
+        android:textColor="#000000"
+        android:paddingLeft="10dp"
+        android:drawablePadding="5dp"
+        android:onClick="findFriendOnContact"
+        android:background="#ffffff"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="이름으로 검색"
+        android:drawableLeft="@drawable/search_name"
+        android:gravity="center_vertical"
+        android:textColor="#000000"
+        android:paddingLeft="10dp"
+        android:drawablePadding="5dp"
+        android:onClick="searchFriendByName"
+        android:background="#ffffff"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="받은 신청"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:textColor="#657487"
+        android:paddingLeft="13dp"
+        android:background="#eff1f3"
+        />
+
+<ListView
+    android:id="@+id/list_got_friend_request"
+    android:layout_width="match_parent"
+    android:layout_height="0px" android:layout_weight="1"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="보낸 신청"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:textColor="#657487"
+        android:paddingLeft="13dp"
+        android:background="#eff1f3"
+        />
+    <ListView
+        android:id="@+id/list_sent_friend_request"
+        android:layout_width="match_parent"
+        android:layout_height="0px" android:layout_weight="1"/>
+
+
+
+
+</LinearLayout>

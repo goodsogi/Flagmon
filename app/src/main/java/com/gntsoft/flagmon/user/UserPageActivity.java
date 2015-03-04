@@ -7,10 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.gntsoft.flagmon.util.LoginChecker;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginActivity;
-import com.gntsoft.flagmon.main.MainListFragment;
-import com.gntsoft.flagmon.main.MapFragment;
 import com.gntsoft.flagmon.reply.ReplyActivity;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
@@ -68,7 +67,35 @@ public class UserPageActivity extends Activity {
     public void addFriend(View v) {
 
         PlusClickGuard.doIt(v);
+        if(LoginChecker.doIt(this)) showLoginAlertDialog();
+        else showAddFriendAlertDialog();
 
+
+
+    }
+
+    private void showAddFriendAlertDialog() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("친구 신청 하시겠습니까?");
+        ab.setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                }).setPositiveButton("예", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                requestAddFriend();
+            }
+        });
+        ab.show();
+    }
+
+    private void requestAddFriend() {
+        //구현!!
+        PlusToaster.doIt(this, "준비중...");
+    }
+
+    private void showLoginAlertDialog() {
         AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
         ab.setTitle("친구 신청은 로그인후 가능합니다. 로그인 하시겠습니까?");
         ab.setNegativeButton("아니오",
@@ -82,7 +109,6 @@ public class UserPageActivity extends Activity {
             }
         });
         ab.show();
-
     }
 
     private void goToLogin() {

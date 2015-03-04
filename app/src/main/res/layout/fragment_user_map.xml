@@ -26,7 +26,6 @@
             android:id="@+id/reply_icon"
             android:layout_width="26dp"
             android:layout_height="26dp"
-            android:layout_alignTop="@id/main_img_bar"
             android:layout_marginLeft="30dp"
             android:onClick="goToReply"
             android:src="@drawable/p05_box_icon_0001" />

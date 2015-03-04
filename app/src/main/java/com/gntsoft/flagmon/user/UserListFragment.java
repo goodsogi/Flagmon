@@ -11,8 +11,8 @@ import android.widget.ListView;
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
-import com.gntsoft.flagmon.main.MainListAdapter;
-import com.gntsoft.flagmon.main.MainListModel;
+import com.gntsoft.flagmon.neighbor.NeighborListAdapter;
+import com.gntsoft.flagmon.neighbor.NeighborListModel;
 import com.pluslibrary.server.PlusOnGetDataListener;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class UserListFragment extends FMCommonFragment implements
                 .findViewById(R.id.list_user);
 
         if (list == null) return;
-        list.setAdapter(new MainListAdapter(mActivity,
+        list.setAdapter(new NeighborListAdapter(mActivity,
                 getSampleDatas()));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -57,11 +57,11 @@ public class UserListFragment extends FMCommonFragment implements
         startActivity(intent);
     }
 
-    private ArrayList<MainListModel> getSampleDatas() {
-        ArrayList<MainListModel> datas = new ArrayList<>();
+    private ArrayList<NeighborListModel> getSampleDatas() {
+        ArrayList<NeighborListModel> datas = new ArrayList<>();
 
         for (int i = 0; i < 20; i++) {
-            MainListModel data = new MainListModel();
+            NeighborListModel data = new NeighborListModel();
             data.setTitle("YTN뉴스");
             data.setContent("세월호 침몰 사건");
             data.setTime("25m");

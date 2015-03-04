@@ -32,12 +32,21 @@ public class FriendFragment extends FMCommonFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        showFriendTopBar();
+       }
 
-        //refreshList();
+
+    private void showFriendTopBar() {
+        FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
+        topBarContainer.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
+        View inviteTopBar = inflater.inflate(R.layout.top_bar_friend,null);
+        topBarContainer.addView(inviteTopBar);
     }
 
 
-        @Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_friend,

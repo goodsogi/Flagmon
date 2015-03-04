@@ -2,10 +2,8 @@ package com.gntsoft.flagmon.detail;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,7 +17,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.gntsoft.flagmon.FMConstants;
+import com.gntsoft.flagmon.util.LoginChecker;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginActivity;
 import com.gntsoft.flagmon.reply.ReplyActivity;
@@ -56,7 +54,7 @@ public class DetailActivity extends Activity {
       }
 
     private void checkLogin() {
-        if (isLogin()) showMenuButton();
+        if (LoginChecker.doIt(this)) showMenuButton();
 
     }
 
@@ -242,9 +240,5 @@ public class DetailActivity extends Activity {
         startActivity(intent);
     }
 
-    public boolean isLogin() {
-        SharedPreferences sharedPreference = getSharedPreferences(
-                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreference.getBoolean(FMConstants.KEY_IS_LOGIN, false);
-    }
+
 }

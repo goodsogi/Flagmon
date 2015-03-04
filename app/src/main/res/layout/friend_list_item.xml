@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="433dp">
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginLeft="7dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="7dp" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:layout_marginLeft="6dp"
+        android:layout_alignTop="@id/img"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_toRightOf="@id/img"
+        android:textColor="#000000" />
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_below="@+id/name"
+        android:textColor="#adadad" />
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/date"
+        android:layout_alignTop="@+id/date"
+        android:layout_marginLeft="40dp"
+        android:textColor="#adadad" />
+    <ImageView
+        android:id="@+id/reply_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginLeft="23dp"
+        android:layout_alignTop="@id/distance"
+        android:layout_toRightOf="@id/distance"
+        android:src="@drawable/reply" />
+
+    <TextView
+        android:id="@+id/reply"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_alignTop="@id/reply_icon"
+        android:layout_marginLeft="2dp"
+        android:layout_toRightOf="@id/reply_icon"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="#878fa1" />
+    <ImageView
+        android:id="@+id/pin_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginLeft="20dp"
+        android:layout_alignTop="@id/reply"
+        android:layout_toRightOf="@id/reply"
+        android:src="@drawable/pin" />
+    <TextView
+        android:id="@+id/pin"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_alignTop="@id/pin_icon"
+        android:layout_marginLeft="2dp"
+        android:layout_toRightOf="@id/pin_icon"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="#878fa1" />
+
+    <ImageView
+        android:id="@+id/big_img"
+        android:layout_width="match_parent"
+        android:layout_height="223dp"
+        android:layout_below="@+id/img"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="6dp" />
+    
+    <Button
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:background="@drawable/p27_2_icon_0001"
+        android:layout_alignBottom="@+id/big_img"
+        android:layout_marginLeft="6dp"
+        android:layout_marginBottom="6dp"
+        />
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lines="4"
+        android:layout_below="@+id/big_img"
+        android:layout_margin="11dp"
+        android:textSize="12sp"
+        android:textColor="#000000" />
+
+    <TextView
+        android:id="@+id/view_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="더보기"
+        android:layout_below="@+id/content"
+        android:gravity="center_horizontal"
+        android:textColor="#adadad" />
+<Button
+    android:id="@+id/writeReply"
+    android:layout_width="94dp"
+    android:layout_height="23dp" android:background="@drawable/write_reply"
+    android:layout_below="@+id/view_more"
+    android:layout_marginTop="8dp"
+    android:layout_marginLeft="15dp"
+    />
+
+    <Button
+        android:id="@+id/getArticle"
+        android:layout_width="94dp"
+        android:layout_height="23dp" android:background="@drawable/get_article"
+        android:layout_toRightOf="@+id/writeReply"
+        android:layout_alignTop="@+id/writeReply"
+        android:layout_marginLeft="5dp"
+        />
+</RelativeLayout>

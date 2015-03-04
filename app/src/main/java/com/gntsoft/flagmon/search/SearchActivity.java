@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.main.MapFragment;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
 
