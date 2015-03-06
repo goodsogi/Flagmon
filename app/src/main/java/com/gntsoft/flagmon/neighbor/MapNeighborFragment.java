@@ -25,6 +25,11 @@ import android.widget.Toast;
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.MapDataModel;
+import com.gntsoft.flagmon.server.MapDataParser;
+import com.gntsoft.flagmon.server.ServerResultParser;
+import com.gntsoft.flagmon.util.LoginChecker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -38,12 +43,19 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class MapNeighborFragment extends FMCommonFragment implements
@@ -58,6 +70,7 @@ public class MapNeighborFragment extends FMCommonFragment implements
     private Button mMyLocationButton;
 
     String [] mapOptionDatas = {"인기순","최근 등록순"};
+    private String userAuthKey;
 
     public MapNeighborFragment() {
         // TODO Auto-generated constructor stub
@@ -70,12 +83,13 @@ public class MapNeighborFragment extends FMCommonFragment implements
         //refreshList();
         // getCurrentLocation();
 
-        showSampleMarkers();
+        //showSampleMarkers();
         checkLogin();
+        getDataFromServer();
     }
 
     private void checkLogin() {
-        if (isLogin()) showTreasureButton();
+        if (LoginChecker.isLogIn(mActivity)) showTreasureButton();
 
     }
 
@@ -120,45 +134,60 @@ public class MapNeighborFragment extends FMCommonFragment implements
     }
 
 
-    private void showSampleMarkers() {
-        //샘플용 위치와 마커 이미지
-        ArrayList<LatLng> positions = new ArrayList<>();
-
-        Random random = new Random();
+    private void handleMapData(ArrayList<MapDataModel> datas) {
 
 
-        for (int i = 0; i < 20; i++) {
-            positions.add(new LatLng(37.587140 + random.nextInt(10) / 10f, 126.994357 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(36.817490 + random.nextInt(10) / 10f, 128.627411 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(35.862362 + random.nextInt(10) / 10f, 128.585926 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(35.185497 + random.nextInt(10) / 10f, 129.023048 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(35.415269 + random.nextInt(10) / 10f, 127.391928 + random.nextInt(10) / 10f));
-        }
+        for (int i = 0; i < datas.size(); i++)
+        {
+           fetchImageFromServer(datas.get(i), i);
 
 
-        ArrayList<Integer> imgs = new ArrayList<>();
-
-
-        imgs.add(R.drawable.sandarapark);
-        imgs.add(R.drawable.sandarapark2);
-        imgs.add(R.drawable.sandarapark3);
-        imgs.add(R.drawable.sandarapark4);
-        imgs.add(R.drawable.sandarapark5);
-
-
-        LatLng position = null;
-        for (int i = 0; i < 100; i++) {
-            mGoogleMap.addMarker(new MarkerOptions().position(positions.get(i)).snippet("" + i)
-                    .icon(getMarKerImg(imgs.get(i % 5))).anchor(0f, 1.0f));
-            //마커 클릭처리 필요!!
         }
     }
 
-    private BitmapDescriptor getMarKerImg(int imgId) {
+    private void fetchImageFromServer(final MapDataModel mapDataModel, final int position) {
+        mImageLoader.loadImage(mapDataModel.getImgUrl(),mOption,new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+
+                showMarkers(bitmap,mapDataModel,position);
+
+
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+
+            }
+        });
+
+
+
+
+
+    }
+
+    private void showMarkers(Bitmap bitmap,MapDataModel mapDataModel, final int position) {
+        LatLng latLng = new LatLng(Double.parseDouble(mapDataModel.getLat()), Double.parseDouble(mapDataModel.getLon()));
+        mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet("" + position)
+                .icon(getMarKerImg(bitmap)).anchor(0f, 1.0f));
+        //마커 클릭처리 필요!!
+    }
+
+    private BitmapDescriptor getMarKerImg(Bitmap original) {
 
         //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
         //마스킹
-        Bitmap original = BitmapFactory.decodeResource(getResources(), imgId);
         Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
         Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
@@ -311,7 +340,7 @@ public class MapNeighborFragment extends FMCommonFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map,
+        View rootView = inflater.inflate(R.layout.fragment_map_neighbor,
                 container, false);
         setUpMap(savedInstanceState, rootView);
         return rootView;
@@ -412,29 +441,30 @@ public class MapNeighborFragment extends FMCommonFragment implements
             return;
         switch (from) {
             case GET_MAP_DATA:
-                makeList(datas);
+                handleMapData((ArrayList<MapDataModel>) datas);
                 break;
         }
 
     }
 
-    private void makeList(Object datas) {
 
-//		ListView list = (ListView) mActivity
-//				.findViewById(R.id.list_order_history);
-//
-//		if(list==null) return;
-//		list.setAdapter(new OrderHistoryListAdapter(mActivity,this,
-//				(ArrayList<OrderHistoryModel>) datas));
+    public void getDataFromServer() {
+
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
+                FMApiConstants.GET_MAP_DATA, new MapDataParser(),
+                postParams);
     }
 
-    public void refreshList() {
-//		new PlusHttpClient(mActivity, this, false).execute(
-//				GET_MAP_DATA,
-//				ApiConstants.GET_MAP_DATA + "?id="
-//						+ PlusPhoneNumberFinder.doIt(mActivity),
-//				new OrderHistoryParser());
-
-    }
+    public String getUserAuthKey() {
+            SharedPreferences sharedPreference = mActivity.getSharedPreferences(
+                    FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+            return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY,"");
+        }
 
 }
