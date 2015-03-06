@@ -76,7 +76,7 @@ public class MyalbumFragment extends FMCommonFragment implements
 //        new PlusHttpClient(mActivity, this, false).execute(
 //                GET_ORDER_HISTORY,
 //                ApiConstants.GET_ORDER_HISTORY + "?id="
-//                        + PlusPhoneNumberFinder.doIt(mActivity),
+//                        + PlusPhoneNumberFinder.isLogIn(mActivity),
 //                new OrderHistoryParser());
 
     }

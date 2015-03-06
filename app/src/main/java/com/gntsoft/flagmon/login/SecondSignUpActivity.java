@@ -12,22 +12,35 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.login.PolicyActivity;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusOnClickListener;
+import com.pluslibrary.utils.PlusToaster;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 2. 26.
  */
-public class SecondSignUpActivity extends Activity {
+public class SecondSignUpActivity extends Activity implements PlusOnGetDataListener {
+    private static final int SIGN_UP = 11;
     private EditText mUserSexView;
     String[] sexs = {"남", "여"};
     final int DRAWABLE_LEFT = 0;
     final int DRAWABLE_TOP = 1;
     final int DRAWABLE_RIGHT = 2;
     final int DRAWABLE_BOTTOM = 3;
+    private String userSex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +48,7 @@ public class SecondSignUpActivity extends Activity {
         setContentView(R.layout.activity_second_signup);
 
         addButtonListener();
-        //!! 첫번째 가입화면의 사용자 정보 가져와서 처리
-        String userEmail = getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL);
-        String userPassword = getIntent().getStringExtra(FMConstants.KEY_USER_PASSWORD);
-        String userName = getIntent().getStringExtra(FMConstants.KEY_USER_NAME);
+
 
 
     }
@@ -172,6 +182,57 @@ public class SecondSignUpActivity extends Activity {
 
     public void finishSignUp(View v) {
         PlusClickGuard.doIt(v);
-        //!!구현
+
+        String userEmail = getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL);
+        String userPassword = getIntent().getStringExtra(FMConstants.KEY_USER_PASSWORD);
+        String userName = getIntent().getStringExtra(FMConstants.KEY_USER_NAME);
+
+
+        EditText userAgeView = (EditText) findViewById(R.id.userAge);
+        String userAge = userAgeView.getText().toString();
+
+        if(userAge.equals("")) {
+            PlusToaster.doIt(this, "나이를 입력해주세요");
+            return;
+        }
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("user_email", userEmail));
+        postParams.add(new BasicNameValuePair("user_pw", userPassword));
+        postParams.add(new BasicNameValuePair("user_gender", getUserSex()));
+        postParams.add(new BasicNameValuePair("user_name", userName));
+        // postParams.add(new BasicNameValuePair("where", mArea));
+        //생년월일에 나이??
+        postParams.add(new BasicNameValuePair("user_birth", userAge));
+
+//        SharedPreferences sharedPreference = getSharedPreferences(
+//                PlusConstants.PREF_NAME, Context.MODE_PRIVATE);
+//        String token = sharedPreference.getString(
+//                PlusGcmRegister.PROPERTY_REG_ID, "");
+//        postParams.add(new BasicNameValuePair("deviceid", token));
+//        postParams.add(new BasicNameValuePair("alarm2", soundNoti));
+//        postParams.add(new BasicNameValuePair("alarm1", vibrationNoti));
+
+        new PlusHttpClient(this, this, false).execute(SIGN_UP,
+                FMApiConstants.SIGN_UP, new ServerResultParser(),
+                postParams);
+    }
+
+    public String getUserSex() {
+        return mUserSexView.getText().toString().equals(sexs[0])? "M":"W";
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        switch (from) {
+
+            case SIGN_UP:
+
+                ServerResultModel model = (ServerResultModel) datas;
+                PlusToaster.doIt(this,model.getResult().equals("success")?"회원가입되었습니다":"회원가입되지 못했습니다");
+                break;
+
+        }
+
     }
 }

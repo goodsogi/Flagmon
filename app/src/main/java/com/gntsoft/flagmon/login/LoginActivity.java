@@ -12,11 +12,20 @@ import android.widget.EditText;
 
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
+import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusStringEmailChecker;
 import com.pluslibrary.utils.PlusToaster;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,11 +36,10 @@ public class LoginActivity  extends Activity implements PlusOnGetDataListener {
     final int DRAWABLE_LEFT = 0;
     final int DRAWABLE_TOP = 1;
     final int DRAWABLE_RIGHT = 2;
-    final int DO_LOGIN = 77;
 
     final int DRAWABLE_BOTTOM = 3;
     private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z]+)(?=.*[!@#$%^*+=-]|.*[0-9]+).{8,16}$";
-
+    private static final int LOG_IN = 11;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,20 +52,22 @@ public class LoginActivity  extends Activity implements PlusOnGetDataListener {
         if (datas == null)
             return;
         switch (from) {
-            case DO_LOGIN:
-                //!!로그인 성공 실패 처리
-                saveLoginInfo();
+            case LOG_IN:
+                ServerResultModel model = (ServerResultModel) datas;
+                PlusToaster.doIt(this,model.getResult().equals("success")?"로그인되었습니다":"로그인되지 못했습니다");
+                if(model.getResult().equals("success"))saveLoginInfo(model.getMsg());
                 break;
         }
 
     }
 
-    private void saveLoginInfo() {
+    private void saveLoginInfo(String userAuthKey) {
 
         SharedPreferences sharedPreference = getSharedPreferences(
                 FMConstants.PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor e = sharedPreference.edit();
         e.putBoolean(FMConstants.KEY_IS_LOGIN, true);
+        e.putString(FMConstants.KEY_USER_AUTH_KEY, userAuthKey);
         e.commit();
     }
 
@@ -122,43 +132,41 @@ public class LoginActivity  extends Activity implements PlusOnGetDataListener {
     public void doLogin(View v) {
         PlusClickGuard.doIt(v);
 
-//        EditText userEmailView = (EditText) findViewById(R.id.userEmail);
-//        String userEmail = userEmailView.getText().toString();
-//
-//        if(userEmail.equals("")) {
-//            PlusToaster.doIt(this,"이메일을 입력해주세요.");
-//            return;
-//        }
-//
-//        if(!PlusStringEmailChecker.doIt(userEmail)) {
-//            PlusToaster.doIt(this,"아이디는 이메일 주소 형식입니다.");
-//            return;
-//        }
-//
-//        EditText userPasswordView = (EditText) findViewById(R.id.userPassword);
-//        String userPassword = userPasswordView.getText().toString();
-//
-//        if(userPassword.equals("")) {
-//            PlusToaster.doIt(this,"비밀번호를 입력해주세요.");
-//            return;
-//        }
-//
-//        if(!isPasswordValid(userPassword)) {
-//            PlusToaster.doIt(this,"비밀번호는 영문 숫자 조합 8자리 이상입니다.");
-//            return;
-//
-//        }
-//
-//        //구현!!
-//        PlusToaster.doIt(this,"준비중...");
-//
-        //테스트!!
+        EditText userEmailView = (EditText) findViewById(R.id.userEmail);
+        String userEmail = userEmailView.getText().toString();
 
-        SharedPreferences sharedPreference = getSharedPreferences(
-                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor e = sharedPreference.edit();
-        e.putBoolean(FMConstants.KEY_IS_LOGIN, true);
-        e.commit();
+        if(userEmail.equals("")) {
+            PlusToaster.doIt(this,"이메일을 입력해주세요.");
+            return;
+        }
+
+        if(!PlusStringEmailChecker.doIt(userEmail)) {
+            PlusToaster.doIt(this,"아이디는 이메일 주소 형식입니다.");
+            return;
+        }
+
+        EditText userPasswordView = (EditText) findViewById(R.id.userPassword);
+        String userPassword = userPasswordView.getText().toString();
+
+        if(userPassword.equals("")) {
+            PlusToaster.doIt(this,"비밀번호를 입력해주세요.");
+            return;
+        }
+
+        if(!isPasswordValid(userPassword)) {
+            PlusToaster.doIt(this,"비밀번호는 영문 숫자 조합 8자리 이상입니다.");
+            return;
+
+        }
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("user_email", userEmail));
+        postParams.add(new BasicNameValuePair("user_pw", userPassword));
+
+
+        new PlusHttpClient(this, this, false).execute(LOG_IN,
+                FMApiConstants.LOG_IN, new ServerResultParser(),
+                postParams);
 
     }
 

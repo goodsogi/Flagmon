@@ -305,7 +305,7 @@ public class UserMapFragment extends FMCommonFragment implements
 //		new PlusHttpClient(mActivity, this, false).execute(
 //				GET_MAP_DATA,
 //				ApiConstants.GET_MAP_DATA + "?id="
-//						+ PlusPhoneNumberFinder.doIt(mActivity),
+//						+ PlusPhoneNumberFinder.isLogIn(mActivity),
 //				new OrderHistoryParser());
 
     }

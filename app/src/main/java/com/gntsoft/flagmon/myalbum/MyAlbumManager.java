@@ -10,8 +10,6 @@ import android.widget.FrameLayout;
 
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.friend.ListFriendFragment;
-import com.gntsoft.flagmon.friend.MapFriendFragment;
 import com.gntsoft.flagmon.login.LoginFragment;
 import com.gntsoft.flagmon.util.LoginChecker;
 import com.pluslibrary.utils.PlusClickGuard;
@@ -28,7 +26,7 @@ public class MyAlbumManager {
     }
 
     public void chooseFragment() {
-        if (!LoginChecker.doIt(mActivity)) {
+        if (!LoginChecker.isLogIn(mActivity)) {
             showLogin(FMConstants.TAB_MYALBUM);
         } else if (hasPost()) {
             showMyAlbumTopBar();

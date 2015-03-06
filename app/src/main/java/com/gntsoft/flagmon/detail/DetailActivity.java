@@ -54,7 +54,7 @@ public class DetailActivity extends Activity {
       }
 
     private void checkLogin() {
-        if (LoginChecker.doIt(this)) showMenuButton();
+        if (LoginChecker.isLogIn(this)) showMenuButton();
 
     }
 
@@ -68,7 +68,7 @@ public class DetailActivity extends Activity {
 //        mMainImage = (ImageView) findViewById(R.id.main_img);
 //        mMainImage.setOnClickListener(new PlusOnClickListener() {
 //            @Override
-//            protected void doIt() {
+//            protected void isLogIn() {
 //                goToImageViewer();
 //            }
 //        });

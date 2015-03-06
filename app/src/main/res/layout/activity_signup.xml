@@ -55,7 +55,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/signup_button_selector"
-        android:onClick="goToSecondSignUp" />
+        android:onClick="checkEmail" />
 
     <View
         android:layout_width="match_parent"

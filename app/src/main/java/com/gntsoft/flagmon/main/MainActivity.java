@@ -258,7 +258,7 @@ public class MainActivity extends FragmentActivity {
     }
 
 //    public void showSortPopupFriend(View v) {
-//        PlusClickGuard.doIt(v);
+//        PlusClickGuard.isLogIn(v);
 //
 //        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
 //        ab.setTitle("정렬방식을 선택해주세요.");
@@ -291,12 +291,12 @@ public class MainActivity extends FragmentActivity {
 //    }
 
 //    private void sortByPin() {
-//        PlusToaster.doIt(this,"준비중...");
+//        PlusToaster.isLogIn(this,"준비중...");
 //        //구현!!
 //    }
 
 //    public void showSortPopup(View v) {
-//        PlusClickGuard.doIt(v);
+//        PlusClickGuard.isLogIn(v);
 //
 //        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
 //        ab.setTitle("정렬방식을 선택해주세요.");
@@ -330,17 +330,17 @@ public class MainActivity extends FragmentActivity {
 //    }
 //
 //    private void sortByDistance() {
-//        PlusToaster.doIt(this,"준비중...");
+//        PlusToaster.isLogIn(this,"준비중...");
 //        //구현!!
 //    }
 //
 //    private void sortByRecent() {
-//        PlusToaster.doIt(this,"준비중...");
+//        PlusToaster.isLogIn(this,"준비중...");
 //        //구현!!
 //    }
 //
 //    private void sortByPopular() {
-//        PlusToaster.doIt(this,"준비중...");
+//        PlusToaster.isLogIn(this,"준비중...");
 //        //구현!!
 //    }
 
@@ -355,7 +355,7 @@ public class MainActivity extends FragmentActivity {
     }
 
 //    public void goToChooseFriend(View v) {
-//        PlusClickGuard.doIt(v);
+//        PlusClickGuard.isLogIn(v);
 //
 //        Intent intent = new Intent(this, ChooseFriendActivity.class);
 //        startActivity(intent);

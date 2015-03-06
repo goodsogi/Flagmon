@@ -83,7 +83,7 @@ public class ListNeighborFragment extends FMCommonFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main_list,
+        View rootView = inflater.inflate(R.layout.fragment_list_neighbor,
                 container, false);
         return rootView;
     }
@@ -176,7 +176,7 @@ public class ListNeighborFragment extends FMCommonFragment implements
 //        new PlusHttpClient(mActivity, this, false).execute(
 //                GET_ORDER_HISTORY,
 //                ApiConstants.GET_ORDER_HISTORY + "?id="
-//                        + PlusPhoneNumberFinder.doIt(mActivity),
+//                        + PlusPhoneNumberFinder.isLogIn(mActivity),
 //                new OrderHistoryParser());
 
     }

@@ -67,7 +67,7 @@ public class UserPageActivity extends Activity {
     public void addFriend(View v) {
 
         PlusClickGuard.doIt(v);
-        if(LoginChecker.doIt(this)) showLoginAlertDialog();
+        if(LoginChecker.isLogIn(this)) showLoginAlertDialog();
         else showAddFriendAlertDialog();
 
 

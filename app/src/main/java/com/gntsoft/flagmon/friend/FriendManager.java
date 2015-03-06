@@ -11,11 +11,8 @@ import android.widget.FrameLayout;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginFragment;
-import com.gntsoft.flagmon.myalbum.MyalbumFragment;
-import com.gntsoft.flagmon.myalbum.SharePhotoFragment;
 import com.gntsoft.flagmon.util.LoginChecker;
 import com.pluslibrary.utils.PlusClickGuard;
-import com.pluslibrary.utils.PlusOnClickListener;
 
 /**
  * Created by johnny on 15. 3. 3.
@@ -29,7 +26,7 @@ public class FriendManager {
     }
 
     public void chooseFragment() {
-        if (!LoginChecker.doIt(mActivity)) {
+        if (!LoginChecker.isLogIn(mActivity)) {
             showLogin(FMConstants.TAB_FRIEND);
         } else if (hasFriend()) {
             showFriendTopBar();

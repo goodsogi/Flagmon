@@ -243,7 +243,7 @@ public class MapDetailFragment extends FMCommonFragment implements
 //        mMyLocationButton = (Button) mActivity.findViewById(R.id.my_location);
 //        mMyLocationButton.setOnClickListener(new PlusOnClickListener() {
 //            @Override
-//            protected void doIt() {
+//            protected void isLogIn() {
 //                if (!mMyLocationButton.isSelected()) {
 //                    getCurrentLocation();
 //                }
@@ -277,7 +277,7 @@ public class MapDetailFragment extends FMCommonFragment implements
 //		new PlusHttpClient(mActivity, this, false).execute(
 //				GET_MAP_DATA,
 //				ApiConstants.GET_MAP_DATA + "?id="
-//						+ PlusPhoneNumberFinder.doIt(mActivity),
+//						+ PlusPhoneNumberFinder.isLogIn(mActivity),
 //				new OrderHistoryParser());
 
     }

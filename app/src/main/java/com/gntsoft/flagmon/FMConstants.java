@@ -17,9 +17,13 @@ public class FMConstants {
     public static final int TAB_FRIEND = 0;
     public static final int TAB_MYALBUM = 1;
     public static final int TAB_SETTING = 2;
+    public static final String DATA_TAB_FRIEND = "1";
+    public static final String DATA_TAB_MYALBUM = "2";
+    public static final String DATA_TAB_NEIGHBOR = "0";
     public static final String KEY_TAB_NAME = "tabName";
     public static final String KEY_MAIN_CONTENT_TYPE = "mainContentType";
     public static final int CONTENT_MAP = 0;
     public static final int CONTENT_LIST = 1;
     public static final String KEY_IS_GO_TO_FRIEND_MANAGEMENT = "isGoToFriendManagement";
+    public static final String KEY_USER_AUTH_KEY = "userAuthKey";
 }
