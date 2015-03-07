@@ -40,14 +40,14 @@ public class UserListFragment extends FMCommonFragment implements
                 .findViewById(R.id.list_user);
 
         if (list == null) return;
-        list.setAdapter(new NeighborListAdapter(mActivity,
-                getSampleDatas()));
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToDetail();
-            }
-        });
+//        list.setAdapter(new NeighborListAdapter(mActivity,
+//                getSampleDatas()));
+//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                goToDetail();
+//            }
+//        });
 
 
     }

@@ -12,18 +12,29 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMListParser;
+import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListNeighborFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
 
-    private static final int GET_MAIN_LIST = 0;
+    private static final int GET_LIST_DATA = 0;
     String [] listOptionDatas = {"인기순","최근 등록순","거리순"};
 
     public ListNeighborFragment() {
@@ -34,50 +45,30 @@ public class ListNeighborFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        makeSampleList();
-        //refreshList();
+        getDataFromServer();
     }
 
-    private void makeSampleList() {
-
-        ListView list = (ListView) mActivity
-                .findViewById(R.id.list_main);
-
-        if (list == null) return;
-        list.setAdapter(new NeighborListAdapter(mActivity,
-                getSampleDatas()));
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToDetail();
-            }
-        });
+    public void getDataFromServer() {
 
 
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
+                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
+                postParams);
     }
+
+
 
     private void goToDetail() {
         Intent intent = new Intent(mActivity, DetailActivity.class);
         startActivity(intent);
     }
 
-    private ArrayList<NeighborListModel> getSampleDatas() {
-        ArrayList<NeighborListModel> datas = new ArrayList<>();
 
-        for (int i = 0; i < 20; i++) {
-            NeighborListModel data = new NeighborListModel();
-            data.setTitle("YTN뉴스");
-            data.setContent("세월호 침몰 사건");
-            data.setTime("25m");
-            data.setReplyCount("50");
-            data.setPinCount("15");
-            data.setRegisterDate("2014.04.01 12:30");
-            data.setImg(R.drawable.sandarapark);
-            datas.add(data);
-        }
-
-        return datas;
-    }
 
 
     @Override
@@ -155,30 +146,29 @@ public class ListNeighborFragment extends FMCommonFragment implements
         if (datas == null)
             return;
         switch (from) {
-            case GET_MAIN_LIST:
-                makeList(datas);
+            case GET_LIST_DATA:
+                makeList(new FMListParser().doIt((String) datas));
                 break;
         }
 
     }
 
-    private void makeList(Object datas) {
+    private void makeList(ArrayList<FMModel> datas) {
 
-//        ListView list = (ListView) mActivity
-//                .findViewById(R.id.list_main);
-//
-//        if(list==null) return;
-//        list.setAdapter(new OrderHistoryListAdapter(mActivity,this,
-//                (ArrayList<OrderHistoryModel>) datas));
+        ListView list = (ListView) mActivity
+                .findViewById(R.id.list_neighbor);
+
+        if (list == null||datas==null) return;
+        list.setAdapter(new NeighborListAdapter(mActivity,
+                datas));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                goToDetail();
+            }
+        });
     }
 
-    public void refreshList() {
-//        new PlusHttpClient(mActivity, this, false).execute(
-//                GET_ORDER_HISTORY,
-//                ApiConstants.GET_ORDER_HISTORY + "?id="
-//                        + PlusPhoneNumberFinder.isLogIn(mActivity),
-//                new OrderHistoryParser());
 
-    }
 
 }

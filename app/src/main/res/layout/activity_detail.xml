@@ -49,6 +49,13 @@
             android:layout_weight="1" />
     </LinearLayout>
 
+    <com.gntsoft.flagmon.utils.ScrollViewExt
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#efefef" >
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="247dp">
@@ -195,5 +202,5 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="5dp" />
 
-
+    </com.gntsoft.flagmon.utils.ScrollViewExt>
 </LinearLayout>

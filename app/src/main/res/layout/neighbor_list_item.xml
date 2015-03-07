@@ -42,7 +42,7 @@
         android:background="#eff1f3" />
 
     <TextView
-        android:id="@+id/time"
+        android:id="@+id/distance"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:layout_below="@id/content"
@@ -57,9 +57,9 @@
         android:id="@+id/reply_icon"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:layout_alignTop="@id/time"
+        android:layout_alignTop="@id/distance"
         android:layout_marginLeft="30dp"
-        android:layout_toRightOf="@id/time"
+        android:layout_toRightOf="@id/distance"
         android:src="@drawable/reply" />
 
     <TextView

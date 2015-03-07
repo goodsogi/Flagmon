@@ -2,6 +2,8 @@ package com.gntsoft.flagmon;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -48,6 +50,10 @@ public abstract class FMCommonFragment extends Fragment {
 	 */
 	abstract protected void addListenerButton();
 
-	
+    protected String getUserAuthKey() {
+        SharedPreferences sharedPreference = mActivity.getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY,"");
+    }
 
 }

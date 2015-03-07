@@ -26,10 +26,9 @@ import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
-import com.gntsoft.flagmon.server.MapDataModel;
-import com.gntsoft.flagmon.server.MapDataParser;
-import com.gntsoft.flagmon.server.ServerResultParser;
-import com.gntsoft.flagmon.util.LoginChecker;
+import com.gntsoft.flagmon.server.FMMapParser;
+import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.LoginChecker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -46,6 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusOnClickListener;
@@ -56,7 +56,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MapNeighborFragment extends FMCommonFragment implements
         PlusOnGetDataListener, LocationListener {
@@ -80,10 +79,7 @@ public class MapNeighborFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //refreshList();
-        // getCurrentLocation();
 
-        //showSampleMarkers();
         checkLogin();
         getDataFromServer();
     }
@@ -134,7 +130,7 @@ public class MapNeighborFragment extends FMCommonFragment implements
     }
 
 
-    private void handleMapData(ArrayList<MapDataModel> datas) {
+    private void handleMapData(ArrayList<FMModel> datas) {
 
 
         for (int i = 0; i < datas.size(); i++)
@@ -145,7 +141,7 @@ public class MapNeighborFragment extends FMCommonFragment implements
         }
     }
 
-    private void fetchImageFromServer(final MapDataModel mapDataModel, final int position) {
+    private void fetchImageFromServer(final FMModel mapDataModel, final int position) {
         mImageLoader.loadImage(mapDataModel.getImgUrl(),mOption,new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -177,7 +173,7 @@ public class MapNeighborFragment extends FMCommonFragment implements
 
     }
 
-    private void showMarkers(Bitmap bitmap,MapDataModel mapDataModel, final int position) {
+    private void showMarkers(Bitmap bitmap,FMModel mapDataModel, final int position) {
         LatLng latLng = new LatLng(Double.parseDouble(mapDataModel.getLat()), Double.parseDouble(mapDataModel.getLon()));
         mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet("" + position)
                 .icon(getMarKerImg(bitmap)).anchor(0f, 1.0f));
@@ -441,7 +437,7 @@ public class MapNeighborFragment extends FMCommonFragment implements
             return;
         switch (from) {
             case GET_MAP_DATA:
-                handleMapData((ArrayList<MapDataModel>) datas);
+                handleMapData(new FMMapParser().doIt((String) datas));
                 break;
         }
 
@@ -457,14 +453,10 @@ public class MapNeighborFragment extends FMCommonFragment implements
 
 
         new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
-                FMApiConstants.GET_MAP_DATA, new MapDataParser(),
+                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
                 postParams);
     }
 
-    public String getUserAuthKey() {
-            SharedPreferences sharedPreference = mActivity.getSharedPreferences(
-                    FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-            return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY,"");
-        }
+
 
 }

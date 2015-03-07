@@ -12,14 +12,25 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
-import com.gntsoft.flagmon.neighbor.NeighborListModel;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMListParser;
+import com.gntsoft.flagmon.server.FMMapParser;
+import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 3. 3.
@@ -27,7 +38,7 @@ import java.util.ArrayList;
 public class ListFriendFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
 
-    private static final int GET_MAIN_LIST = 0;
+    private static final int GET_LIST_DATA = 0;
     String [] listFriendOptionDatas = {"인기순","최근 등록순","퍼간 날짜","거리순"};
 
     public ListFriendFragment() {
@@ -38,52 +49,29 @@ public class ListFriendFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        makeSampleList();
-        //refreshList();
+        getDataFromServer();
     }
 
-    private void makeSampleList() {
-
-        ListView list = (ListView) mActivity
-                .findViewById(R.id.list_friend);
-
-        if (list == null) return;
-        list.setAdapter(new FriendListAdapter(mActivity,
-                getSampleDatas()));
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //goToDetail();
-            }
-        });
+    public void getDataFromServer() {
 
 
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
+                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
+                postParams);
     }
+
 
     private void goToDetail() {
         Intent intent = new Intent(mActivity, DetailActivity.class);
         startActivity(intent);
     }
 
-    private ArrayList<NeighborListModel> getSampleDatas() {
-        ArrayList<NeighborListModel> datas = new ArrayList<>();
 
-        for (int i = 0; i < 20; i++) {
-            NeighborListModel data = new NeighborListModel();
-            data.setTitle("YTN뉴스");
-            data.setName("산다라박");
-            data.setContent("박산다라는 어린 시절 무역업에 종사하는 아버지를 따라 대한민국에서 필리핀으로 이민을 가서 생활한다. 학교 행사에서 만난, 연예계에서 활동 중이던 친구가 필리핀 방송국 ABS-CBN의 스타 서클 퀘스트라고 하는 스타가 되기 위한 서바이벌 쇼의 오디션에 응시해 볼 것을 권하여 산다라는 쇼에 참가하게 된다. 최종 다섯 명이 확정되는 마지막 탈락자 선발전에서 약 50만 통의 휴대전화 문자 득표를 기록하였고, 이는 여성 출연자 사상 최대의 기록이었다. 쇼 전체를 통틀어 적어도 2백만여 통의 문자 득표를 획득했다고 추정된다.");
-            data.setDistance("25m");
-            data.setReplyCount("50");
-            data.setPinCount("15");
-            data.setRegisterDate("2014.04.01 12:30");
-            data.setImg(R.drawable.sandarapark);
-            data.setBigImg(R.drawable.sandarapark2);
-            datas.add(data);
-        }
-
-        return datas;
-    }
 
 
     @Override
@@ -166,30 +154,29 @@ public class ListFriendFragment extends FMCommonFragment implements
         if (datas == null)
             return;
         switch (from) {
-            case GET_MAIN_LIST:
-                makeList(datas);
+            case GET_LIST_DATA:
+                makeList(new FMListParser().doIt((String) datas));
                 break;
         }
 
     }
 
-    private void makeList(Object datas) {
+    private void makeList(ArrayList<FMModel> datas) {
 
-//        ListView list = (ListView) mActivity
-//                .findViewById(R.id.list_main);
-//
-//        if(list==null) return;
-//        list.setAdapter(new OrderHistoryListAdapter(mActivity,this,
-//                (ArrayList<OrderHistoryModel>) datas));
+        ListView list = (ListView) mActivity
+                .findViewById(R.id.list_friend);
+
+        if (list == null||datas==null) return;
+        list.setAdapter(new FriendListAdapter(mActivity,
+                datas));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                goToDetail();
+            }
+        });
     }
 
-    public void refreshList() {
-//        new PlusHttpClient(mActivity, this, false).execute(
-//                GET_ORDER_HISTORY,
-//                ApiConstants.GET_ORDER_HISTORY + "?id="
-//                        + PlusPhoneNumberFinder.isLogIn(mActivity),
-//                new OrderHistoryParser());
 
-    }
 
 }

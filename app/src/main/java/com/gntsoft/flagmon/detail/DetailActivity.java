@@ -17,16 +17,20 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.gntsoft.flagmon.util.LoginChecker;
+import com.gntsoft.flagmon.utils.LoginChecker;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginActivity;
 import com.gntsoft.flagmon.reply.ReplyActivity;
 import com.gntsoft.flagmon.user.UserPageActivity;
+import com.gntsoft.flagmon.utils.ScrollViewExt;
+import com.gntsoft.flagmon.utils.ScrollViewListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusListHeightCalculator;
 import com.pluslibrary.utils.PlusToaster;
 
 import java.util.ArrayList;
@@ -34,7 +38,8 @@ import java.util.ArrayList;
 /**
  * Created by johnny on 15. 2. 12.
  */
-public class DetailActivity extends Activity {
+public class DetailActivity extends Activity implements
+        PlusOnGetDataListener, ScrollViewListener {
 
     private MapView mMapView;
     private GoogleMap mGoogleMap;
@@ -42,6 +47,7 @@ public class DetailActivity extends Activity {
 
     String [] menuItems = {"신고하기", "URL 복사"};
     private boolean login;
+    private ScrollViewExt mScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,15 @@ public class DetailActivity extends Activity {
         makeGridView();
         showMainPhoto();
         checkLogin();
+        initScrollView();
+
         //addListenerToMainImage();
       }
+
+    private void initScrollView() {
+        mScrollView = (com.gntsoft.flagmon.utils.ScrollViewExt) findViewById(R.id.scrollView);
+        mScrollView.setScrollViewListener(this);
+    }
 
     private void checkLogin() {
         if (LoginChecker.isLogIn(this)) showMenuButton();
@@ -124,6 +137,9 @@ public class DetailActivity extends Activity {
 
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new DetailGridviewAdapter(this, imgs));
+
+        PlusListHeightCalculator.setGridViewHeightBasedOnChildren(this,
+                gridview, 5f, 66);
     }
 
     public void goBack(View v) {
@@ -241,4 +257,25 @@ public class DetailActivity extends Activity {
     }
 
 
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+
+    }
+
+    @Override
+    public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
+// We take the last son in the scrollview
+        View view = (View) scrollView
+                .getChildAt(scrollView.getChildCount() - 1);
+        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView
+                .getScrollY()));
+
+        // if diff is zero, then the bottom has been reached
+        if (diff == 0) {
+            // ScrollView 맨밑에 도달하면 리스트 아이템 추가!!
+//            addItem();
+//            PlusListHeightCalculator.setGridViewHeightBasedOnChildren(
+//                    mActivity, mList, 2f, 229);
+        }
+    }
 }

@@ -1,32 +1,19 @@
 package com.gntsoft.flagmon.main;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 
-import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.friend.FriendManager;
 import com.gntsoft.flagmon.myalbum.MyAlbumManager;
-import com.gntsoft.flagmon.neighbor.ListNeighborFragment;
-import com.gntsoft.flagmon.neighbor.MapNeighborFragment;
 import com.gntsoft.flagmon.neighbor.NeighborManager;
 import com.gntsoft.flagmon.setting.SettingManager;
-import com.gntsoft.flagmon.util.LoginChecker;
 import com.gntsoft.flagmon.login.LoginActivity;
-import com.gntsoft.flagmon.login.LoginFragment;
-import com.gntsoft.flagmon.myalbum.MyalbumFragment;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.search.SearchActivity;
-import com.gntsoft.flagmon.setting.SettingFragment;
 import com.gntsoft.flagmon.login.SignUpActivity;
 import com.pluslibrary.utils.PlusClickGuard;
-import com.pluslibrary.utils.PlusToaster;
 
 
 public class MainActivity extends FragmentActivity {

@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginFragment;
-import com.gntsoft.flagmon.util.LoginChecker;
+import com.gntsoft.flagmon.utils.LoginChecker;
 
 /**
  * Created by johnny on 15. 3. 3.

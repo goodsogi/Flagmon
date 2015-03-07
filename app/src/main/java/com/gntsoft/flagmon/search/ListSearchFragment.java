@@ -5,13 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
-import com.gntsoft.flagmon.neighbor.NeighborListAdapter;
 import com.gntsoft.flagmon.neighbor.NeighborListModel;
 import com.pluslibrary.server.PlusOnGetDataListener;
 
@@ -37,17 +35,17 @@ public class ListSearchFragment extends FMCommonFragment implements
     private void makeSampleList() {
 
         ListView list = (ListView) mActivity
-                .findViewById(R.id.list_main);
+                .findViewById(R.id.list_neighbor);
 
         if (list == null) return;
-        list.setAdapter(new NeighborListAdapter(mActivity,
-                getSampleDatas()));
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToDetail();
-            }
-        });
+//        list.setAdapter(new NeighborListAdapter(mActivity,
+//                getSampleDatas()));
+//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                goToDetail();
+//            }
+//        });
 
 
     }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.neighbor.NeighborListModel;
+import com.gntsoft.flagmon.server.FMModel;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 import com.pluslibrary.utils.PlusViewHolder;
@@ -26,10 +27,10 @@ import java.util.ArrayList;
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class MyAlbumListAdapter extends FMCommonAdapter<NeighborListModel> {
+public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
 
 
-    public MyAlbumListAdapter(Context context, ArrayList<NeighborListModel> datas) {
+    public MyAlbumListAdapter(Context context, ArrayList<FMModel> datas) {
         super(context, R.layout.my_album_list_item, datas);
 
     }
@@ -41,21 +42,24 @@ public class MyAlbumListAdapter extends FMCommonAdapter<NeighborListModel> {
                     parent, false);
         }
 
-        NeighborListModel data = mDatas.get(position);
+        FMModel data = mDatas.get(position);
         TextView content = PlusViewHolder.get(convertView, R.id.content);
         TextView date = PlusViewHolder.get(convertView, R.id.date);
         TextView reply = PlusViewHolder.get(convertView, R.id.reply);
         TextView pin = PlusViewHolder.get(convertView, R.id.pin);
         TextView distance = PlusViewHolder.get(convertView, R.id.distance);
-
+//큰이미지 url 필요!!
         ImageView bigImg = PlusViewHolder.get(convertView, R.id.big_img);
-        bigImg.setImageResource(data.getBigImg());
+        mImageLoader.displayImage(
+                data.getImgUrl(), bigImg,
+                mOption);
 
-        content.setText(data.getContent());
+        content.setText(data.getMemo());
         date.setText(data.getRegisterDate());
         reply.setText(data.getReplyCount());
-        pin.setText(data.getPinCount());
-        distance.setText(data.getDistance());
+        pin.setText(data.getScrapCount());
+        //거리 처리!!
+        //distance.setText(data.getDistance());
 
         Button writeReply = PlusViewHolder.get(convertView, R.id.writeReply);
         writeReply.setOnClickListener(new PlusOnClickListener() {

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.gntsoft.flagmon.util.LoginChecker;
+import com.gntsoft.flagmon.utils.LoginChecker;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginActivity;
 import com.gntsoft.flagmon.reply.ReplyActivity;
