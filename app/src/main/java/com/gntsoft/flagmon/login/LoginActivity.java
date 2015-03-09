@@ -16,6 +16,7 @@ import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
 import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusStringEmailChecker;
@@ -53,9 +54,12 @@ public class LoginActivity  extends Activity implements PlusOnGetDataListener {
             return;
         switch (from) {
             case LOG_IN:
-                ServerResultModel model = (ServerResultModel) datas;
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
                 PlusToaster.doIt(this,model.getResult().equals("success")?"로그인되었습니다":"로그인되지 못했습니다");
-                if(model.getResult().equals("success"))saveLoginInfo(model.getMsg());
+                if(model.getResult().equals("success")) {
+                    saveLoginInfo(model.getMsg());
+                    finish();
+                }
                 break;
         }
 
@@ -165,7 +169,7 @@ public class LoginActivity  extends Activity implements PlusOnGetDataListener {
 
 
         new PlusHttpClient(this, this, false).execute(LOG_IN,
-                FMApiConstants.LOG_IN, new ServerResultParser(),
+                FMApiConstants.LOG_IN, new PlusInputStreamStringConverter(),
                 postParams);
 
     }

@@ -13,10 +13,9 @@ import java.io.InputStream;
  */
 public class ServerResultParser {
 
-    public ServerResultModel doIt(InputStream in) {
+    public ServerResultModel doIt(String serverResultData) {
         ServerResultModel model = new ServerResultModel();
         try {
-            String serverResultData = (String) new PlusInputStreamStringConverter().doIt(in);
 
             JSONObject jsonObject = new JSONObject(serverResultData);
 

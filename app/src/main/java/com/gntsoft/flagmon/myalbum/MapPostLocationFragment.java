@@ -10,6 +10,7 @@ import android.graphics.PorterDuffXfermode;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -35,6 +37,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pluslibrary.server.PlusOnGetDataListener;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MapPostLocationFragment extends FMCommonFragment implements
         PlusOnGetDataListener, LocationListener {
@@ -55,26 +60,123 @@ public class MapPostLocationFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //refreshList();
-        // getCurrentLocation();
 
-        showSampleMarker();
+
+        showMarker();
     }
 
 
-    private void showSampleMarker() {
+    private void showMarker() {
+        String filepath =  this.getArguments().getString(FMConstants.KEY_IMAGE_PATH);
+        PhotoLocation photoLocation =
+                getPhotoLocation(filepath);
 
-        double lat = 36.986828;
-        double lng = 127.936019;
-        LatLng position = new LatLng(lat, lng);
+        LatLng position = new LatLng(photoLocation.getLat(), photoLocation.getLon());
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position,13);
+        mGoogleMap.animateCamera(cameraUpdate);
 
         mGoogleMap.addMarker(new MarkerOptions().position(position)
-                .icon(getMarKerImg(R.drawable.sandarapark)).anchor(0f, 1.0f));
+                .icon(getMarKerImg(filepath)).anchor(0f, 1.0f));
     }
 
-    private BitmapDescriptor getMarKerImg(int imgId) {
+    public PhotoLocation getPhotoLocation(String filepath) {
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String LATITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+        String LATITUDE_REF = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+        String LONGITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+        String LONGITUDE_REF = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+
+        // your Final lat Long Values
+        Double lat, lon;
+        PhotoLocation photoLocation = new PhotoLocation();
+        if ((LATITUDE != null)
+                && (LATITUDE_REF != null)
+                && (LONGITUDE != null)
+                && (LONGITUDE_REF != null)) {
+
+            if (LATITUDE_REF.equals("N")) {
+                lat = convertToDegree(LATITUDE);
+            } else {
+                lat = 0 - convertToDegree(LATITUDE);
+            }
+
+            if (LONGITUDE_REF.equals("E")) {
+                lon = convertToDegree(LONGITUDE);
+            } else {
+                lon = 0 - convertToDegree(LONGITUDE);
+            }
+
+
+            photoLocation.setLat(lat);
+            photoLocation.setLon(lon);
+
+
+        }else {
+            //사진에 gps 정보가 없는 경우 임시로 서울을 지정!!
+            photoLocation.setLat(37.561562);
+            photoLocation.setLon(127.010149);
+
+        }
+
+        return photoLocation;
+    }
+
+
+    private Double convertToDegree(String stringDMS){
+        Double result = null;
+        String[] DMS = stringDMS.split(",", 3);
+
+        String[] stringD = DMS[0].split("/", 2);
+        Double D0 = new Double(stringD[0]);
+        Double D1 = new Double(stringD[1]);
+        Double FloatD = D0/D1;
+
+        String[] stringM = DMS[1].split("/", 2);
+        Double M0 = new Double(stringM[0]);
+        Double M1 = new Double(stringM[1]);
+        Double FloatM = M0/M1;
+
+        String[] stringS = DMS[2].split("/", 2);
+        Double S0 = new Double(stringS[0]);
+        Double S1 = new Double(stringS[1]);
+        Double FloatS = S0/S1;
+
+        result = new Double(FloatD + (FloatM/60) + (FloatS/3600));
+
+        return result;
+
+
+    };
+
+
+//
+//    @Override
+//    public String toString() {
+//        // TODO Auto-generated method stub
+//        return (String.valueOf(Latitude)
+//                + ", "
+//                + String.valueOf(Longitude));
+//    }
+//
+//    public int getLatitudeE6(){
+//        return (int)(Latitude*1000000);
+//    }
+//
+//    public int getLongitudeE6(){
+//        return (int)(Longitude*1000000);
+//    }
+
+    private BitmapDescriptor getMarKerImg(String filePath) {
         //마스킹
-        Bitmap original = BitmapFactory.decodeResource(getResources(), imgId);
+        File imgFile = new File(filePath);
+        Bitmap original = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+        Bitmap scaledOriginal = getScaledOriginal(original);
         Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
         Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
@@ -82,7 +184,7 @@ public class MapPostLocationFragment extends FMCommonFragment implements
         Canvas mCanvas = new Canvas(result);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        mCanvas.drawBitmap(original, 0, 0, null);
+        mCanvas.drawBitmap(scaledOriginal, 0, 0, null);
         mCanvas.drawBitmap(mask, 0, 0, paint);
         mCanvas.drawBitmap(frame, 0, 0, null);
         paint.setXfermode(null);
@@ -90,6 +192,32 @@ public class MapPostLocationFragment extends FMCommonFragment implements
 
         return BitmapDescriptorFactory.fromBitmap(result);
 
+
+    }
+
+    private Bitmap getScaledOriginal(Bitmap original) {
+
+        int viewHeight = 142;
+
+        float width = original.getWidth();
+        float height = original.getHeight();
+
+
+
+// Calculate image's size by maintain the image's aspect ratio
+        if(height > viewHeight)
+        {
+            float percente = (float)(height / 100);
+            float scale = (float)(viewHeight / percente);
+            width *= (scale / 100);
+            height *= (scale / 100);
+        }
+
+
+
+// Resizing image
+
+        return Bitmap.createScaledBitmap(original, (int) width, (int) height, true);
 
     }
 
@@ -116,7 +244,7 @@ public class MapPostLocationFragment extends FMCommonFragment implements
                     LatLng position = new LatLng(lat, lng);
 
 
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 7);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position,8);
                     mGoogleMap.moveCamera(cameraUpdate);
 
                     mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {

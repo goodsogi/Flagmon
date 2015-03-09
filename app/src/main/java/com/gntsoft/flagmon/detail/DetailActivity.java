@@ -53,10 +53,11 @@ public class DetailActivity extends Activity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        initScrollView();
         makeGridView();
         showMainPhoto();
         checkLogin();
-        initScrollView();
+
 
         //addListenerToMainImage();
       }
@@ -64,6 +65,7 @@ public class DetailActivity extends Activity implements
     private void initScrollView() {
         mScrollView = (com.gntsoft.flagmon.utils.ScrollViewExt) findViewById(R.id.scrollView);
         mScrollView.setScrollViewListener(this);
+
     }
 
     private void checkLogin() {
@@ -140,6 +142,12 @@ public class DetailActivity extends Activity implements
 
         PlusListHeightCalculator.setGridViewHeightBasedOnChildren(this,
                 gridview, 5f, 66);
+        //scrollview의 맨위로 올리는데 아래 코드만 작동
+        gridview.post(new Runnable() {
+            public void run() {
+                mScrollView.fullScroll(View.FOCUS_UP);
+            }
+        });
     }
 
     public void goBack(View v) {

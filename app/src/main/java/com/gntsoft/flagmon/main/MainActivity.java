@@ -1,11 +1,15 @@
 package com.gntsoft.flagmon.main;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.gntsoft.flagmon.FMConstants;
+import com.gntsoft.flagmon.FMTabManager;
 import com.gntsoft.flagmon.friend.FriendManager;
 import com.gntsoft.flagmon.myalbum.MyAlbumManager;
 import com.gntsoft.flagmon.neighbor.NeighborManager;
@@ -32,18 +36,35 @@ public class MainActivity extends FragmentActivity {
     private FriendManager mFriendManager;
     private NeighborManager mNeighborManager;
     private SettingManager mSettingManager;
+    private FMTabManager mSelectedTabManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setLoginFalse();
         createTabManagers();
         Button neighbor = (Button) findViewById(R.id.tab_neighbor);
         changeTab(neighbor);
 
 
 
+    }
+
+    private void setLoginFalse() {
+        SharedPreferences sharedPreference = getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = sharedPreference.edit();
+        e.putBoolean(FMConstants.KEY_IS_LOGIN, false);
+        e.commit();
+
+    }
+
+
+    public void onResume() {
+        super.onResume();
+        if(mSelectedTabManager != null) mSelectedTabManager.chooseFragment();
     }
 
     private void createTabManagers() {
@@ -85,18 +106,22 @@ public class MainActivity extends FragmentActivity {
             case R.id.tab_neighbor:
                 neighbor.setSelected(true);
                 mNeighborManager.chooseFragment();
+                mSelectedTabManager = mNeighborManager;
                 break;
             case R.id.tab_friend:
                 friend.setSelected(true);
                 mFriendManager.chooseFragment();
+                mSelectedTabManager = mFriendManager;
                 break;
             case R.id.tab_myalbum:
                 myalbum.setSelected(true);
                 mMyAlbumManager.chooseFragment();
+                mSelectedTabManager = mMyAlbumManager;
                 break;
             case R.id.tab_setting:
                 setting.setSelected(true);
                 mSettingManager.chooseFragment();
+                mSelectedTabManager = mSettingManager;
                 break;
 
 

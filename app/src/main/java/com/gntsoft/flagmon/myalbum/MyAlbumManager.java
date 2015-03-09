@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.gntsoft.flagmon.FMConstants;
+import com.gntsoft.flagmon.FMTabManager;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginFragment;
 import com.gntsoft.flagmon.utils.LoginChecker;
@@ -17,7 +18,7 @@ import com.pluslibrary.utils.PlusClickGuard;
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class MyAlbumManager {
+public class MyAlbumManager implements FMTabManager {
 
     private final Activity mActivity;
 
@@ -128,7 +129,7 @@ public class MyAlbumManager {
     private void goToPost(View v) {
         PlusClickGuard.doIt(v);
 
-        Intent intent = new Intent(mActivity, PostActivity.class);
+        Intent intent = new Intent(mActivity, PostChoosePhotoActivity.class);
         mActivity.startActivity(intent);
 
     }

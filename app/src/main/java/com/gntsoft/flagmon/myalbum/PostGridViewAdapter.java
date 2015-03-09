@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.R;
+import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusViewHolder;
 
 import java.util.ArrayList;
@@ -14,10 +15,10 @@ import java.util.ArrayList;
 /**
  * Created by johnny on 15. 2. 12.
  */
-public class PostGridViewAdapter extends FMCommonAdapter<Integer> {
+public class PostGridViewAdapter extends FMCommonAdapter<GalleryPhotoModel> {
 
 
-    public PostGridViewAdapter(Context context, ArrayList<Integer> datas) {
+    public PostGridViewAdapter(Context context, ArrayList<GalleryPhotoModel> datas) {
         super(context, R.layout.post_gridview_item, datas);
     }
 
@@ -30,7 +31,9 @@ public class PostGridViewAdapter extends FMCommonAdapter<Integer> {
                     parent, false);
         }
         ImageView img = PlusViewHolder.get(convertView, R.id.gridview_img);
-        img.setImageResource(mDatas.get(position));
+        img.setImageBitmap(mDatas.get(position).getThumnail());
+
+
 
         return convertView;
     }

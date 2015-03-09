@@ -26,4 +26,7 @@ public class FMConstants {
     public static final int CONTENT_LIST = 1;
     public static final String KEY_IS_GO_TO_FRIEND_MANAGEMENT = "isGoToFriendManagement";
     public static final String KEY_USER_AUTH_KEY = "userAuthKey";
+    public static final String KEY_IMAGE_PATH = "imagePath";
+    public static final String KEY_PHOTO_LAT = "photoLat";
+    public static final String KEY_PHOTO_LON = "photoLon";
 }

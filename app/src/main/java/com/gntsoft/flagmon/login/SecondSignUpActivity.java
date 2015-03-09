@@ -18,6 +18,7 @@ import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
 import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusOnClickListener;
@@ -214,7 +215,7 @@ public class SecondSignUpActivity extends Activity implements PlusOnGetDataListe
 //        postParams.add(new BasicNameValuePair("alarm1", vibrationNoti));
 
         new PlusHttpClient(this, this, false).execute(SIGN_UP,
-                FMApiConstants.SIGN_UP, new ServerResultParser(),
+                FMApiConstants.SIGN_UP, new PlusInputStreamStringConverter(),
                 postParams);
     }
 
@@ -228,8 +229,9 @@ public class SecondSignUpActivity extends Activity implements PlusOnGetDataListe
 
             case SIGN_UP:
 
-                ServerResultModel model = (ServerResultModel) datas;
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
                 PlusToaster.doIt(this,model.getResult().equals("success")?"회원가입되었습니다":"회원가입되지 못했습니다");
+                if(model.getResult().equals("success")) finish();
                 break;
 
         }

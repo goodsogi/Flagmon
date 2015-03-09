@@ -11,9 +11,11 @@ import android.widget.EditText;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMMapParser;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
 import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusStringEmailChecker;
@@ -138,7 +140,7 @@ public class SignUpActivity extends Activity implements PlusOnGetDataListener {
         postParams.add(new BasicNameValuePair("user_email", userEmail));
 
         new PlusHttpClient(this, this, false).execute(CHECK_EMAIL,
-                FMApiConstants.CHECK_EMAIL, new ServerResultParser(),
+                FMApiConstants.CHECK_EMAIL, new PlusInputStreamStringConverter(),
                 postParams);
     }
 
@@ -170,7 +172,7 @@ public class SignUpActivity extends Activity implements PlusOnGetDataListener {
 
             case CHECK_EMAIL:
 
-                ServerResultModel model = (ServerResultModel) datas;
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
                 PlusToaster.doIt(this, model.getResult().equals("success") ? "이메일을 사용할 수 있습니다" :
                         model.getMsg().equals("not email")? "이메일이 유효하지 않습니다":"이미 사용중인 이메일입니다");
                 if(model.getResult().equals("success")) checkPasswordAndName();

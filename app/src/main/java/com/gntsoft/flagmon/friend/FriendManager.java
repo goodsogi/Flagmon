@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.gntsoft.flagmon.FMConstants;
+import com.gntsoft.flagmon.FMTabManager;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginFragment;
 import com.gntsoft.flagmon.utils.LoginChecker;
@@ -17,7 +18,7 @@ import com.pluslibrary.utils.PlusClickGuard;
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class FriendManager {
+public class FriendManager implements FMTabManager {
 
     private final Activity mActivity;
 

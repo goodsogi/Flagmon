@@ -80,10 +80,10 @@
             android:theme="@style/noTheme" android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".myalbum.PostActivity"
+            android:name=".myalbum.PostChoosePhotoActivity"
             android:theme="@style/noTheme" android:screenOrientation="portrait"/>
         <activity
-            android:name=".myalbum.PostLocationActivity"
+            android:name=".myalbum.PostSetLocationActivity"
             android:theme="@style/noTheme" android:screenOrientation="portrait"/>
 
         <activity

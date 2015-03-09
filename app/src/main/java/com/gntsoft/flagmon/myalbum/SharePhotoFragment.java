@@ -10,7 +10,6 @@ import android.widget.FrameLayout;
 
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.setting.FindFriendActivity;
 import com.pluslibrary.utils.PlusClickGuard;
 
 /**
@@ -63,7 +62,7 @@ public class SharePhotoFragment extends FMCommonFragment {
     private void goToPost(View v) {
         PlusClickGuard.doIt(v);
 
-        Intent intent = new Intent(mActivity, PostActivity.class);
+        Intent intent = new Intent(mActivity, PostChoosePhotoActivity.class);
         mActivity.startActivity(intent);
 
     }
