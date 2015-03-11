@@ -13,4 +13,7 @@ public class FMApiConstants {
     public static final String GET_MAP_DATA = API_MAIN + "maplist.php";
     public static final String GET_LIST_DATA =API_MAIN + "postlist.php";
     public static final String SEND_POST = API_MAIN + "posting_ok.php";
+    public static final String GET_DETAIL = API_MAIN + "postview.php";
+    public static final String GET_COMMENTS = API_MAIN + "commentlist.php";
+    public static final String SEND_COMMENT = API_MAIN + "comment_ok.php";
 }

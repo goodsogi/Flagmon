@@ -24,7 +24,8 @@
             android:text="이전"
             android:onClick="goBack"
             android:textColor="#ffffff"
-            android:textSize="22sp"
+            android:clickable="true"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <View
@@ -40,7 +41,7 @@
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:text="완료"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

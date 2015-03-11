@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/navigation_bar_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="27.5dp"
+            android:layout_height="27.5dp"
+            android:background="@drawable/back_btn"
+            android:onClick="goBack" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="이름으로 검색"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#eff1f3"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+
+        <ImageView
+            android:layout_width="55dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="15dp" android:background="@drawable/friend_search"/>
+
+        <!--아래 두 속성을 지정해야 imeOptions가 작동함 -->
+        <!--android:inputType="text"-->
+        <!--android:imeOptions="actionSearch"-->
+
+        <EditText
+            android:id="@+id/searchInput"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:paddingLeft="3dp"
+            android:paddingRight="15dp"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:background="#00000000"
+            android:hint="검색할 이름을 입력하세요"
+            android:textColorHint="#9a9a9a"
+            android:layout_weight="1" />
+
+
+        <Button
+            android:layout_width="43dp"
+            android:layout_height="29dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/location_search_button_selector"
+            android:onClick="doSearch" />
+
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+
+</LinearLayout>

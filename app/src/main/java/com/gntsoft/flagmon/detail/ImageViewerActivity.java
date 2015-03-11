@@ -14,6 +14,7 @@ import android.view.View.OnTouchListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -30,7 +31,7 @@ import com.pluslibrary.utils.PlusScreenMeasureTool;
  * @author jeff
  * 
  */
-public class ImageViewerActivity extends Activity implements OnTouchListener {
+public class ImageViewerActivity extends FMCommonActivity implements OnTouchListener {
 
 	// 이미지 다운로드
 	protected ImageLoader mImageLoader;
@@ -80,8 +81,7 @@ public class ImageViewerActivity extends Activity implements OnTouchListener {
 		// 이미지
 		final ImageView img = (ImageView) findViewById(R.id.img);
 
-        //샘플처리
-        img.setImageBitmap(getScaledRatioBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.sandarapark)));
+
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -91,44 +91,43 @@ public class ImageViewerActivity extends Activity implements OnTouchListener {
         img.setOnTouchListener(ImageViewerActivity.this);
 
 
-        //!!주석해제
-//		mImageLoader.loadImage(
-//				getIntent().getStringExtra(FMConstants.KEY_IMAGE_URL),
-//				mOption, new ImageLoadingListener() {
-//
-//					@Override
-//					public void onLoadingStarted(String arg0, View arg1) {
-//						// TODO Auto-generated method stub
-//
-//					}
-//
-//					@Override
-//					public void onLoadingFailed(String arg0, View arg1,
-//							FailReason arg2) {
-//
-//					}
-//
-//					@Override
-//					public void onLoadingComplete(String arg0, View arg1,
-//							Bitmap bitmap) {
-//
-//						img.setImageBitmap(getScaledRatioBitmap(bitmap));
-//
-//						FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-//								FrameLayout.LayoutParams.MATCH_PARENT,
-//								FrameLayout.LayoutParams.MATCH_PARENT);
-//
-//						img.setLayoutParams(params);
-//						img.setOnTouchListener(ImageViewerActivity.this);
-//
-//					}
-//
-//					@Override
-//					public void onLoadingCancelled(String arg0, View arg1) {
-//						// TODO Auto-generated method stub
-//
-//					}
-//				});
+		mImageLoader.loadImage(
+				getIntent().getStringExtra(FMConstants.KEY_IMAGE_URL),
+				mOption, new ImageLoadingListener() {
+
+					@Override
+					public void onLoadingStarted(String arg0, View arg1) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onLoadingFailed(String arg0, View arg1,
+							FailReason arg2) {
+
+					}
+
+					@Override
+					public void onLoadingComplete(String arg0, View arg1,
+							Bitmap bitmap) {
+
+						img.setImageBitmap(getScaledRatioBitmap(bitmap));
+
+						FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+								FrameLayout.LayoutParams.MATCH_PARENT,
+								FrameLayout.LayoutParams.MATCH_PARENT);
+
+						img.setLayoutParams(params);
+						img.setOnTouchListener(ImageViewerActivity.this);
+
+					}
+
+					@Override
+					public void onLoadingCancelled(String arg0, View arg1) {
+						// TODO Auto-generated method stub
+
+					}
+				});
 
 	}
 

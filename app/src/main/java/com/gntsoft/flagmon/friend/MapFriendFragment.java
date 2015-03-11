@@ -3,6 +3,7 @@ package com.gntsoft.flagmon.friend;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.detail.DetailActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMMapParser;
 import com.gntsoft.flagmon.server.FMModel;
@@ -79,14 +81,15 @@ public class MapFriendFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getDataFromServer();
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
-    public void getDataFromServer() {
+    public void getDataFromServer(String sortType) {
 
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        postParams.add(new BasicNameValuePair("sort", sortType));
         if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
 
 
@@ -129,20 +132,17 @@ public class MapFriendFragment extends FMCommonFragment implements
     }
 
     private void sortByPin() {
-        PlusToaster.doIt(mActivity, "준비중...");
-        //구현!!
+        getDataFromServer(FMConstants.SORT_BY_PIN);
     }
 
 
 
     private void sortByRecent() {
-        PlusToaster.doIt(mActivity,"준비중...");
-        //구현!!
+        getDataFromServer(FMConstants.SORT_BY_RECENT);
     }
 
     private void sortByPopular() {
-        PlusToaster.doIt(mActivity,"준비중...");
-        //구현!!
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
 
@@ -348,7 +348,7 @@ public class MapFriendFragment extends FMCommonFragment implements
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
 
-                showMarkers(bitmap,mapDataModel,position);
+                showMarkers(bitmap,mapDataModel);
 
 
             }
@@ -365,11 +365,25 @@ public class MapFriendFragment extends FMCommonFragment implements
 
     }
 
-    private void showMarkers(Bitmap bitmap,FMModel mapDataModel, final int position) {
+    private void showMarkers(Bitmap bitmap,FMModel mapDataModel) {
         LatLng latLng = new LatLng(Double.parseDouble(mapDataModel.getLat()), Double.parseDouble(mapDataModel.getLon()));
-        mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet("" + position)
+        mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet(mapDataModel.getIdx())
                 .icon(getMarKerImg(bitmap)).anchor(0f, 1.0f));
-        //마커 클릭처리 필요!!
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                goToDetail(marker.getSnippet());
+                return false;
+            }
+        });
+    }
+
+    private void goToDetail(String idx) {
+        Intent intent = new Intent(mActivity, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+
+        startActivity(intent);
     }
 
     private BitmapDescriptor getMarKerImg(Bitmap original) {

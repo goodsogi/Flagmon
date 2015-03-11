@@ -45,14 +45,15 @@ public class ListNeighborFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getDataFromServer();
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
-    public void getDataFromServer() {
+    public void getDataFromServer(String sortType) {
 
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        postParams.add(new BasicNameValuePair("sort", sortType));
         if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
 
 
@@ -63,8 +64,10 @@ public class ListNeighborFragment extends FMCommonFragment implements
 
 
 
-    private void goToDetail() {
+    private void goToDetail(String idx) {
         Intent intent = new Intent(mActivity, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+
         startActivity(intent);
     }
 
@@ -126,18 +129,17 @@ public class ListNeighborFragment extends FMCommonFragment implements
     }
 
     private void sortByDistance() {
-        PlusToaster.doIt(mActivity, "준비중...");
-        //구현!!
+
+        //sort 값 수정!!
+        getDataFromServer(FMConstants.SORT_BY_DISTANCE);
     }
 
     private void sortByRecent() {
-        PlusToaster.doIt(mActivity,"준비중...");
-        //구현!!
+        getDataFromServer(FMConstants.SORT_BY_RECENT);
     }
 
     private void sortByPopular() {
-        PlusToaster.doIt(mActivity,"준비중...");
-        //구현!!
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
 
@@ -153,7 +155,7 @@ public class ListNeighborFragment extends FMCommonFragment implements
 
     }
 
-    private void makeList(ArrayList<FMModel> datas) {
+    private void makeList(final ArrayList<FMModel> datas) {
 
         ListView list = (ListView) mActivity
                 .findViewById(R.id.list_neighbor);
@@ -164,7 +166,7 @@ public class ListNeighborFragment extends FMCommonFragment implements
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToDetail();
+                goToDetail(datas.get(position).getIdx());
             }
         });
     }

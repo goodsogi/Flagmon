@@ -1,7 +1,9 @@
 package com.gntsoft.flagmon.myalbum;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,28 +14,39 @@ import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.FMTabManager;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginFragment;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMListParser;
+import com.gntsoft.flagmon.server.FMModel;
 import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
+import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class MyAlbumManager implements FMTabManager {
+public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
 
     private final Activity mActivity;
+    private static final int GET_LIST_DATA = 0;
 
     public MyAlbumManager(Activity activity) {
         mActivity = activity;
     }
 
     public void chooseFragment() {
-        if (!LoginChecker.isLogIn(mActivity)) {
+        if (!LoginChecker.isLogIn(mActivity))
             showLogin(FMConstants.TAB_MYALBUM);
-        } else if (hasPost()) {
-            showMyAlbumTopBar();
-            addButtonListener();
-            showMapMyAlbum();
-        } else showSharePhotoFragment();
+         else checkIfhasPost();
+
+
     }
 
     private void addButtonListener() {
@@ -142,10 +155,49 @@ public class MyAlbumManager implements FMTabManager {
 
     }
 
-    private boolean hasPost() {
-        //!!구현
+    private boolean checkIfhasPost() {
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
+        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
+                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
+                postParams);
 
         return false;
+    }
+
+    protected String getUserAuthKey() {
+        SharedPreferences sharedPreference = mActivity.getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY,"");
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+
+        switch (from) {
+            case GET_LIST_DATA:
+                handleHasPost(new FMListParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    private void handleHasPost(ArrayList<FMModel> fmModels) {
+        if(fmModels != null && fmModels.size() > 0) {
+            showMapMyAlbumFragment();
+        } else {
+            showSharePhotoFragment();
+        }
+    }
+
+    private void showMapMyAlbumFragment() {
+        showMyAlbumTopBar();
+        addButtonListener();
+        showMapMyAlbum();
     }
 
 }

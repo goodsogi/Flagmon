@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginFragment;
@@ -38,14 +39,17 @@ import java.util.List;
 /**
  * Created by johnny on 15. 3. 4.
  */
-public class PostSetLocationActivity extends Activity implements
+public class PostSetLocationActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
     private static final int SEND_POST = 0;
+    private Double mPhotoLat;
+    private Double mPhotoLon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_set_location);
+        getPhotoLatLon();
         showMap();
     }
 
@@ -56,6 +60,8 @@ public class PostSetLocationActivity extends Activity implements
 
         Bundle bundle = new Bundle();
         bundle.putString(FMConstants.KEY_IMAGE_PATH, getIntent().getStringExtra(FMConstants.KEY_IMAGE_PATH));
+        bundle.putDouble(FMConstants.KEY_PHOTO_LAT, mPhotoLat);
+        bundle.putDouble(FMConstants.KEY_PHOTO_LON, mPhotoLon);
         MapPostLocationFragment fragment = new MapPostLocationFragment();
         fragment.setArguments(bundle);
 
@@ -74,9 +80,6 @@ public class PostSetLocationActivity extends Activity implements
         barChooseShareType.setVisibility(View.VISIBLE);
     }
 
-    public void goBack(View v) {
-        finish();
-    }
 
 
     public void onBackPressed() {
@@ -113,8 +116,7 @@ public class PostSetLocationActivity extends Activity implements
         }
 
         String imgUrl = getIntent().getStringExtra(FMConstants.KEY_IMAGE_PATH);
-        PhotoLocation photoLocation =
-                getPhotoLocation(imgUrl);
+
 
         MultipartEntity entity = new MultipartEntity();
         try {
@@ -128,9 +130,9 @@ public class PostSetLocationActivity extends Activity implements
             entity.addPart("memo", new StringBody(
                     photoDescription));
             entity.addPart("lat", new StringBody(String.valueOf(
-                    photoLocation.getLat())));
+                    mPhotoLat)));
             entity.addPart("lon", new StringBody(String.valueOf(
-                    photoLocation.getLon())));
+                    mPhotoLon)));
             entity.addPart("update", new StringBody(
                     getPhotoTakenTime(imgUrl)));
 
@@ -239,6 +241,24 @@ public class PostSetLocationActivity extends Activity implements
 
 
     };
+
+    public void getPhotoLatLon() {
+        String imgPath = getIntent().getStringExtra(FMConstants.KEY_IMAGE_PATH);
+        PhotoLocation photoLocation =
+                getPhotoLocation(imgPath);
+
+        mPhotoLat = photoLocation.getLat();
+        mPhotoLon = photoLocation.getLon();
+
+    }
+
+    public void setPhotoLat(double latitude) {
+        mPhotoLat = latitude;
+    }
+
+    public void setPhotoLon(double longitude) {
+        mPhotoLon = longitude;
+    }
 
 
 //

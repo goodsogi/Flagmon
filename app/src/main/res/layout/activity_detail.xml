@@ -18,10 +18,16 @@
             android:onClick="goBack" />
 
         <TextView
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="이전"
-            android:textColor="#ffffff" />
+            android:clickable="true"
+            android:onClick="goBack"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
 
         <View
             android:layout_width="0px"
@@ -29,9 +35,9 @@
             android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="산다라박"
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -101,7 +107,7 @@
                 android:layout_width="26dp"
                 android:layout_height="26dp"
                 android:layout_marginLeft="30dp"
-                android:onClick="goToReply"
+                android:onClick="goToCommentActivity"
                 android:src="@drawable/p05_box_icon_0001" />
 
             <TextView
@@ -110,7 +116,7 @@
                 android:layout_height="26dp"
                 android:layout_marginLeft="2dp"
                 android:gravity="center"
-                android:onClick="goToReply"
+                android:onClick="goToCommentActivity"
                 android:text="50"
                 android:textColor="#ffffff"
                 android:textSize="12sp" />

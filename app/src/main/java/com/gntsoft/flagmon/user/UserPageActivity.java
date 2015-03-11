@@ -7,17 +7,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.gntsoft.flagmon.FMCommonActivity;
+import com.gntsoft.flagmon.comment.CommentActivity;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginActivity;
-import com.gntsoft.flagmon.reply.ReplyActivity;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
 
 /**
  * Created by johnny on 15. 2. 27.
  */
-public class UserPageActivity extends Activity {
+public class UserPageActivity extends FMCommonActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +28,9 @@ public class UserPageActivity extends Activity {
 
     }
 
-    public void goBack(View v) {
-        finish();
-    }
     public void goToReply(View v) {
         PlusClickGuard.doIt(v);
-        Intent intent = new Intent(this, ReplyActivity.class);
+        Intent intent = new Intent(this, CommentActivity.class);
         startActivity(intent);
 
     }

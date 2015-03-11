@@ -17,9 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -34,6 +36,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusOnClickListener;
 
@@ -47,9 +51,7 @@ public class MapDetailFragment extends FMCommonFragment implements
     private LocationManager mLocationManager;
     private boolean mIsGpsCatched;
     private static final int GET_MAP_DATA = 0;
-    private SupportMapFragment fragment;
     private MapView mMapView;
-    private Button mMyLocationButton;
 
     public MapDetailFragment() {
         // TODO Auto-generated constructor stub
@@ -59,26 +61,16 @@ public class MapDetailFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //refreshList();
-        // getCurrentLocation();
+        getImageFromServer();
 
-        showSampleMarker();
     }
 
 
-    private void showSampleMarker() {
 
-        double lat = 36.986828;
-        double lng = 127.936019;
-        LatLng position = new LatLng(lat, lng);
 
-        mGoogleMap.addMarker(new MarkerOptions().position(position)
-                .icon(getMarKerImg(R.drawable.sandarapark)).anchor(0f, 1.0f));
-    }
-
-    private BitmapDescriptor getMarKerImg(int imgId) {
+    private BitmapDescriptor getMarKerImg(Bitmap original) {
         //마스킹
-        Bitmap original = BitmapFactory.decodeResource(getResources(), imgId);
+        Bitmap scaledOriginal = getScaledOriginal(original);
         Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
         Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
@@ -86,7 +78,7 @@ public class MapDetailFragment extends FMCommonFragment implements
         Canvas mCanvas = new Canvas(result);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        mCanvas.drawBitmap(original, 0, 0, null);
+        mCanvas.drawBitmap(scaledOriginal, 0, 0, null);
         mCanvas.drawBitmap(mask, 0, 0, paint);
         mCanvas.drawBitmap(frame, 0, 0, null);
         paint.setXfermode(null);
@@ -94,6 +86,32 @@ public class MapDetailFragment extends FMCommonFragment implements
 
         return BitmapDescriptorFactory.fromBitmap(result);
 
+
+    }
+
+    private Bitmap getScaledOriginal(Bitmap original) {
+
+        int viewHeight = 142;
+
+        float width = original.getWidth();
+        float height = original.getHeight();
+
+
+
+// Calculate image's size by maintain the image's aspect ratio
+        if(height > viewHeight)
+        {
+            float percente = (float)(height / 100);
+            float scale = (float)(viewHeight / percente);
+            width *= (scale / 100);
+            height *= (scale / 100);
+        }
+
+
+
+// Resizing image
+
+        return Bitmap.createScaledBitmap(original, (int) width, (int) height, true);
 
     }
 
@@ -180,7 +198,6 @@ public class MapDetailFragment extends FMCommonFragment implements
     @Override
     public void onLocationChanged(Location location) {
         removeLocationListener();
-        mMyLocationButton.setSelected(true);
         mIsGpsCatched = true;
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
         //showHouseMarkers();
@@ -282,4 +299,53 @@ public class MapDetailFragment extends FMCommonFragment implements
 
     }
 
+    public void getImageFromServer() {
+        mImageLoader.loadImage(
+                getArguments().getString(FMConstants.KEY_IMAGE_URL),
+                mOption, new ImageLoadingListener() {
+
+                    @Override
+                    public void onLoadingStarted(String arg0, View arg1) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String arg0, View arg1,
+                                                FailReason arg2) {
+
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String arg0, View arg1,
+                                                  Bitmap bitmap) {
+
+                        showMarker(bitmap);
+
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String arg0, View arg1) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
+    }
+
+    private void showMarker(Bitmap bitmap) {
+
+        Double lat = Double.parseDouble(getArguments().getString(FMConstants.KEY_PHOTO_LAT));
+        Double lon = Double.parseDouble(getArguments().getString(FMConstants.KEY_PHOTO_LON));
+
+        LatLng position = new LatLng(lat, lon);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position,13);
+        mGoogleMap.animateCamera(cameraUpdate);
+
+        mGoogleMap.addMarker(new MarkerOptions().position(position)
+                .icon(getMarKerImg(bitmap)).anchor(0f, 1.0f));
+
+    }
 }

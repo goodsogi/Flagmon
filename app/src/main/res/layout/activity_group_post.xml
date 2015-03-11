@@ -22,8 +22,10 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="이전"
+            android:onClick="goBack"
             android:textColor="#ffffff"
-            android:textSize="22sp"
+            android:clickable="true"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <View
@@ -37,7 +39,7 @@
             android:layout_marginRight="15dp"
             android:onClick="completePost"
             android:text="완료"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

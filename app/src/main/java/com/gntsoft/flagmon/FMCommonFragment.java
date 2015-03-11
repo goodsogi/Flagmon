@@ -30,9 +30,10 @@ public abstract class FMCommonFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 
 		mActivity = getActivity();
+        initUIL();
 		// 리스너 등록
 		addListenerButton();
-        initUIL();
+
 		
 	}
 

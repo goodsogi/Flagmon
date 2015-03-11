@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
@@ -33,7 +34,7 @@ import java.util.List;
 /**
  * Created by johnny on 15. 2. 26.
  */
-public class SecondSignUpActivity extends Activity implements PlusOnGetDataListener {
+public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetDataListener {
     private static final int SIGN_UP = 11;
     private EditText mUserSexView;
     String[] sexs = {"남", "여"};

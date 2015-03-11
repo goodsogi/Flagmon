@@ -6,6 +6,11 @@
         android:minSdkVersion="10"
         android:targetSdkVersion="19" />
 
-    <application />
+    <application>
+        <activity
+            android:name="com.pluslibrary.img.CameraAlbumActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/noTheme" />
+    </application>
 
 </manifest>

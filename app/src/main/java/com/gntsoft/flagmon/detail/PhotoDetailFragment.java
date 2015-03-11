@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusOnClickListener;
@@ -40,6 +41,7 @@ public class PhotoDetailFragment extends FMCommonFragment implements
     @Override
     protected void addListenerButton() {
         ImageView mainImage = (ImageView) mActivity.findViewById(R.id.main_img);
+        mImageLoader.displayImage(getArguments().getString(FMConstants.KEY_IMAGE_URL,""),mainImage, mOption);
         mainImage.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
@@ -50,6 +52,7 @@ public class PhotoDetailFragment extends FMCommonFragment implements
 
     private void goToImageViewer() {
         Intent intent = new Intent(mActivity, ImageViewerActivity.class);
+        intent.putExtra(FMConstants.KEY_IMAGE_URL, getArguments().getString(FMConstants.KEY_IMAGE_URL,""));
         startActivity(intent);
 
     }

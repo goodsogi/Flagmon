@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.neighbor.NeighborListAdapter;
 import com.gntsoft.flagmon.neighbor.NeighborListModel;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by johnny on 15. 3. 4.
  */
-public class GroupPostActivity extends Activity implements
+public class GroupPostActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
     private static final int GET_MAIN_LIST = 0;
     @Override
@@ -65,9 +66,6 @@ public class GroupPostActivity extends Activity implements
         return datas;
     }
 
-    public void goBack(View v) {
-        finish();
-    }
 
     public void completePost(View v) {
 //구현!!

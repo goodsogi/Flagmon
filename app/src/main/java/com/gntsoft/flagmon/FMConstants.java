@@ -29,4 +29,11 @@ public class FMConstants {
     public static final String KEY_IMAGE_PATH = "imagePath";
     public static final String KEY_PHOTO_LAT = "photoLat";
     public static final String KEY_PHOTO_LON = "photoLon";
+    public static final String KEY_POST_IDX = "postIdx";
+    public static final String SORT_BY_POPULAR = "0";
+    public static final String SORT_BY_RECENT = "1";
+    public static final String SORT_BY_DISTANCE = "2";
+    public static final String SORT_BY_PIN = "3";
+    public static final String KEY_KEYWORD = "keyword";
+    public static final String KEY_SORT_TYPE = "sortType";
 }

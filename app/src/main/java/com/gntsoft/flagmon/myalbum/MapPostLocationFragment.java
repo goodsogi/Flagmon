@@ -42,7 +42,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class MapPostLocationFragment extends FMCommonFragment implements
-        PlusOnGetDataListener, LocationListener {
+        PlusOnGetDataListener, LocationListener, GoogleMap.OnMarkerDragListener {
     private static final long DELAY_TIME = 1000 * 10;
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
@@ -68,109 +68,20 @@ public class MapPostLocationFragment extends FMCommonFragment implements
 
     private void showMarker() {
         String filepath =  this.getArguments().getString(FMConstants.KEY_IMAGE_PATH);
-        PhotoLocation photoLocation =
-                getPhotoLocation(filepath);
+        Double lat = this.getArguments().getDouble(FMConstants.KEY_PHOTO_LAT);
+        Double lon = this.getArguments().getDouble(FMConstants.KEY_PHOTO_LON);
 
-        LatLng position = new LatLng(photoLocation.getLat(), photoLocation.getLon());
+
+        LatLng position = new LatLng(lat, lon);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position,13);
         mGoogleMap.animateCamera(cameraUpdate);
 
         mGoogleMap.addMarker(new MarkerOptions().position(position)
-                .icon(getMarKerImg(filepath)).anchor(0f, 1.0f));
-    }
-
-    public PhotoLocation getPhotoLocation(String filepath) {
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(filepath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String LATITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-        String LATITUDE_REF = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
-        String LONGITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-        String LONGITUDE_REF = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
-
-        // your Final lat Long Values
-        Double lat, lon;
-        PhotoLocation photoLocation = new PhotoLocation();
-        if ((LATITUDE != null)
-                && (LATITUDE_REF != null)
-                && (LONGITUDE != null)
-                && (LONGITUDE_REF != null)) {
-
-            if (LATITUDE_REF.equals("N")) {
-                lat = convertToDegree(LATITUDE);
-            } else {
-                lat = 0 - convertToDegree(LATITUDE);
-            }
-
-            if (LONGITUDE_REF.equals("E")) {
-                lon = convertToDegree(LONGITUDE);
-            } else {
-                lon = 0 - convertToDegree(LONGITUDE);
-            }
-
-
-            photoLocation.setLat(lat);
-            photoLocation.setLon(lon);
-
-
-        }else {
-            //사진에 gps 정보가 없는 경우 임시로 서울을 지정!!
-            photoLocation.setLat(37.561562);
-            photoLocation.setLon(127.010149);
-
-        }
-
-        return photoLocation;
+                .icon(getMarKerImg(filepath)).anchor(0f, 1.0f).draggable(true));
     }
 
 
-    private Double convertToDegree(String stringDMS){
-        Double result = null;
-        String[] DMS = stringDMS.split(",", 3);
-
-        String[] stringD = DMS[0].split("/", 2);
-        Double D0 = new Double(stringD[0]);
-        Double D1 = new Double(stringD[1]);
-        Double FloatD = D0/D1;
-
-        String[] stringM = DMS[1].split("/", 2);
-        Double M0 = new Double(stringM[0]);
-        Double M1 = new Double(stringM[1]);
-        Double FloatM = M0/M1;
-
-        String[] stringS = DMS[2].split("/", 2);
-        Double S0 = new Double(stringS[0]);
-        Double S1 = new Double(stringS[1]);
-        Double FloatS = S0/S1;
-
-        result = new Double(FloatD + (FloatM/60) + (FloatS/3600));
-
-        return result;
-
-
-    };
-
-
-//
-//    @Override
-//    public String toString() {
-//        // TODO Auto-generated method stub
-//        return (String.valueOf(Latitude)
-//                + ", "
-//                + String.valueOf(Longitude));
-//    }
-//
-//    public int getLatitudeE6(){
-//        return (int)(Latitude*1000000);
-//    }
-//
-//    public int getLongitudeE6(){
-//        return (int)(Longitude*1000000);
-//    }
 
     private BitmapDescriptor getMarKerImg(String filePath) {
         //마스킹
@@ -258,6 +169,8 @@ public class MapPostLocationFragment extends FMCommonFragment implements
                             return false;
                         }
                     });
+
+                    mGoogleMap.setOnMarkerDragListener(MapPostLocationFragment.this);
                 }
                 break;
             case ConnectionResult.SERVICE_MISSING:
@@ -406,4 +319,21 @@ public class MapPostLocationFragment extends FMCommonFragment implements
 
     }
 
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        LatLng dragPosition = marker.getPosition();
+        ((PostSetLocationActivity) mActivity).setPhotoLat(dragPosition.latitude);
+        ((PostSetLocationActivity) mActivity).setPhotoLon(dragPosition.longitude);
+
+    }
 }

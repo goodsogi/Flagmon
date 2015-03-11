@@ -23,14 +23,22 @@
             android:gravity="center"
             android:text="검색"
             android:textColor="#ffffff"
-            android:textSize="22sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
+        <!--아래 두 속성을 지정해야 imeOptions가 작동함 -->
+        <!--android:inputType="text"-->
+        <!--android:imeOptions="actionSearch"-->
+
         <EditText
+            android:id="@+id/searchInput"
             android:layout_width="0px"
             android:layout_height="match_parent"
-            android:layout_marginLeft="7dp"
-            android:layout_marginRight="7dp"
+            android:layout_margin="7dp"
+            android:paddingLeft="7dp"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:background="@drawable/white_bar_bg"
             android:layout_weight="1" />
 
 

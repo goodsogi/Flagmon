@@ -199,7 +199,7 @@ ADDED from AndroidManifest.xml:78:9
 		ADDED from AndroidManifest.xml:80:13
 	android:name
 		ADDED from AndroidManifest.xml:79:13
-activity#com.gntsoft.flagmon.myalbum.PostActivity
+activity#com.gntsoft.flagmon.myalbum.PostChoosePhotoActivity
 ADDED from AndroidManifest.xml:82:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:84:44
@@ -207,7 +207,7 @@ ADDED from AndroidManifest.xml:82:9
 		ADDED from AndroidManifest.xml:84:13
 	android:name
 		ADDED from AndroidManifest.xml:83:13
-activity#com.gntsoft.flagmon.myalbum.PostLocationActivity
+activity#com.gntsoft.flagmon.myalbum.PostSetLocationActivity
 ADDED from AndroidManifest.xml:85:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:87:44
@@ -238,3 +238,11 @@ MERGED from com.android.support:support-v4:21.0.3:15:5
 	android:minSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
+activity#com.pluslibrary.img.CameraAlbumActivity
+ADDED from FlagMon5:plusLibrary:unspecified:10:9
+	android:screenOrientation
+		ADDED from FlagMon5:plusLibrary:unspecified:12:13
+	android:theme
+		ADDED from FlagMon5:plusLibrary:unspecified:13:13
+	android:name
+		ADDED from FlagMon5:plusLibrary:unspecified:11:13

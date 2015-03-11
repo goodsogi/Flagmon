@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.pluslibrary.utils.PlusClickGuard;
@@ -16,7 +17,7 @@ import com.pluslibrary.utils.PlusToaster;
 /**
  * Created by johnny on 15. 2. 27.
  */
-public class FindPasswordActivity  extends Activity {
+public class FindPasswordActivity  extends FMCommonActivity {
     final int DRAWABLE_LEFT = 0;
     final int DRAWABLE_TOP = 1;
     final int DRAWABLE_RIGHT = 2;
@@ -76,12 +77,7 @@ public class FindPasswordActivity  extends Activity {
 
     }
 
-    public void goBackLogin(View v) {
-        PlusClickGuard.doIt(v);
 
-        finish();
-
-    }
 
     public void showPolicy(View v) {
         PlusClickGuard.doIt(v);

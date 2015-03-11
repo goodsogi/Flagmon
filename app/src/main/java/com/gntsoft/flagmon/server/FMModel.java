@@ -6,6 +6,7 @@ package com.gntsoft.flagmon.server;
 public class FMModel {
 
     private String idx;
+    private String photoIdx;
     private String userId;
     private String userName;
     private String postType;
@@ -131,5 +132,13 @@ public class FMModel {
 
     public void setPhotoCount(String photoCount) {
         this.photoCount = photoCount;
+    }
+
+    public String getPhotoIdx() {
+        return photoIdx;
+    }
+
+    public void setPhotoIdx(String photoIdx) {
+        this.photoIdx = photoIdx;
     }
 }

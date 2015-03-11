@@ -23,8 +23,9 @@
             android:gravity="center"
             android:text="이전"
             android:onClick="goBack"
+            android:clickable="true"
             android:textColor="#ffffff"
-            android:textSize="22sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
 

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.setting.FindFriendModel;
 import com.gntsoft.flagmon.setting.SentFriendRequestListAdapter;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class ChooseFriendActivity extends Activity implements
+public class ChooseFriendActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
     private static final int GET_MAIN_LIST = 0;
     @Override

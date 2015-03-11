@@ -2,8 +2,10 @@ package com.gntsoft.flagmon.detail;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,11 +18,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
+import com.gntsoft.flagmon.FMConstants;
+import com.gntsoft.flagmon.comment.CommentActivity;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.PostDetailParser;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginActivity;
-import com.gntsoft.flagmon.reply.ReplyActivity;
 import com.gntsoft.flagmon.user.UserPageActivity;
 import com.gntsoft.flagmon.utils.ScrollViewExt;
 import com.gntsoft.flagmon.utils.ScrollViewListener;
@@ -28,17 +36,23 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusListHeightCalculator;
 import com.pluslibrary.utils.PlusToaster;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 2. 12.
  */
-public class DetailActivity extends Activity implements
+public class DetailActivity extends FMCommonActivity implements
         PlusOnGetDataListener, ScrollViewListener {
 
     private MapView mMapView;
@@ -49,18 +63,42 @@ public class DetailActivity extends Activity implements
     private boolean login;
     private ScrollViewExt mScrollView;
 
+    private static final int GET_DETAIL = 0;
+    private String mImageUrl;
+    private String mPhotoLat;
+    private String mPhotoLon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         initScrollView();
-        makeGridView();
-        showMainPhoto();
-        checkLogin();
+        getDataFromServer();
+
 
 
         //addListenerToMainImage();
       }
+
+    public void getDataFromServer() {
+
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+
+        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        postParams.add(new BasicNameValuePair("idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
+
+
+        new PlusHttpClient(this, this, false).execute(GET_DETAIL,
+                FMApiConstants.GET_DETAIL, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    protected String getUserAuthKey() {
+        SharedPreferences sharedPreference = getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY,"");
+    }
 
     private void initScrollView() {
         mScrollView = (com.gntsoft.flagmon.utils.ScrollViewExt) findViewById(R.id.scrollView);
@@ -115,7 +153,7 @@ public class DetailActivity extends Activity implements
     }
 
 
-    private void makeGridView() {
+    private void makeSampleGridView() {
 
         ArrayList<Integer> imgs = new ArrayList<>();
 
@@ -150,9 +188,6 @@ public class DetailActivity extends Activity implements
         });
     }
 
-    public void goBack(View v) {
-        finish();
-    }
 
     public void changeMapPhoto(View v) {
         PlusClickGuard.doIt(v);
@@ -167,23 +202,33 @@ public class DetailActivity extends Activity implements
     }
 
     private void showMainPhoto() {
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FMConstants.KEY_IMAGE_URL, mImageUrl);
+        PhotoDetailFragment fragment = new PhotoDetailFragment();
+        fragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
-                .replace(R.id.container_detail, new PhotoDetailFragment())
+                .replace(R.id.container_detail, fragment)
                 .commit();
-
-
-    }
+        }
 
     private void showMap() {
+        Bundle bundle = new Bundle();
+        bundle.putString(FMConstants.KEY_IMAGE_URL, mImageUrl);
+        bundle.putString(FMConstants.KEY_PHOTO_LAT, mPhotoLat);
+        bundle.putString(FMConstants.KEY_PHOTO_LON, mPhotoLon);
+        MapDetailFragment fragment = new MapDetailFragment();
+        fragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
-                .replace(R.id.container_detail, new MapDetailFragment())
+                .replace(R.id.container_detail, fragment)
                 .commit();
 
     }
 
-    public void goToReply(View v) {
+    public void goToCommentActivity(View v) {
         PlusClickGuard.doIt(v);
-        Intent intent = new Intent(this, ReplyActivity.class);
+        Intent intent = new Intent(this, CommentActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, getIntent().getStringExtra(FMConstants.KEY_POST_IDX));
         startActivity(intent);
 
     }
@@ -267,6 +312,52 @@ public class DetailActivity extends Activity implements
 
     @Override
     public void onSuccess(Integer from, Object datas) {
+
+        switch (from) {
+            case GET_DETAIL:
+                handleData(new PostDetailParser().doIt((String) datas));
+                break;
+        }
+    }
+
+    private void handleData(ArrayList<FMModel> fmModels) {
+
+        showContent(fmModels);
+
+//api 연동!!
+        makeSampleGridView();
+
+        showMainPhoto();
+
+        checkLogin();
+
+
+
+
+
+    }
+
+    private void showContent(ArrayList<FMModel> fmModels) {
+        FMModel data = fmModels.get(0);
+        TextView userName = (TextView) findViewById(R.id.userName);
+        TextView content = (TextView) findViewById(R.id.content);
+        TextView date = (TextView) findViewById(R.id.date);
+        TextView reply = (TextView) findViewById(R.id.reply);
+        TextView pin = (TextView) findViewById(R.id.pin);
+        TextView distance = (TextView) findViewById(R.id.distance);
+
+
+
+        content.setText(data.getMemo());
+        date.setText(data.getRegisterDate());
+        reply.setText(data.getReplyCount());
+        pin.setText(data.getScrapCount());
+        //거리 처리!!
+        //distance.setText(data.getDistance());
+
+        mImageUrl = data.getImgUrl();
+        mPhotoLat = data.getLat();
+        mPhotoLon = data.getLon();
 
     }
 

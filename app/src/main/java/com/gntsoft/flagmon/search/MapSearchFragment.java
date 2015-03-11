@@ -1,6 +1,7 @@
 package com.gntsoft.flagmon.search;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -20,7 +21,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.detail.DetailActivity;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMMapParser;
+import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.LoginChecker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -34,7 +41,17 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapSearchFragment extends FMCommonFragment implements
         PlusOnGetDataListener, LocationListener {
@@ -55,43 +72,26 @@ public class MapSearchFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //refreshList();
-        // getCurrentLocation();
+        getDataFromServer(getArguments().getString(FMConstants.KEY_SORT_TYPE));
+    }
 
-        showSampleMarker();
+    public void getDataFromServer(String sortType) {
+
+//수정!!??
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        postParams.add(new BasicNameValuePair("sort", sortType));
+        postParams.add(new BasicNameValuePair("srchPost", getArguments().getString(FMConstants.KEY_SORT_TYPE)));
+        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
+                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
+                postParams);
     }
 
 
-    private void showSampleMarker() {
 
-        double lat = 36.986828;
-        double lng = 127.936019;
-        LatLng position = new LatLng(lat, lng);
-
-        mGoogleMap.addMarker(new MarkerOptions().position(position)
-                .icon(getMarKerImg(R.drawable.sandarapark)).anchor(0f, 1.0f));
-    }
-
-    private BitmapDescriptor getMarKerImg(int imgId) {
-        //마스킹
-        Bitmap original = BitmapFactory.decodeResource(getResources(), imgId);
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
-        Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
-        Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
-        Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas mCanvas = new Canvas(result);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        mCanvas.drawBitmap(original, 0, 0, null);
-        mCanvas.drawBitmap(mask, 0, 0, paint);
-        mCanvas.drawBitmap(frame, 0, 0, null);
-        paint.setXfermode(null);
-
-
-        return BitmapDescriptorFactory.fromBitmap(result);
-
-
-    }
 
 
     private void setUpMap(Bundle savedInstanceState, View rootView) {
@@ -253,29 +253,97 @@ public class MapSearchFragment extends FMCommonFragment implements
             return;
         switch (from) {
             case GET_MAP_DATA:
-                makeList(datas);
+                handleMapData(new FMMapParser().doIt((String) datas));
                 break;
         }
 
     }
 
-    private void makeList(Object datas) {
+    private void handleMapData(ArrayList<FMModel> datas) {
 
-//		ListView list = (ListView) mActivity
-//				.findViewById(R.id.list_order_history);
-//
-//		if(list==null) return;
-//		list.setAdapter(new OrderHistoryListAdapter(mActivity,this,
-//				(ArrayList<OrderHistoryModel>) datas));
+
+        for (int i = 0; i < datas.size(); i++)
+        {
+            fetchImageFromServer(datas.get(i), i);
+
+
+        }
     }
 
-    public void refreshList() {
-//		new PlusHttpClient(mActivity, this, false).execute(
-//				GET_MAP_DATA,
-//				ApiConstants.GET_MAP_DATA + "?id="
-//						+ PlusPhoneNumberFinder.isLogIn(mActivity),
-//				new OrderHistoryParser());
+    private void fetchImageFromServer(final FMModel mapDataModel, final int position) {
+        mImageLoader.loadImage(mapDataModel.getImgUrl(),mOption,new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+
+                showMarkers(bitmap,mapDataModel);
+
+
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+
+            }
+        });
+
+
+
+
 
     }
+
+    private void showMarkers(Bitmap bitmap,FMModel mapDataModel) {
+        LatLng latLng = new LatLng(Double.parseDouble(mapDataModel.getLat()), Double.parseDouble(mapDataModel.getLon()));
+        mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet(mapDataModel.getIdx())
+                .icon(getMarKerImg(bitmap)).anchor(0f, 1.0f));
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                goToDetail(marker.getSnippet());
+                return false;
+            }
+        });
+    }
+
+    private void goToDetail(String idx) {
+        Intent intent = new Intent(mActivity, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+
+        startActivity(intent);
+    }
+
+    private BitmapDescriptor getMarKerImg(Bitmap original) {
+
+        //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
+        //마스킹
+        Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
+        Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
+        Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
+        Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas mCanvas = new Canvas(result);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        mCanvas.drawBitmap(original, 0, 0, null);
+        mCanvas.drawBitmap(mask, 0, 0, paint);
+        mCanvas.drawBitmap(frame, 0, 0, null);
+        paint.setXfermode(null);
+
+
+        return BitmapDescriptorFactory.fromBitmap(result);
+
+
+    }
+
 
 }

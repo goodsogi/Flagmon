@@ -16,6 +16,11 @@
     <application>
         <uses-library android:name="android.test.runner" />
 
+        <activity
+            android:name="com.pluslibrary.img.CameraAlbumActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/noTheme" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

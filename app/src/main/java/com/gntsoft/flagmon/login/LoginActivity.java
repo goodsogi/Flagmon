@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
@@ -33,7 +34,7 @@ import java.util.regex.Pattern;
 /**
  * Created by johnny on 15. 2. 27.
  */
-public class LoginActivity  extends Activity implements PlusOnGetDataListener {
+public class LoginActivity  extends FMCommonActivity implements PlusOnGetDataListener {
     final int DRAWABLE_LEFT = 0;
     final int DRAWABLE_TOP = 1;
     final int DRAWABLE_RIGHT = 2;

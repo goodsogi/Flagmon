@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.pluslibrary.img.CameraAlbumActivity;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class PostChoosePhotoActivity extends Activity implements
+public class PostChoosePhotoActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
     private static final int GET_MAIN_LIST = 0;
     private Object photosFromGallery;
@@ -53,9 +54,6 @@ public class PostChoosePhotoActivity extends Activity implements
         startActivity(intent);
     }
 
-    public void goBack(View v) {
-        finish();
-    }
 
     public void doCamera(View v) {
         Intent intent = new Intent(this, CameraAlbumActivity.class);

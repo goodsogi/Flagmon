@@ -23,7 +23,7 @@
             android:gravity="center"
             android:text="친구선택"
             android:textColor="#ffffff"
-            android:textSize="22sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
 

@@ -1,0 +1,156 @@
+package com.gntsoft.flagmon.comment;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ListView;
+
+import com.gntsoft.flagmon.FMCommonActivity;
+import com.gntsoft.flagmon.FMConstants;
+import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.login.LoginActivity;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.ReplyParser;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
+import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
+import com.pluslibrary.server.PlusOnGetDataListener;
+import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusToaster;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by johnny on 15. 2. 13.
+ */
+public class CommentActivity extends FMCommonActivity implements
+        PlusOnGetDataListener {
+
+    private static final int GET_COMMENTS = 0;
+    private static final int SEND_COMMENT = 1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_comment);
+
+        getDataFromServer();
+    }
+
+
+
+    public void getDataFromServer() {
+
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+
+        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        postParams.add(new BasicNameValuePair("photo_idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
+        //가장 마지막으로 조회한 idx. 만일 첫 조회인 경우는 공란??
+        //postParams.add(new BasicNameValuePair("idx", "")));
+
+
+        new PlusHttpClient(this, this, false).execute(GET_COMMENTS,
+                FMApiConstants.GET_COMMENTS, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+
+
+    protected String getUserAuthKey() {
+        SharedPreferences sharedPreference = getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY,"");
+    }
+
+
+    public void sendComment(View v) {
+        PlusClickGuard.doIt(v);
+        if(LoginChecker.isLogIn(this)) sendCommentToServer();
+        else goToLogin(v);
+    }
+
+    private void sendCommentToServer() {
+        String userEmail = getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL);
+        String userPassword = getIntent().getStringExtra(FMConstants.KEY_USER_PASSWORD);
+        String userName = getIntent().getStringExtra(FMConstants.KEY_USER_NAME);
+
+
+        EditText commentInputView = (EditText) findViewById(R.id.commentInput);
+        String commentInput = commentInputView.getText().toString();
+
+        if(commentInput.equals("")) {
+            PlusToaster.doIt(this, "댓글을 입력해주세요");
+            return;
+        }
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        postParams.add(new BasicNameValuePair("memo", commentInput));
+        postParams.add(new BasicNameValuePair("photo_idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
+
+
+        new PlusHttpClient(this, this, false).execute(SEND_COMMENT,
+                FMApiConstants.SEND_COMMENT, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+
+    private void goToLogin(View v) {
+
+        PlusClickGuard.doIt(v);
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+
+    }
+
+
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        switch (from) {
+
+            case GET_COMMENTS:
+                makeList(new ReplyParser().doIt((String) datas));
+
+                break;
+            case SEND_COMMENT:
+
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(this,model.getResult().equals("success")?"댓글을 달았습니다":"댓글을 달지 못했습니다");
+                //if(model.getResult().equals("success")) finish();
+                break;
+
+        }
+
+    }
+
+    private void makeList(final ArrayList<FMModel> datas) {
+
+        ListView list = (ListView) findViewById(R.id.list_reply);
+
+        if (list == null||datas==null) return;
+        list.setAdapter(new CommentListAdapter(this,
+                datas));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });
+
+
+    }
+}

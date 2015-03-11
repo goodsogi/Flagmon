@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
 import com.gntsoft.flagmon.neighbor.NeighborListAdapter;
@@ -52,10 +53,13 @@ public class UserListFragment extends FMCommonFragment implements
 
     }
 
-    private void goToDetail() {
+    private void goToDetail(String idx) {
         Intent intent = new Intent(mActivity, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+
         startActivity(intent);
     }
+
 
     private ArrayList<NeighborListModel> getSampleDatas() {
         ArrayList<NeighborListModel> datas = new ArrayList<>();
