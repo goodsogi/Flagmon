@@ -16,20 +16,20 @@ import com.pluslibrary.utils.PlusViewHolder;
 import java.util.ArrayList;
 
 /**
- * Created by johnny on 15. 3. 3.
+ * Created by johnny on 15. 3. 12.
  */
-public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> {
+public class RequestFriendListAdapter extends FMCommonAdapter<FriendModel> {
 
 
-    public GotFriendRequestListAdapter(Context context, ArrayList<FriendModel> datas) {
-        super(context, R.layout.got_friend_request_list_item, datas);
+    public RequestFriendListAdapter(Context context, ArrayList<FriendModel> datas) {
+        super(context, R.layout.request_friend_list_item, datas);
 
     }
 
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.got_friend_request_list_item,
+            convertView = mLayoutInflater.inflate(R.layout.request_friend_list_item,
                     parent, false);
         }
 
@@ -43,19 +43,11 @@ public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> {
 
         name.setText(data.getName());
 
-        Button ignore = PlusViewHolder.get(convertView, R.id.ignore);
-        ignore.setOnClickListener(new PlusOnClickListener() {
+        Button sendRequest = PlusViewHolder.get(convertView, R.id.sendRequest);
+        sendRequest.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                ignoreRequest();
-            }
-        });
-
-        Button accept = PlusViewHolder.get(convertView, R.id.accept);
-        accept.setOnClickListener(new PlusOnClickListener() {
-            @Override
-            protected void doIt() {
-                acceptRequest();
+                sendRequest();
             }
         });
 
@@ -63,14 +55,8 @@ public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> {
         return convertView;
     }
 
-    private void acceptRequest() {
+    private void sendRequest() {
         //구현!!
         PlusToaster.doIt(mContext, "준비중...");
     }
-
-    private void ignoreRequest() {
-//구현!!
-        PlusToaster.doIt(mContext, "준비중...");
-    }
-
 }

@@ -33,10 +33,10 @@
         android:layout_height="45dp" android:gravity="center_vertical" android:paddingLeft="13dp"
         android:textColor="#657487"
         android:background="#eff1f3"
-        android:text="4명의 Twitter 친구가 Flagmon에 있습니다"
         />
     <ListView
         android:id="@+id/listTwitter"
+        android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ListView>
 

@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -15,7 +19,10 @@ import com.facebook.model.GraphObjectList;
 import com.facebook.model.GraphUser;
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.R;
-import com.pluslibrary.utils.PlusToaster;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,16 +46,17 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
 
     }
 
-    private void getUserData(final Session session){
+    private void getUserData(final Session session) {
         Request request = Request.newMeRequest(session,
                 new Request.GraphUserCallback() {
                     @Override
                     public void onCompleted(GraphUser user, Response response) {
-                        if(user != null && session == Session.getActiveSession()){
+                        if (user != null && session == Session.getActiveSession()) {
+
                             getFriends();
 
                         }
-                        if(response.getError() !=null){
+                        if (response.getError() != null) {
 
                         }
                     }
@@ -56,15 +64,18 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
         request.executeAsync();
     }
 
-    private void getFriends(){
-        Session activeSession = Session.getActiveSession();
-        if(activeSession.getState().isOpened()){
+    private void getFriends() {
+        final Session activeSession = Session.getActiveSession();
+        if (activeSession.getState().isOpened()) {
+            //현재 이 앱을 사용하고 있는 친구 리스트를 반환
             Request friendRequest = Request.newMyFriendsRequest(activeSession,
-                    new Request.GraphUserListCallback(){
+                    new Request.GraphUserListCallback() {
                         @Override
                         public void onCompleted(List<GraphUser> users,
                                                 Response response) {
-                            Log.i("INFO", response.toString());
+
+                            handleResponse(response);
+
 
                         }
                     });
@@ -75,7 +86,66 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
         }
     }
 
+    private void handleResponse(Response response) {
+        ArrayList<FriendModel> model = parseResponse(response);
+        makeList(model);
+        showFriendCount(model);
+    }
+
+    private void showFriendCount(ArrayList<FriendModel> model) {
+        TextView facebookFriendCount = (TextView) findViewById(R.id.facebookFriendCount);
+        facebookFriendCount.setText(model.size() + "명의 Facebook 친구가 Flagmon에 있습니다");
+    }
+
+    private void makeList(ArrayList<FriendModel> model) {
+        ListView list = (ListView) findViewById(R.id.listFacebook);
+
+        if (list == null || model == null) return;
+        list.setAdapter(new SentFriendRequestListAdapter(this,
+                model));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });
+
+    }
+
+    private ArrayList<FriendModel> parseResponse(Response response) {
+        ArrayList<FriendModel> model = new ArrayList<>();
+        GraphObject graphObject = response.getGraphObject();
+        if (graphObject != null) {
+            JSONObject jsonObject = graphObject.getInnerJSONObject();
+            try {
+                JSONArray array = jsonObject.getJSONArray("data");
+
+
+                for (int i = 0; i < array.length(); i++) {
+                    FriendModel data = new FriendModel();
+                    JSONObject object = (JSONObject) array.get(i);
+                    //수정이 필요할 수 있음!!
+                    data.setId(object.optString("id"));
+                    data.setName(object.optString("name"));
+                    data.setProfileImageUrl(object.optString("picture"));
+                    model.add(data);
+                }
+            } catch (JSONException e) {
+
+                e.printStackTrace();
+            }
+
+        }
+
+        return model;
+
+
+    }
+
     private void init() {
+
+        String[] PERMISSION_ARRAY_READ = {"user_friends"};
+        final List<String> permissionList = Arrays.asList(PERMISSION_ARRAY_READ);
+
 // start Facebook Login
         Session.openActiveSession(this, true, new Session.StatusCallback() {
 
@@ -84,16 +154,19 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
             public void call(final Session session, SessionState state, Exception exception) {
                 if (session.isOpened()) {
 
-                    getFriends();
+                    if (session.getPermissions().contains("user_friends")) {
+                        getFriends();
+                    } else {
+                        //public_profile만 디폴트로 permission이 부여되었으므로 친구리스트를 얻기 위해서는 user_friends permission을 별도로 요청해야 함
+                        Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(FindFriendInFacebookActivity.this, permissionList);
+                        session.requestNewReadPermissions(newPermissionsRequest);
+                    }
+
                 }
             }
         });
 
     }
-
-
-
-
 
 
 //    private void init() {
@@ -132,7 +205,7 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
                 //SetUpList
                 List<GraphUser> friends = getResults(response);
                 GraphUser user;
-                ArrayList<FacebookFriendModel> friendsList = new ArrayList<FacebookFriendModel>();
+                ArrayList<FriendModel> friendsList = new ArrayList<FriendModel>();
                 boolean installed = false;
                 if (friends != null) {
                     for (int count = 0; count < friends.size(); count++) {
@@ -166,12 +239,6 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
     }
 
 
-    private class FacebookFriendModel {
-        String Name, ID, ImageUrl;
-        boolean selected;
-    }
-
-
     private List<GraphUser> getResults(Response response) throws NullPointerException {
         try {
             GraphMultiResult multiResult = response
@@ -189,7 +256,6 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
         super.onActivityResult(requestCode, resultCode, data);
         Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
-
 
 
 }

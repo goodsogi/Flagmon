@@ -1,28 +1,19 @@
 package com.gntsoft.flagmon.setting;
 
-import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.R;
-import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusToaster;
-
-import java.util.ArrayList;
 
 /**
  * Created by johnny on 15. 2. 13.
  */
-public class SettingFragment extends FMCommonFragment  {
+public class SettingFragment extends FMCommonFragment {
 
 
     public SettingFragment() {
@@ -33,11 +24,6 @@ public class SettingFragment extends FMCommonFragment  {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
-
-
-
-
-
 
 
     @Override
@@ -89,7 +75,6 @@ public class SettingFragment extends FMCommonFragment  {
         });
 
 
-
     }
 
     private void mananageFriend(View v) {
@@ -106,17 +91,16 @@ public class SettingFragment extends FMCommonFragment  {
 //구현!!
         PlusToaster.doIt(mActivity, "준비중...");
     }
+
     private void showNoti(View v) {
 //구현!!
         PlusToaster.doIt(mActivity, "준비중...");
     }
+
     private void setAlarm(View v) {
 //구현!!
         PlusToaster.doIt(mActivity, "준비중...");
     }
-
-
-
 
 
 }

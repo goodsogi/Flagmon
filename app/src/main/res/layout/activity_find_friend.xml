@@ -73,7 +73,7 @@
         android:drawableLeft="@drawable/contact"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
-        android:onClick="findFriendOnContact"
+        android:onClick="findFriendInContact"
         android:paddingLeft="10dp"
         android:clickable="true"
         android:text="연락처로부터 친구 찾기"

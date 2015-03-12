@@ -36,4 +36,10 @@ public class FMConstants {
     public static final String SORT_BY_PIN = "3";
     public static final String KEY_KEYWORD = "keyword";
     public static final String KEY_SORT_TYPE = "sortType";
+    public static final String TWITTER_CONSUMER_KEY = "3FAfGgTcGu0EphohZIni8SWN8";
+    public static final String TWITTER_CONSUMER_SECRET = "1HSVkvTMkGIMoAh4DJB42ihK6VlRCevpVsJoILgfNoil6C0OE9";
+    public static final String TWITTER_CALLBACK_URL = "twitter-callback:///";
+    public static final String KEY_URL = "url";
+    public static final String URL_TWITTER_OAUTH_VERIFIER =  "oauth_verifier";
+    public static final int TWITTER_OAUTH = 22;
 }

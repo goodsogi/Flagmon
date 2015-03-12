@@ -18,10 +18,10 @@ import java.util.ArrayList;
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class SentFriendRequestListAdapter extends FMCommonAdapter<FindFriendModel> {
+public class SentFriendRequestListAdapter extends FMCommonAdapter<FriendModel> {
 
 
-    public SentFriendRequestListAdapter(Context context, ArrayList<FindFriendModel> datas) {
+    public SentFriendRequestListAdapter(Context context, ArrayList<FriendModel> datas) {
         super(context, R.layout.sent_friend_request_list_item, datas);
 
     }
@@ -33,12 +33,13 @@ public class SentFriendRequestListAdapter extends FMCommonAdapter<FindFriendMode
                     parent, false);
         }
 
-        FindFriendModel data = mDatas.get(position);
+        FriendModel data = mDatas.get(position);
         TextView name = PlusViewHolder.get(convertView, R.id.name);
 
 
         ImageView img = PlusViewHolder.get(convertView, R.id.img);
-        img.setImageResource(data.getImg());
+        mImageLoader.displayImage(data.getProfileImageUrl(), img,
+                mOption);
 
         name.setText(data.getName());
 
@@ -51,15 +52,6 @@ public class SentFriendRequestListAdapter extends FMCommonAdapter<FindFriendMode
         });
 
 
-
-//        mImageLoader.displayImage(
-//                BBGGConstants.IMG_URL_HEAD + mDatas.get(position).getImg01(), main_img,
-//                mOption);
-
-
-
-
-
         return convertView;
     }
 
@@ -67,7 +59,6 @@ public class SentFriendRequestListAdapter extends FMCommonAdapter<FindFriendMode
         //구현!!
         PlusToaster.doIt(mContext, "준비중...");
     }
-
 
 
 }

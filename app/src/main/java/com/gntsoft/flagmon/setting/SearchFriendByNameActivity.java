@@ -27,6 +27,4 @@ public class SearchFriendByNameActivity extends FMCommonActivity {
     }
 
 
-
-
 }

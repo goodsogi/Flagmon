@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.setting.FindFriendModel;
+import com.gntsoft.flagmon.setting.FriendModel;
 import com.gntsoft.flagmon.user.UserPageActivity;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
@@ -22,10 +22,10 @@ import java.util.ArrayList;
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class ChooseFriendListAdapter extends FMCommonAdapter<FindFriendModel> {
+public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> {
 
 
-    public ChooseFriendListAdapter(Context context, ArrayList<FindFriendModel> datas) {
+    public ChooseFriendListAdapter(Context context, ArrayList<FriendModel> datas) {
         super(context, R.layout.choose_friend_list_item, datas);
 
     }
@@ -37,12 +37,13 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FindFriendModel> {
                     parent, false);
         }
 
-        FindFriendModel data = mDatas.get(position);
+        FriendModel data = mDatas.get(position);
         TextView name = PlusViewHolder.get(convertView, R.id.name);
 
 
         ImageView img = PlusViewHolder.get(convertView, R.id.img);
-        img.setImageResource(data.getImg());
+        mImageLoader.displayImage(data.getProfileImageUrl(), img,
+                mOption);
         img.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {

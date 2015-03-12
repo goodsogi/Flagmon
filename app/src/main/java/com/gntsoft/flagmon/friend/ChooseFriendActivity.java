@@ -8,7 +8,7 @@ import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.setting.FindFriendModel;
+import com.gntsoft.flagmon.setting.FriendModel;
 import com.gntsoft.flagmon.setting.SentFriendRequestListAdapter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 
@@ -45,14 +45,13 @@ public class ChooseFriendActivity extends FMCommonActivity implements
 
 
 
-    private ArrayList<FindFriendModel> getSampleDatas() {
-        ArrayList<FindFriendModel> datas = new ArrayList<>();
+    private ArrayList<FriendModel> getSampleDatas() {
+        ArrayList<FriendModel> datas = new ArrayList<>();
 
         for (int i = 0; i < 20; i++) {
-            FindFriendModel data = new FindFriendModel();
+            FriendModel data = new FriendModel();
             data.setName("Sandara Park");
 
-            data.setImg(R.drawable.sandarapark);
             datas.add(data);
         }
 

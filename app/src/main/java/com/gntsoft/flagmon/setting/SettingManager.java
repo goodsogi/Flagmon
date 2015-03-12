@@ -15,7 +15,7 @@ import com.gntsoft.flagmon.utils.LoginChecker;
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class SettingManager implements FMTabManager{
+public class SettingManager implements FMTabManager {
 
     private final Activity mActivity;
 
@@ -46,7 +46,6 @@ public class SettingManager implements FMTabManager{
     }
 
 
-
     private void toggleMenu(View v) {
 //        if (v.isSelected()) {
 //            v.setSelected(false);
@@ -62,8 +61,6 @@ public class SettingManager implements FMTabManager{
                 .replace(R.id.container_main, new SettingFragment())
                 .commit();
     }
-
-
 
 
     private void showSettingTopBar() {
