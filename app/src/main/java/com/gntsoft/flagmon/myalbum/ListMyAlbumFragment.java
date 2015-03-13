@@ -167,7 +167,7 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
 
     @Override
     public void onSuccess(Integer from, Object datas) {
-
+        if(datas == null) return;
         switch (from) {
             case GET_LIST_DATA:
                 makeList(new FMListParser().doIt((String) datas));

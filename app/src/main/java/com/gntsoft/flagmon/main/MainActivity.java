@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.FMTabManager;
 import com.gntsoft.flagmon.friend.FriendManager;
@@ -20,7 +21,7 @@ import com.gntsoft.flagmon.login.SignUpActivity;
 import com.pluslibrary.utils.PlusClickGuard;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FMCommonActivity {
 
 
  //   private boolean login;

@@ -8,19 +8,34 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.FMTabManager;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginFragment;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FriendListParser;
+import com.gntsoft.flagmon.setting.FriendModel;
 import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
+import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class FriendManager implements FMTabManager {
+public class FriendManager implements FMTabManager,PlusOnGetDataListener {
 
     private final Activity mActivity;
+
+    private static final int CHECK_IF_HAS_FRIEND = 0;
 
     public FriendManager(Activity activity) {
         mActivity = activity;
@@ -29,11 +44,7 @@ public class FriendManager implements FMTabManager {
     public void chooseFragment() {
         if (!LoginChecker.isLogIn(mActivity)) {
             showLogin(FMConstants.TAB_FRIEND);
-        } else if (hasFriend()) {
-            showFriendTopBar();
-            addButtonListener();
-            showMapFriend();
-        } else inviteFriend();
+        } else checkIfHasFriend();
     }
 
     private void addButtonListener() {
@@ -49,16 +60,17 @@ public class FriendManager implements FMTabManager {
         chooseFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToChooseFriend(v);
+                goToChooseFriendFragment(v);
             }
         });
     }
 
-    private void goToChooseFriend(View v) {
+    private void goToChooseFriendFragment(View v) {
         PlusClickGuard.doIt(v);
 
-        Intent intent = new Intent(mActivity, ChooseFriendActivity.class);
-        mActivity.startActivity(intent);
+        mActivity.getFragmentManager().beginTransaction()
+                .replace(R.id.container_main, new ChooseFriendFragment())
+                .commit();
     }
 
     private void toggleMenu(View v) {
@@ -117,10 +129,42 @@ public class FriendManager implements FMTabManager {
                 .commit();
     }
 
-    private boolean hasFriend() {
-        //!!구현
+    private void checkIfHasFriend() {
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        //postParams.add(new BasicNameValuePair("sort", sortType));
+        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mActivity).getUserAuthKey()));}
 
-        return false;
+
+        new PlusHttpClient(mActivity, this, false).execute(CHECK_IF_HAS_FRIEND,
+                FMApiConstants.CHECK_IF_HAS_FRIEND, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null) {
+            inviteFriend(); //나중에 삭제!!
+            return;
+        }
+        switch (from) {
+            case CHECK_IF_HAS_FRIEND:
+                handleIfHasFriend(new FriendListParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    private void handleIfHasFriend(ArrayList<FriendModel> friendModels) {
+
+        if(friendModels.size() > 0) {
+            showFriendTopBar();
+            addButtonListener();
+            showMapFriend();
+        } else {
+            inviteFriend();
+        }
     }
 
 }

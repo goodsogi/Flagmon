@@ -163,11 +163,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
     }
 
 
-    public String getUserAuthKey() {
-        SharedPreferences sharedPreference = getSharedPreferences(
-                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY,"");
-    }
+
 
     public PhotoLocation getPhotoLocation(String filepath) {
         ExifInterface exif = null;

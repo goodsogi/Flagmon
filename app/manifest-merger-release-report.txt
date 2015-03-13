@@ -43,15 +43,21 @@ uses-permission#android.permission.ACCESS_FINE_LOCATION
 ADDED from AndroidManifest.xml:13:5
 	android:name
 		ADDED from AndroidManifest.xml:13:22
-uses-feature#0x00020000
+uses-permission#android.permission.READ_CONTACTS
 ADDED from AndroidManifest.xml:15:5
+	android:name
+		ADDED from AndroidManifest.xml:15:22
+uses-feature#0x00020000
+ADDED from AndroidManifest.xml:17:5
 	android:glEsVersion
-		ADDED from AndroidManifest.xml:16:9
+		ADDED from AndroidManifest.xml:18:9
 	android:required
-		ADDED from AndroidManifest.xml:17:9
+		ADDED from AndroidManifest.xml:19:9
 application
-ADDED from AndroidManifest.xml:18:5
+ADDED from AndroidManifest.xml:20:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
+MERGED from com.facebook.android:facebook-android-sdk:3.21.1:24:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from FlagMon5:plusLibrary:unspecified:9:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
@@ -59,75 +65,69 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.google.android.gms:play-services:6.5.87:20:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 	android:label
-		ADDED from AndroidManifest.xml:22:9
+		ADDED from AndroidManifest.xml:24:9
 	android:allowBackup
-		ADDED from AndroidManifest.xml:19:9
-	android:icon
-		ADDED from AndroidManifest.xml:20:9
-	android:theme
-		ADDED from AndroidManifest.xml:23:9
-	android:name
 		ADDED from AndroidManifest.xml:21:9
+	android:icon
+		ADDED from AndroidManifest.xml:22:9
+	android:theme
+		ADDED from AndroidManifest.xml:25:9
+	android:name
+		ADDED from AndroidManifest.xml:23:9
 uses-library#com.google.android.maps
-ADDED from AndroidManifest.xml:25:9
-	android:name
-		ADDED from AndroidManifest.xml:25:23
-meta-data#com.google.android.maps.v2.API_KEY
 ADDED from AndroidManifest.xml:27:9
-	android:value
-		ADDED from AndroidManifest.xml:29:13
 	android:name
-		ADDED from AndroidManifest.xml:28:13
+		ADDED from AndroidManifest.xml:27:23
+meta-data#com.google.android.maps.v2.API_KEY
+ADDED from AndroidManifest.xml:29:9
+	android:value
+		ADDED from AndroidManifest.xml:31:13
+	android:name
+		ADDED from AndroidManifest.xml:30:13
 meta-data#com.google.android.gms.version
-ADDED from AndroidManifest.xml:30:9
+ADDED from AndroidManifest.xml:32:9
 MERGED from com.google.android.gms:play-services:6.5.87:21:9
 	android:value
-		ADDED from AndroidManifest.xml:32:13
-	android:name
-		ADDED from AndroidManifest.xml:31:13
-activity#com.gntsoft.flagmon.main.MainActivity
-ADDED from AndroidManifest.xml:33:9
-	android:screenOrientation
-		ADDED from AndroidManifest.xml:35:45
-	android:theme
-		ADDED from AndroidManifest.xml:35:14
-	android:name
 		ADDED from AndroidManifest.xml:34:13
+	android:name
+		ADDED from AndroidManifest.xml:33:13
+meta-data#com.facebook.sdk.ApplicationId
+ADDED from AndroidManifest.xml:37:9
+	android:value
+		ADDED from AndroidManifest.xml:37:66
+	android:name
+		ADDED from AndroidManifest.xml:37:20
+activity#com.facebook.LoginActivity
+ADDED from AndroidManifest.xml:38:9
+	android:name
+		ADDED from AndroidManifest.xml:38:19
+activity#com.gntsoft.flagmon.main.MainActivity
+ADDED from AndroidManifest.xml:39:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:41:45
+	android:theme
+		ADDED from AndroidManifest.xml:41:14
+	android:name
+		ADDED from AndroidManifest.xml:40:13
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:36:13
+ADDED from AndroidManifest.xml:42:13
 action#android.intent.action.MAIN
-ADDED from AndroidManifest.xml:37:17
+ADDED from AndroidManifest.xml:43:17
 	android:name
-		ADDED from AndroidManifest.xml:37:25
+		ADDED from AndroidManifest.xml:43:25
 category#android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:39:17
+ADDED from AndroidManifest.xml:45:17
 	android:name
-		ADDED from AndroidManifest.xml:39:27
+		ADDED from AndroidManifest.xml:45:27
 activity#com.gntsoft.flagmon.login.LoginActivity
-ADDED from AndroidManifest.xml:42:9
+ADDED from AndroidManifest.xml:48:9
 	android:screenOrientation
-		ADDED from AndroidManifest.xml:44:44
+		ADDED from AndroidManifest.xml:50:44
 	android:theme
-		ADDED from AndroidManifest.xml:44:13
-	android:name
-		ADDED from AndroidManifest.xml:43:13
-activity#com.gntsoft.flagmon.login.FindPasswordActivity
-ADDED from AndroidManifest.xml:46:9
-	android:screenOrientation
-		ADDED from AndroidManifest.xml:48:44
-	android:theme
-		ADDED from AndroidManifest.xml:48:13
-	android:name
-		ADDED from AndroidManifest.xml:47:13
-activity#com.gntsoft.flagmon.login.SignUpActivity
-ADDED from AndroidManifest.xml:49:9
-	android:screenOrientation
-		ADDED from AndroidManifest.xml:51:44
-	android:theme
-		ADDED from AndroidManifest.xml:51:13
-	android:name
 		ADDED from AndroidManifest.xml:50:13
-activity#com.gntsoft.flagmon.login.PolicyActivity
+	android:name
+		ADDED from AndroidManifest.xml:49:13
+activity#com.gntsoft.flagmon.login.FindPasswordActivity
 ADDED from AndroidManifest.xml:52:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:54:44
@@ -135,7 +135,7 @@ ADDED from AndroidManifest.xml:52:9
 		ADDED from AndroidManifest.xml:54:13
 	android:name
 		ADDED from AndroidManifest.xml:53:13
-activity#com.gntsoft.flagmon.login.SecondSignUpActivity
+activity#com.gntsoft.flagmon.login.SignUpActivity
 ADDED from AndroidManifest.xml:55:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:57:44
@@ -143,7 +143,7 @@ ADDED from AndroidManifest.xml:55:9
 		ADDED from AndroidManifest.xml:57:13
 	android:name
 		ADDED from AndroidManifest.xml:56:13
-activity#com.gntsoft.flagmon.detail.DetailActivity
+activity#com.gntsoft.flagmon.login.PolicyActivity
 ADDED from AndroidManifest.xml:58:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:60:44
@@ -151,7 +151,7 @@ ADDED from AndroidManifest.xml:58:9
 		ADDED from AndroidManifest.xml:60:13
 	android:name
 		ADDED from AndroidManifest.xml:59:13
-activity#com.gntsoft.flagmon.detail.ImageViewerActivity
+activity#com.gntsoft.flagmon.login.SecondSignUpActivity
 ADDED from AndroidManifest.xml:61:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:63:44
@@ -159,7 +159,7 @@ ADDED from AndroidManifest.xml:61:9
 		ADDED from AndroidManifest.xml:63:13
 	android:name
 		ADDED from AndroidManifest.xml:62:13
-activity#com.gntsoft.flagmon.reply.ReplyActivity
+activity#com.gntsoft.flagmon.detail.DetailActivity
 ADDED from AndroidManifest.xml:64:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:66:44
@@ -167,65 +167,123 @@ ADDED from AndroidManifest.xml:64:9
 		ADDED from AndroidManifest.xml:66:13
 	android:name
 		ADDED from AndroidManifest.xml:65:13
-activity#com.gntsoft.flagmon.user.UserPageActivity
-ADDED from AndroidManifest.xml:68:9
+activity#com.gntsoft.flagmon.detail.ImageViewerActivity
+ADDED from AndroidManifest.xml:67:9
 	android:screenOrientation
-		ADDED from AndroidManifest.xml:70:44
+		ADDED from AndroidManifest.xml:69:44
 	android:theme
-		ADDED from AndroidManifest.xml:70:13
-	android:name
 		ADDED from AndroidManifest.xml:69:13
-activity#com.gntsoft.flagmon.search.SearchActivity
-ADDED from AndroidManifest.xml:71:9
-	android:screenOrientation
-		ADDED from AndroidManifest.xml:73:44
-	android:theme
-		ADDED from AndroidManifest.xml:73:13
 	android:name
+		ADDED from AndroidManifest.xml:68:13
+activity#com.gntsoft.flagmon.comment.CommentActivity
+ADDED from AndroidManifest.xml:70:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:72:44
+	android:theme
 		ADDED from AndroidManifest.xml:72:13
-activity#com.gntsoft.flagmon.setting.FindFriendActivity
-ADDED from AndroidManifest.xml:75:9
-	android:screenOrientation
-		ADDED from AndroidManifest.xml:77:44
-	android:theme
-		ADDED from AndroidManifest.xml:77:13
 	android:name
+		ADDED from AndroidManifest.xml:71:13
+activity#com.gntsoft.flagmon.user.UserPageActivity
+ADDED from AndroidManifest.xml:74:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:76:44
+	android:theme
 		ADDED from AndroidManifest.xml:76:13
-activity#com.gntsoft.flagmon.friend.ChooseFriendActivity
-ADDED from AndroidManifest.xml:78:9
-	android:screenOrientation
-		ADDED from AndroidManifest.xml:80:44
-	android:theme
-		ADDED from AndroidManifest.xml:80:13
 	android:name
+		ADDED from AndroidManifest.xml:75:13
+activity#com.gntsoft.flagmon.search.SearchActivity
+ADDED from AndroidManifest.xml:77:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:79:44
+	android:theme
 		ADDED from AndroidManifest.xml:79:13
-activity#com.gntsoft.flagmon.myalbum.PostChoosePhotoActivity
-ADDED from AndroidManifest.xml:82:9
-	android:screenOrientation
-		ADDED from AndroidManifest.xml:84:44
-	android:theme
-		ADDED from AndroidManifest.xml:84:13
 	android:name
+		ADDED from AndroidManifest.xml:78:13
+activity#com.gntsoft.flagmon.setting.FindFriendActivity
+ADDED from AndroidManifest.xml:81:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:83:44
+	android:theme
 		ADDED from AndroidManifest.xml:83:13
-activity#com.gntsoft.flagmon.myalbum.PostSetLocationActivity
-ADDED from AndroidManifest.xml:85:9
-	android:screenOrientation
-		ADDED from AndroidManifest.xml:87:44
-	android:theme
-		ADDED from AndroidManifest.xml:87:13
 	android:name
+		ADDED from AndroidManifest.xml:82:13
+activity#com.gntsoft.flagmon.friend.ChooseFriendActivity
+ADDED from AndroidManifest.xml:84:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:86:44
+	android:theme
 		ADDED from AndroidManifest.xml:86:13
-activity#com.gntsoft.flagmon.myalbum.GroupPostActivity
-ADDED from AndroidManifest.xml:89:9
-	android:screenOrientation
-		ADDED from AndroidManifest.xml:91:44
-	android:theme
-		ADDED from AndroidManifest.xml:91:13
 	android:name
+		ADDED from AndroidManifest.xml:85:13
+activity#com.gntsoft.flagmon.myalbum.PostChoosePhotoActivity
+ADDED from AndroidManifest.xml:88:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:90:44
+	android:theme
 		ADDED from AndroidManifest.xml:90:13
+	android:name
+		ADDED from AndroidManifest.xml:89:13
+activity#com.gntsoft.flagmon.myalbum.PostSetLocationActivity
+ADDED from AndroidManifest.xml:91:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:93:44
+	android:theme
+		ADDED from AndroidManifest.xml:93:13
+	android:name
+		ADDED from AndroidManifest.xml:92:13
+activity#com.gntsoft.flagmon.myalbum.GroupPostActivity
+ADDED from AndroidManifest.xml:95:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:97:44
+	android:theme
+		ADDED from AndroidManifest.xml:97:13
+	android:name
+		ADDED from AndroidManifest.xml:96:13
+activity#com.gntsoft.flagmon.setting.FindFriendInContactActivity
+ADDED from AndroidManifest.xml:99:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:101:44
+	android:theme
+		ADDED from AndroidManifest.xml:101:13
+	android:name
+		ADDED from AndroidManifest.xml:100:13
+activity#com.gntsoft.flagmon.setting.FindFriendInFacebookActivity
+ADDED from AndroidManifest.xml:103:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:105:44
+	android:theme
+		ADDED from AndroidManifest.xml:105:13
+	android:name
+		ADDED from AndroidManifest.xml:104:13
+activity#com.gntsoft.flagmon.setting.FindFriendInTwitterActivity
+ADDED from AndroidManifest.xml:106:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:108:44
+	android:theme
+		ADDED from AndroidManifest.xml:108:13
+	android:name
+		ADDED from AndroidManifest.xml:107:13
+activity#com.gntsoft.flagmon.setting.SearchFriendByNameActivity
+ADDED from AndroidManifest.xml:109:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:111:44
+	android:theme
+		ADDED from AndroidManifest.xml:111:13
+	android:name
+		ADDED from AndroidManifest.xml:110:13
+activity#com.gntsoft.flagmon.setting.WebviewLoginActivity
+ADDED from AndroidManifest.xml:112:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:114:44
+	android:theme
+		ADDED from AndroidManifest.xml:114:13
+	android:name
+		ADDED from AndroidManifest.xml:113:13
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.facebook.android:facebook-android-sdk:3.21.1:20:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from FlagMon5:plusLibrary:unspecified:5:5
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5

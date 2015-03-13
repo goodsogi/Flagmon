@@ -69,11 +69,7 @@ public class CommentActivity extends FMCommonActivity implements
 
 
 
-    protected String getUserAuthKey() {
-        SharedPreferences sharedPreference = getSharedPreferences(
-                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY,"");
-    }
+
 
 
     public void sendComment(View v) {
@@ -121,6 +117,7 @@ public class CommentActivity extends FMCommonActivity implements
 
     @Override
     public void onSuccess(Integer from, Object datas) {
+        if(datas == null) return;
         switch (from) {
 
             case GET_COMMENTS:

@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.FMModel;
 import com.pluslibrary.utils.PlusViewHolder;
 
 import java.util.ArrayList;
@@ -14,10 +15,10 @@ import java.util.ArrayList;
 /**
  * Created by johnny on 15. 2. 12.
  */
-public class DetailGridviewAdapter extends FMCommonAdapter<Integer> {
+public class DetailGridviewAdapter extends FMCommonAdapter<FMModel> {
 
 
-    public DetailGridviewAdapter(Context context, ArrayList<Integer> datas) {
+    public DetailGridviewAdapter(Context context, ArrayList<FMModel> datas) {
         super(context, R.layout.gridview_item, datas);
     }
 
@@ -29,8 +30,13 @@ public class DetailGridviewAdapter extends FMCommonAdapter<Integer> {
             convertView = mLayoutInflater.inflate(R.layout.gridview_item,
                     parent, false);
         }
+
+        FMModel data = mDatas.get(position);
+
         ImageView img = PlusViewHolder.get(convertView, R.id.gridview_img);
-        img.setImageResource(mDatas.get(position));
+        mImageLoader.displayImage(
+                data.getImgUrl(), img,
+                mOption);
 
         return convertView;
     }

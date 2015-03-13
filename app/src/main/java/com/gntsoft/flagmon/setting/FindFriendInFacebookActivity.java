@@ -101,7 +101,7 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
         ListView list = (ListView) findViewById(R.id.listFacebook);
 
         if (list == null || model == null) return;
-        list.setAdapter(new SentFriendRequestListAdapter(this,
+        list.setAdapter(new FindFriendListAdapter(this,
                 model));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

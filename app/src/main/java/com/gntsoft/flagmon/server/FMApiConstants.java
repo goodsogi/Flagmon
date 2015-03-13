@@ -16,4 +16,23 @@ public class FMApiConstants {
     public static final String GET_DETAIL = API_MAIN + "postview.php";
     public static final String GET_COMMENTS = API_MAIN + "commentlist.php";
     public static final String SEND_COMMENT = API_MAIN + "comment_ok.php";
+    public static final String PERFORM_PIN = "";
+    public static final String GET_PHOTOS_NEARBY = API_MAIN + "postlist.php";
+    public static final String GET_TOTAL_USER_POST = "";
+    public static final String ADD_FRIEND = "";
+    public static final String REQUEST_PASSWORD = "";
+    public static final String REPORT_POST = "";
+    public static final String FIND_TREASURE = "";
+    public static final String GET_SENT_FRIEND_REQUEST = "";
+    public static final String GET_GOT_FRIEND_REQUEST = "";
+    public static final String CANCEL_REQUEST = "";
+    public static final String ACCEPT_REQUEST = "";
+    public static final String IGNORE_REQUEST = "";
+    public static final String SEND_FRIEND_REQUEST = "";
+    public static final String SEARCH_FRIENDS_BY_NAME = "";
+    public static final String CHOOSE_FRIEND = "";
+    public static final String DELETE_FRIEND = "";
+    public static final String SELECT_FRIEND = "";
+    public static final String CHECK_IF_HAS_FRIEND = "";
+    public static final String SCRAP_THIS = "";
 }

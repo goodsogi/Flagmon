@@ -1,12 +1,16 @@
 package com.gntsoft.flagmon.user;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
@@ -14,14 +18,27 @@ import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
 import com.gntsoft.flagmon.neighbor.NeighborListAdapter;
 import com.gntsoft.flagmon.neighbor.NeighborListModel;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMListParser;
+import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
+import com.pluslibrary.utils.PlusClickGuard;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserListFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
 
-    private static final int GET_MAIN_LIST = 0;
+    private static final int GET_LIST_DATA = 0;
+    String [] listOptionDatas = {"인기순","최근 등록순","거리순"};
+    private int totalUserPost;
 
     public UserListFragment() {
         // TODO Auto-generated constructor stub
@@ -31,27 +48,22 @@ public class UserListFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        makeSampleList();
-        //refreshList();
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
-    private void makeSampleList() {
+    public void getDataFromServer(String sortType) {
 
-        ListView list = (ListView) mActivity
-                .findViewById(R.id.list_user);
-
-        if (list == null) return;
-//        list.setAdapter(new NeighborListAdapter(mActivity,
-//                getSampleDatas()));
-//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                goToDetail();
-//            }
-//        });
+//특정 사용자 아이디등 처리!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("sort", sortType));
+        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
 
 
+        new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
+                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
+                postParams);
     }
+
 
     private void goToDetail(String idx) {
         Intent intent = new Intent(mActivity, DetailActivity.class);
@@ -61,23 +73,7 @@ public class UserListFragment extends FMCommonFragment implements
     }
 
 
-    private ArrayList<NeighborListModel> getSampleDatas() {
-        ArrayList<NeighborListModel> datas = new ArrayList<>();
 
-        for (int i = 0; i < 20; i++) {
-            NeighborListModel data = new NeighborListModel();
-            data.setTitle("YTN뉴스");
-            data.setContent("세월호 침몰 사건");
-            data.setTime("25m");
-            data.setReplyCount("50");
-            data.setPinCount("15");
-            data.setRegisterDate("2014.04.01 12:30");
-            data.setImg(R.drawable.sandarapark);
-            datas.add(data);
-        }
-
-        return datas;
-    }
 
 
     @Override
@@ -90,8 +86,62 @@ public class UserListFragment extends FMCommonFragment implements
 
     @Override
     protected void addListenerButton() {
-        // TODO Auto-generated method stub
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopup(v);
+            }
+        });
 
+    }
+
+    public void showSortPopup(View v) {
+        PlusClickGuard.doIt(v);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("정렬방식을 선택해주세요.");
+        ab.setItems(listOptionDatas, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                doSort(whichButton);
+
+            }
+        }).setNegativeButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+        ab.show();
+    }
+
+    private void doSort(int whichButton) {
+
+
+        switch (whichButton) {
+            case 0: sortByPopular();
+                break;
+
+            case 1: sortByRecent();
+                break;
+
+            case 2:sortByDistance();
+                break;
+
+        }
+    }
+
+    private void sortByDistance() {
+
+        //sort 값 수정!!
+        getDataFromServer(FMConstants.SORT_BY_DISTANCE);
+    }
+
+    private void sortByRecent() {
+        getDataFromServer(FMConstants.SORT_BY_RECENT);
+    }
+
+    private void sortByPopular() {
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
     @Override
@@ -99,30 +149,38 @@ public class UserListFragment extends FMCommonFragment implements
         if (datas == null)
             return;
         switch (from) {
-            case GET_MAIN_LIST:
-                makeList(datas);
+            case GET_LIST_DATA:
+                makeList(new FMListParser().doIt((String) datas));
+                showTotalUserPost();
                 break;
         }
 
     }
 
-    private void makeList(Object datas) {
-
-//        ListView list = (ListView) mActivity
-//                .findViewById(R.id.list_main);
-//
-//        if(list==null) return;
-//        list.setAdapter(new OrderHistoryListAdapter(mActivity,this,
-//                (ArrayList<OrderHistoryModel>) datas));
+    private void showTotalUserPost() {
+        TextView totalUserPost = (TextView) mActivity.findViewById(R.id.totalUserPost);
+        totalUserPost.setText("친구를 맺으면 " + getTotalUserPost() + "개의 게시물을 함께 나눌 수 있습니다.");
     }
 
-    public void refreshList() {
-//        new PlusHttpClient(mActivity, this, false).execute(
-//                GET_ORDER_HISTORY,
-//                ApiConstants.GET_ORDER_HISTORY + "?id="
-//                        + PlusPhoneNumberFinder.isLogIn(mActivity),
-//                new OrderHistoryParser());
+    private void makeList(final ArrayList<FMModel> datas) {
 
+        ListView list = (ListView) mActivity
+                .findViewById(R.id.list_user);
+
+        if (list == null||datas==null) return;
+        list.setAdapter(new NeighborListAdapter(mActivity,
+                datas));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                goToDetail(datas.get(position).getIdx());
+            }
+        });
     }
 
+    public int getTotalUserPost() {
+        return ((UserPageActivity) mActivity).getTotalUserPost();
+
+
+    }
 }

@@ -169,6 +169,7 @@ public class SignUpActivity extends FMCommonActivity implements PlusOnGetDataLis
 
     @Override
     public void onSuccess(Integer from, Object datas) {
+        if(datas == null) return;
         switch (from) {
 
             case CHECK_EMAIL:

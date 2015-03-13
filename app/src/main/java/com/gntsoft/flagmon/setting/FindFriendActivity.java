@@ -8,24 +8,58 @@ import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FriendListParser;
+import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 3. 3.
  */
 public class FindFriendActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
-    private static final int GET_MAIN_LIST = 0;
+    private static final int GET_SENT_FRIEND_REQUEST = 0;
+    private static final int GET_GOT_FRIEND_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friend);
-        makeSampleList1();
-        makeSampleList2();
+        getGotFriendRequestDataFromServer();
+        getSentFriendRequestDataFromServer();
+    }
+
+    private void getSentFriendRequestDataFromServer() {
+        //특정 사용자 아이디등 처리!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        //postParams.add(new BasicNameValuePair("sort", sortType));
+        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(this, this, false).execute(GET_SENT_FRIEND_REQUEST,
+                FMApiConstants.GET_SENT_FRIEND_REQUEST, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    private void getGotFriendRequestDataFromServer() {
+        //특정 사용자 아이디등 처리!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+       // postParams.add(new BasicNameValuePair("sort", sortType));
+        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(this, this, false).execute(GET_GOT_FRIEND_REQUEST,
+                FMApiConstants.GET_GOT_FRIEND_REQUEST, new PlusInputStreamStringConverter(),
+                postParams);
     }
 
 
@@ -65,61 +99,51 @@ public class FindFriendActivity extends FMCommonActivity implements
     }
 
 
-    private void makeSampleList1() {
-
-        ListView list = (ListView) findViewById(R.id.list_got_friend_request);
-
-        if (list == null) return;
-        list.setAdapter(new SentFriendRequestListAdapter(this,
-                getSampleDatas()));
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            }
-        });
 
 
-    }
 
-    private void makeSampleList2() {
-
-        ListView list = (ListView)
-                findViewById(R.id.list_sent_friend_request);
-
-        if (list == null) return;
-        list.setAdapter(new GotFriendRequestListAdapter(this,
-                getSampleDatas()));
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            }
-        });
-
-
-    }
-
-    private ArrayList<FriendModel> getSampleDatas() {
-        ArrayList<FriendModel> datas = new ArrayList<>();
-
-        for (int i = 0; i < 20; i++) {
-            FriendModel data = new FriendModel();
-            data.setName("Sandara Park");
-
-            datas.add(data);
-        }
-
-        return datas;
-    }
 
     @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
             return;
         switch (from) {
-            case GET_MAIN_LIST:
-                //makeList(datas);
+            case GET_GOT_FRIEND_REQUEST:
+                //파서 수정!!
+                makeGotFriendRequestList(new FriendListParser().doIt((String) datas));
+                break;
+            case GET_SENT_FRIEND_REQUEST:
+                makeSentFriendRequestList(new FriendListParser().doIt((String) datas));
                 break;
         }
 
+    }
+
+    private void makeSentFriendRequestList(final ArrayList<FriendModel> datas) {
+        ListView list = (ListView)
+                findViewById(R.id.list_sent_friend_request);
+
+        if (list == null) return;
+        list.setAdapter(new GotFriendRequestListAdapter(this,
+                datas));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });
+
+    }
+
+    private void makeGotFriendRequestList(final ArrayList<FriendModel> datas) {
+        ListView list = (ListView) findViewById(R.id.list_got_friend_request);
+
+        if (list == null) return;
+        list.setAdapter(new SentFriendRequestListAdapter(this,
+                datas));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });
     }
 }

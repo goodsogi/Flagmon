@@ -49,10 +49,11 @@
             android:onClick="doSearch" />
 
         <Button
+            android:id="@+id/sort"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/option_btn_selector"
-            android:onClick="showSortPopup" />
+             />
     </LinearLayout>
 
     <FrameLayout

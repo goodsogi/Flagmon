@@ -1,7 +1,10 @@
 package com.gntsoft.flagmon.user;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -18,10 +21,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.detail.DetailActivity;
+import com.gntsoft.flagmon.main.MainActivity;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMMapParser;
+import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.LoginChecker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -35,10 +46,20 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
+import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusOnClickListener;
+import com.pluslibrary.utils.PlusViewHolder;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -50,10 +71,12 @@ public class UserMapFragment extends FMCommonFragment implements
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
     private boolean mIsGpsCatched;
+    private static final int GET_TOTAL_USER_POST = 7;
     private static final int GET_MAP_DATA = 0;
-    private SupportMapFragment fragment;
     private MapView mMapView;
     private Button mMyLocationButton;
+
+    String [] mapOptionDatas = {"인기순","최근 등록순"};
 
     public UserMapFragment() {
         // TODO Auto-generated constructor stub
@@ -63,50 +86,29 @@ public class UserMapFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //refreshList();
-        // getCurrentLocation();
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
+    }
 
-        showSampleMarkers();
+    public void getDataFromServer(String sortType) {
+
+//특정 사용자 아이디등 처리!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("sort", sortType));
+        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
+                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
+                postParams);
     }
 
 
-    private void showSampleMarkers() {
-        //샘플용 위치와 마커 이미지
-        ArrayList<LatLng> positions = new ArrayList<>();
-
-        Random random = new Random();
 
 
-        for (int i = 0; i < 20; i++) {
-            positions.add(new LatLng(37.587140 + random.nextInt(10) / 10f, 126.994357 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(36.817490 + random.nextInt(10) / 10f, 128.627411 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(35.862362 + random.nextInt(10) / 10f, 128.585926 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(35.185497 + random.nextInt(10) / 10f, 129.023048 + random.nextInt(10) / 10f));
-            positions.add(new LatLng(35.415269 + random.nextInt(10) / 10f, 127.391928 + random.nextInt(10) / 10f));
-        }
+    private BitmapDescriptor getMarKerImg(Bitmap original) {
 
-
-        ArrayList<Integer> imgs = new ArrayList<>();
-
-
-        imgs.add(R.drawable.sandarapark);
-        imgs.add(R.drawable.sandarapark2);
-        imgs.add(R.drawable.sandarapark3);
-        imgs.add(R.drawable.sandarapark4);
-        imgs.add(R.drawable.sandarapark5);
-
-
-        LatLng position = null;
-        for (int i = 0; i < 100; i++) {
-            mGoogleMap.addMarker(new MarkerOptions().position(positions.get(i)).snippet("" + i)
-                    .icon(getMarKerImg(imgs.get(i % 5))).anchor(0f, 1.0f));
-            //마커 클릭처리 필요!!
-        }
-    }
-
-    private BitmapDescriptor getMarKerImg(int imgId) {
+        //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
         //마스킹
-        Bitmap original = BitmapFactory.decodeResource(getResources(), imgId);
         Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
         Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
@@ -277,7 +279,59 @@ public class UserMapFragment extends FMCommonFragment implements
                 }
             }
         });
+
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopup(v);
+            }
+        });
     }
+
+    public void showSortPopup(View v) {
+        PlusClickGuard.doIt(v);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("정렬방식을 선택해주세요.");
+        ab.setItems(mapOptionDatas, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                doSort(whichButton);
+
+            }
+        }).setNegativeButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+        ab.show();
+    }
+
+    private void doSort(int whichButton) {
+
+
+        switch (whichButton) {
+            case 0: sortByPopular();
+                break;
+
+            case 1: sortByRecent();
+                break;
+
+
+
+        }
+    }
+
+
+
+    private void sortByRecent() {
+        getDataFromServer(FMConstants.SORT_BY_RECENT);
+    }
+
+    private void sortByPopular() {
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
+    }
+
 
     @Override
     public void onSuccess(Integer from, Object datas) {
@@ -285,29 +339,108 @@ public class UserMapFragment extends FMCommonFragment implements
             return;
         switch (from) {
             case GET_MAP_DATA:
-                makeList(datas);
+                handleMapData(new FMMapParser().doIt((String) datas));
+                getTotalUserPost();
+                break;
+            case GET_TOTAL_USER_POST:
+                //파서등 수정!!
+                showTotalUserPost(new FMMapParser().doIt((String) datas));
+                ((UserPageActivity) mActivity).setTotalUserPost(10);
                 break;
         }
 
     }
 
-    private void makeList(Object datas) {
+    private void showTotalUserPost(ArrayList<FMModel> fmModels) {
+//수정!!
+        TextView reply = (TextView) mActivity.findViewById(R.id.reply);
+        TextView pin = (TextView) mActivity.findViewById(R.id.pin);
+      reply.setText(fmModels.get(0).getScrapCount());
+        pin.setText(fmModels.get(0).getScrapCount());
 
-//		ListView list = (ListView) mActivity
-//				.findViewById(R.id.list_order_history);
-//
-//		if(list==null) return;
-//		list.setAdapter(new OrderHistoryListAdapter(mActivity,this,
-//				(ArrayList<OrderHistoryModel>) datas));
-    }
 
-    public void refreshList() {
-//		new PlusHttpClient(mActivity, this, false).execute(
-//				GET_MAP_DATA,
-//				ApiConstants.GET_MAP_DATA + "?id="
-//						+ PlusPhoneNumberFinder.isLogIn(mActivity),
-//				new OrderHistoryParser());
 
     }
+
+    private void getTotalUserPost() {
+        //특정 사용자 아이디등 처리!!
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_TOTAL_USER_POST,
+                FMApiConstants.GET_TOTAL_USER_POST, new PlusInputStreamStringConverter(),
+                postParams);
+
+
+    }
+
+    private void handleMapData(ArrayList<FMModel> datas) {
+
+        mGoogleMap.clear();
+
+        for (int i = 0; i < datas.size(); i++)
+        {
+            fetchImageFromServer(datas.get(i), i);
+
+
+        }
+    }
+
+    private void fetchImageFromServer(final FMModel mapDataModel, final int position) {
+        mImageLoader.loadImage(mapDataModel.getImgUrl(),mOption,new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String s, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+
+                showMarkers(bitmap,mapDataModel);
+
+
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+
+            }
+        });
+
+
+
+
+
+    }
+
+    private void showMarkers(Bitmap bitmap,FMModel mapDataModel) {
+        LatLng latLng = new LatLng(Double.parseDouble(mapDataModel.getLat()), Double.parseDouble(mapDataModel.getLon()));
+        mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet(mapDataModel.getIdx())
+                .icon(getMarKerImg(bitmap)).anchor(0f, 1.0f));
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                goToDetail(marker.getSnippet());
+                return false;
+            }
+        });
+    }
+
+    private void goToDetail(String idx) {
+        Intent intent = new Intent(mActivity, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+
+        startActivity(intent);
+    }
+
 
 }

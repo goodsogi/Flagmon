@@ -184,7 +184,7 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
         ListView list = (ListView) findViewById(R.id.listTwitter);
 
         if (list == null || mModel == null) return;
-        list.setAdapter(new SentFriendRequestListAdapter(this,
+        list.setAdapter(new FindFriendListAdapter(this,
                 mModel));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

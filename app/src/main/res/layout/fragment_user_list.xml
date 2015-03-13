@@ -12,11 +12,11 @@
         android:background="#ffffff" />
 
     <TextView
+        android:id="@+id/totalUserPost"
         android:layout_width="match_parent"
         android:layout_height="74dp"
         android:background="#e3eaec"
         android:gravity="center"
-        android:text="친구를 맺으면 65개의 게시물을 함께 나눌 수 있습니다."
         android:textColor="#455068" />
 
 

@@ -1,6 +1,8 @@
 package com.gntsoft.flagmon.search;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,6 +48,8 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
+import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -63,6 +67,8 @@ public class MapSearchFragment extends FMCommonFragment implements
     private SupportMapFragment fragment;
     private MapView mMapView;
     private Button mMyLocationButton;
+
+    String [] mapOptionDatas = {"인기순","최근 등록순"};
 
     public MapSearchFragment() {
         // TODO Auto-generated constructor stub
@@ -245,7 +251,61 @@ public class MapSearchFragment extends FMCommonFragment implements
 //                }
 //            }
 //        });
+
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopup(v);
+            }
+        });
     }
+
+    public void showSortPopup(View v) {
+        PlusClickGuard.doIt(v);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("정렬방식을 선택해주세요.");
+        ab.setItems(mapOptionDatas, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                doSort(whichButton);
+
+            }
+        }).setNegativeButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+        ab.show();
+    }
+
+    private void doSort(int whichButton) {
+
+
+        switch (whichButton) {
+            case 0: sortByPopular();
+                break;
+
+            case 1: sortByRecent();
+                break;
+
+
+
+        }
+    }
+
+
+
+    private void sortByRecent() {
+        getDataFromServer(FMConstants.SORT_BY_RECENT);
+    }
+
+    private void sortByPopular() {
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
+    }
+
+
+
 
     @Override
     public void onSuccess(Integer from, Object datas) {
@@ -260,6 +320,11 @@ public class MapSearchFragment extends FMCommonFragment implements
     }
 
     private void handleMapData(ArrayList<FMModel> datas) {
+
+        if(datas == null || datas.size() == 0) {
+            PlusToaster.doIt(mActivity,"검색결과가 없습니다");
+            return;
+        }
 
 
         for (int i = 0; i < datas.size(); i++)

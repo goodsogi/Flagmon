@@ -2,23 +2,43 @@ package com.gntsoft.flagmon.user;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
 import com.gntsoft.flagmon.FMCommonActivity;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.comment.CommentActivity;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMMapParser;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginActivity;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
+import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 2. 27.
  */
-public class UserPageActivity extends FMCommonActivity {
+public class UserPageActivity extends FMCommonActivity implements
+        PlusOnGetDataListener {
+
+    private int mtotalUserPost;
+    private static final int ADD_FRIEND = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,39 +48,28 @@ public class UserPageActivity extends FMCommonActivity {
 
     }
 
-    public void goToReply(View v) {
-        PlusClickGuard.doIt(v);
-        Intent intent = new Intent(this, CommentActivity.class);
-        startActivity(intent);
+
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case ADD_FRIEND:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(this,model.getResult().equals("success")?"친구 추가되었습니다":"친구 추가되지 못했습니다");
+                if(model.getResult().equals("success")) {
+                    //추가 액션??
+                }
+                break;
+
+        }
 
     }
 
-    public void doPin(View v) {
 
-        PlusClickGuard.doIt(v);
 
-        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-        ab.setTitle("로그인 후 스크랩 할 수 있어요. 로그인하시겠습니까?");
-        ab.setNegativeButton("아니오",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                }).setPositiveButton("예", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                goToLogin();
-            }
-        });
-        ab.show();
 
-    }
-
-    public void sortContent(View v) {
-
-        PlusClickGuard.doIt(v);
-//정렬 구현!!
-        PlusToaster.doIt(this, "준비중...");
-    }
 
     public void addFriend(View v) {
 
@@ -89,8 +98,16 @@ public class UserPageActivity extends FMCommonActivity {
     }
 
     private void requestAddFriend() {
-        //구현!!
-        PlusToaster.doIt(this, "준비중...");
+        //특정 사용자 아이디등 처리!!
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        //postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(this, this, false).execute(ADD_FRIEND,
+                FMApiConstants.ADD_FRIEND, new PlusInputStreamStringConverter(),
+                postParams);
     }
 
     private void showLoginAlertDialog() {
@@ -144,4 +161,15 @@ public class UserPageActivity extends FMCommonActivity {
 
     }
 
+    public int getTotalUserPost() {
+
+
+        return mtotalUserPost;
+    }
+
+    public void setTotalUserPost(int totalUserPost) {
+
+
+        mtotalUserPost = totalUserPost;
+    }
 }

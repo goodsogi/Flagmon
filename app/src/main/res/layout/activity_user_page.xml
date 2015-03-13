@@ -82,12 +82,12 @@
 
 
         <Button
-            android:id="@+id/tab_sort"
+            android:id="@+id/sort"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/sort_btn_selector"
-            android:onClick="sortContent" />
+             />
 
 
     </LinearLayout>

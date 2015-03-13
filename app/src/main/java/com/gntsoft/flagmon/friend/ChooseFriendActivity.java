@@ -32,8 +32,8 @@ public class ChooseFriendActivity extends FMCommonActivity implements
         ListView list = (ListView) findViewById(R.id.list_choose_friend);
 
         if (list == null) return;
-        list.setAdapter(new ChooseFriendListAdapter(this,
-                getSampleDatas()));
+//        list.setAdapter(new ChooseFriendListAdapter(this,
+//                getSampleDatas()));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

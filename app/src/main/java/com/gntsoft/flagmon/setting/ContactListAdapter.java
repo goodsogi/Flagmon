@@ -15,19 +15,35 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
+import com.gntsoft.flagmon.utils.LoginChecker;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
+import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 import com.pluslibrary.utils.PlusViewHolder;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by johnny on 15. 3. 12.
  */
-public class ContactListAdapter extends CursorAdapter {
-
+public class ContactListAdapter extends CursorAdapter implements
+        PlusOnGetDataListener {
+    private static final int SEND_FRIEND_REQUEST = 0;
     private final Context mContext;
     // 이미지 다운로드
     protected ImageLoader mImageLoader;
@@ -75,17 +91,42 @@ public class ContactListAdapter extends CursorAdapter {
 
         nameView.setText(name);
 
-        Button sendRequest = PlusViewHolder.get(convertView, R.id.sendRequest);
-        sendRequest.setOnClickListener(new PlusOnClickListener() {
+        Button sendFriendRequest = PlusViewHolder.get(convertView, R.id.sendFriendRequest);
+        sendFriendRequest.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                sendRequest();
+                sendFriendRequest();
             }
         });
     }
 
-    private void sendRequest() {
-        //구현!!
-        PlusToaster.doIt(mContext, "준비중...");
+    private void sendFriendRequest() {
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
+            postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(SEND_FRIEND_REQUEST,
+                FMApiConstants.SEND_FRIEND_REQUEST, new PlusInputStreamStringConverter(),
+                postParams);
     }
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case SEND_FRIEND_REQUEST:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(mContext, model.getResult().equals("success") ? "친구 신청을 보냈습니다" : "친구 신청을 보내지 못했습니다");
+                if (model.getResult().equals("success")) {
+                    //추가 액션??
+                }
+                break;
+        }
+
+    }
+
 }

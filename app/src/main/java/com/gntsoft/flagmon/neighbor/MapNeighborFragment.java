@@ -65,13 +65,12 @@ public class MapNeighborFragment extends FMCommonFragment implements
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
     private boolean mIsGpsCatched;
+    private static final int FIND_TREASURE = 11;
     private static final int GET_MAP_DATA = 0;
-    private SupportMapFragment fragment;
     private MapView mMapView;
     private Button mMyLocationButton;
 
     String [] mapOptionDatas = {"인기순","최근 등록순"};
-    private String userAuthKey;
 
     public MapNeighborFragment() {
         // TODO Auto-generated constructor stub
@@ -120,8 +119,15 @@ public class MapNeighborFragment extends FMCommonFragment implements
     }
 
     private void findTreasure() {
-        //구현!!
-        PlusToaster.doIt(mActivity, "준비중...");
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(mActivity, this, false).execute(FIND_TREASURE,
+                FMApiConstants.FIND_TREASURE, new PlusInputStreamStringConverter(),
+                postParams);
 
     }
 
@@ -138,13 +144,13 @@ public class MapNeighborFragment extends FMCommonFragment implements
 
         for (int i = 0; i < datas.size(); i++)
         {
-           fetchImageFromServer(datas.get(i), i);
+           fetchImageFromServer(datas.get(i));
 
 
         }
     }
 
-    private void fetchImageFromServer(final FMModel mapDataModel, final int position) {
+    private void fetchImageFromServer(final FMModel mapDataModel) {
         mImageLoader.loadImage(mapDataModel.getImgUrl(),mOption,new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -456,8 +462,56 @@ public class MapNeighborFragment extends FMCommonFragment implements
             case GET_MAP_DATA:
                 handleMapData(new FMMapParser().doIt((String) datas));
                 break;
+
+            case FIND_TREASURE:
+                showTreasures(new FMMapParser().doIt((String) datas));
+                break;
         }
 
+    }
+
+    private void showTreasures(ArrayList<FMModel> datas) {
+        String message = "500개의 보물상자와 100개의 mon이 검색되었습니다.";
+        showTreasureResultAlertDialog(message);
+
+        //보물상자 버튼 아이콘은 gone시키고 검색된 보물상자 아이콘 표시
+        Button treasureBox = (Button) mActivity.findViewById(R.id.treasureBox);
+        treasureBox.setVisibility(View.GONE);
+
+        for (int i = 0; i < datas.size(); i++)
+        {
+            showTreasureMarkers(datas.get(i));
+
+
+        }
+
+    }
+
+    private void showTreasureMarkers(FMModel fmModel) {
+        LatLng latLng = new LatLng(Double.parseDouble(fmModel.getLat()), Double.parseDouble(fmModel.getLon()));
+        mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet(fmModel.getIdx())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.treasure)).anchor(0f, 1.0f));
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                goToDetail(marker.getSnippet());
+                return false;
+            }
+        });
+    }
+
+    private void showTreasureResultAlertDialog(String message) {
+        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("검색결과");
+        ab.setMessage(message);
+        ab.setNeutralButton("확인",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+        ab.show();
     }
 
 

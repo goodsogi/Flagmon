@@ -1,7 +1,9 @@
 package com.gntsoft.flagmon.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MotionEvent;
@@ -11,18 +13,29 @@ import android.widget.EditText;
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
+import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
+import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 2. 27.
  */
-public class FindPasswordActivity  extends FMCommonActivity {
-    final int DRAWABLE_LEFT = 0;
-    final int DRAWABLE_TOP = 1;
+public class FindPasswordActivity  extends FMCommonActivity implements
+        PlusOnGetDataListener {
     final int DRAWABLE_RIGHT = 2;
-    final int DRAWABLE_BOTTOM = 3;
-    private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z]+)(?=.*[!@#$%^*+=-]|.*[0-9]+).{8,16}$";
+    private static final int REQUEST_PASSWORD = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,27 +68,40 @@ public class FindPasswordActivity  extends FMCommonActivity {
 
     }
 
-    private boolean showPassword(EditText userPasswordView) {
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case REQUEST_PASSWORD:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(this,model.getResult().equals("success")?"비밀번호 재설정 메일을 발송하였습니다.":"비밀번호 재설정 메일을 발송하지 못했습니다.");
+                if(model.getResult().equals("success")) {
+                    //추가 액션??
+                }
+                break;
 
-        userPasswordView.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-        return false;
+        }
+
     }
 
-    public void goToFindPassword(View v) {
-        PlusClickGuard.doIt(v);
 
-        Intent intent = new Intent(this, FindPasswordActivity.class);
-        startActivity(intent);
 
-    }
 
     public void requestPassword(View v) {
-        PlusClickGuard.doIt(v);
+        //특정 사용자 아이디등 처리!!
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        //postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
 
-        //구현!!
-        PlusToaster.doIt(this, "준비중...");
+
+        new PlusHttpClient(this, this, false).execute(REQUEST_PASSWORD,
+                FMApiConstants.REQUEST_PASSWORD, new PlusInputStreamStringConverter(),
+                postParams);
 
     }
+
 
 
 

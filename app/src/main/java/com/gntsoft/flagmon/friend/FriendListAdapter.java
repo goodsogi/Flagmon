@@ -1,6 +1,7 @@
 package com.gntsoft.flagmon.friend;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,22 +15,37 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonAdapter;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.comment.CommentActivity;
 import com.gntsoft.flagmon.neighbor.NeighborListModel;
+import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
+import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
+import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 import com.pluslibrary.utils.PlusViewHolder;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class FriendListAdapter extends FMCommonAdapter<FMModel> {
+public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
+        PlusOnGetDataListener {
 
-
+    private static final int SCRAP_THIS = 0;
     public FriendListAdapter(Context context, ArrayList<FMModel> datas) {
         super(context, R.layout.friend_list_item, datas);
 
@@ -42,7 +58,7 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> {
                     parent, false);
         }
 
-        FMModel data = mDatas.get(position);
+        final FMModel data = mDatas.get(position);
         TextView name = PlusViewHolder.get(convertView, R.id.name);
         TextView content = PlusViewHolder.get(convertView, R.id.content);
         TextView date = PlusViewHolder.get(convertView, R.id.date);
@@ -61,6 +77,13 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> {
                 data.getImgUrl(), bigImg,
                 mOption);
 
+        ImageView scrapPost = PlusViewHolder.get(convertView, R.id.scrapPost);
+        ImageView myPost = PlusViewHolder.get(convertView, R.id.myPost);
+
+        //내가 작정한 글인지 스크랩한 글인지 표시
+        //scrapPost.setVisibility(View.VISIBLE);
+        //myPost.setVisibility(View.VISIBLE);
+
         name.setText(data.getUserName());
         content.setText(data.getMemo());
         date.setText(data.getRegisterDate());
@@ -73,15 +96,15 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> {
         writeReply.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                goToReply();
+                goToReply(data.getIdx());
             }
         });
 
-        Button getArticle = PlusViewHolder.get(convertView, R.id.getArticle);
-        getArticle.setOnClickListener(new PlusOnClickListener() {
+        Button scrapThis = PlusViewHolder.get(convertView, R.id.scrapThis);
+        scrapThis.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                doPin();
+                scrapThis();
             }
         });
 
@@ -96,15 +119,23 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> {
         return convertView;
     }
 
-    private void doPin() {
-        //구현!!
-        PlusToaster.doIt(mContext, "준비중...");
+    private void scrapThis() {
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        if(LoginChecker.isLogIn((android.app.Activity) mContext)) { postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));}
+
+
+        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(SCRAP_THIS,
+                FMApiConstants.SCRAP_THIS, new PlusInputStreamStringConverter(),
+                postParams);
 
     }
 
-    private void goToReply() {
-//구현!!
-        PlusToaster.doIt(mContext, "준비중...");
+    private void goToReply(String idx) {
+        Intent intent = new Intent(mContext, CommentActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+        mContext.startActivity(intent);
     }
 
 
@@ -127,6 +158,23 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> {
         return  result;
 
 
+
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case SCRAP_THIS:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(mContext,model.getResult().equals("success")?"스크했습니다":"스크랩하지 못했습니다");
+                if(model.getResult().equals("success")) {
+                    //추가 액션??
+                }
+                break;
+
+        }
 
     }
 

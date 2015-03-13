@@ -136,6 +136,8 @@
                 android:layout_marginLeft="2dp"
                 android:gravity="center"
                 android:text="15"
+                android:onClick="doPin"
+                android:clickable="true"
                 android:textColor="#ffffff"
                 android:textSize="12sp" />
 

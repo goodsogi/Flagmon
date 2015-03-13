@@ -226,6 +226,7 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
 
     @Override
     public void onSuccess(Integer from, Object datas) {
+        if(datas == null) return;
         switch (from) {
 
             case SIGN_UP:

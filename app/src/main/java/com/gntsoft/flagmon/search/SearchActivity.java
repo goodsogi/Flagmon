@@ -25,8 +25,7 @@ import com.pluslibrary.utils.PlusToaster;
 public class SearchActivity extends FMCommonActivity {
 
 
-    String [] mapOptionDatas = {"인기순","최근 등록순"};
-    String [] listOptionDatas = {"인기순","최근 등록순","거리순"};
+
     private int mMainContentType;
     private String mKeyword;
 
@@ -110,62 +109,6 @@ public class SearchActivity extends FMCommonActivity {
 
     }
 
-    public void showSortPopup(View v) {
-        PlusClickGuard.doIt(v);
-
-        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-        ab.setTitle("정렬방식을 선택해주세요.");
-        ab.setItems(getItemDatas(), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                doSort(whichButton);
-
-            }
-        }).setNegativeButton("닫기",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                });
-        ab.show();
-    }
-
-    private void doSort(int whichButton) {
-
-
-        switch (whichButton) {
-            case 0: sortByPopular();
-                break;
-
-            case 1: sortByRecent();
-                break;
-
-            case 2:sortByDistance();
-                break;
-
-        }
-    }
-
-    private void sortByDistance() {
-        //sort 값 수정!!
-        showSearchResult(FMConstants.SORT_BY_DISTANCE);
-
-    }
-
-    private void sortByRecent() {
-        showSearchResult(FMConstants.SORT_BY_RECENT);
-
-    }
-
-    private void sortByPopular() {
-        showSearchResult(FMConstants.SORT_BY_POPULAR);
-
-    }
-
-
-    public String[] getItemDatas() {
-
-
-        return mMainContentType == FMConstants.CONTENT_MAP? mapOptionDatas:listOptionDatas;
-    }
 
 
 }

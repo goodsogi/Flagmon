@@ -1,11 +1,14 @@
 package com.gntsoft.flagmon.search;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonFragment;
@@ -21,6 +24,8 @@ import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
+import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -32,6 +37,7 @@ public class ListSearchFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
 
     private static final int GET_LIST_DATA = 0;
+    String [] mapOptionDatas = {"인기순","최근 등록순"};
 
     public ListSearchFragment() {
         // TODO Auto-generated constructor stub
@@ -80,9 +86,59 @@ public class ListSearchFragment extends FMCommonFragment implements
 
     @Override
     protected void addListenerButton() {
-        // TODO Auto-generated method stub
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopup(v);
+            }
+        });
 
     }
+
+    public void showSortPopup(View v) {
+        PlusClickGuard.doIt(v);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("정렬방식을 선택해주세요.");
+        ab.setItems(mapOptionDatas, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                doSort(whichButton);
+
+            }
+        }).setNegativeButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+        ab.show();
+    }
+
+    private void doSort(int whichButton) {
+
+
+        switch (whichButton) {
+            case 0: sortByPopular();
+                break;
+
+            case 1: sortByRecent();
+                break;
+
+
+
+        }
+    }
+
+
+
+    private void sortByRecent() {
+        getDataFromServer(FMConstants.SORT_BY_RECENT);
+    }
+
+    private void sortByPopular() {
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
+    }
+
 
     @Override
     public void onSuccess(Integer from, Object datas) {
@@ -98,10 +154,15 @@ public class ListSearchFragment extends FMCommonFragment implements
 
     private void makeList(final ArrayList<FMModel> datas) {
 
+        if(datas == null || datas.size() == 0) {
+            PlusToaster.doIt(mActivity, "검색결과가 없습니다");
+            return;
+        }
+
         ListView list = (ListView) mActivity
                 .findViewById(R.id.list_search);
 
-        if (list == null||datas==null) return;
+        if (list == null) return;
         list.setAdapter(new NeighborListAdapter(mActivity,
                 datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

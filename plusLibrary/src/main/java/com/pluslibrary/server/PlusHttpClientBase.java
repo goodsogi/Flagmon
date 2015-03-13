@@ -75,6 +75,7 @@ public class PlusHttpClientBase<T, U, V> extends AsyncTask<T, U, V> {
 	 * @return
 	 */
 	protected InputStream doGet(String urlString) {
+        if(urlString.equals("")) return null;
 		try {
 
 			URL url = new URL(urlString);
@@ -107,6 +108,8 @@ public class PlusHttpClientBase<T, U, V> extends AsyncTask<T, U, V> {
 	 */
 	protected InputStream doPost(String urlString,
 			List<NameValuePair> postParams) {
+
+        if(urlString.equals("")) return null;
 
 		URL url = null;
 		try {
@@ -178,7 +181,7 @@ public class PlusHttpClientBase<T, U, V> extends AsyncTask<T, U, V> {
 	 */
 	protected InputStream doPostMultipartEntirty(String urlString,
 			MultipartEntity entity) {
-
+        if(urlString.equals("")) return null;
 		// Set up request
 		HttpURLConnection httpUrlConnection = null;
 		URL url = null;
