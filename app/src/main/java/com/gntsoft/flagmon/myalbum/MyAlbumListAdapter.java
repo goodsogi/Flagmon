@@ -1,6 +1,7 @@
 package com.gntsoft.flagmon.myalbum;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,22 +15,38 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonAdapter;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.comment.CommentActivity;
 import com.gntsoft.flagmon.neighbor.NeighborListModel;
+import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
+import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
+import com.pluslibrary.server.PlusOnGetDataListener;
+import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 import com.pluslibrary.utils.PlusViewHolder;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
+public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
+        PlusOnGetDataListener {
 
-
+    private static final int BURY_TREASURE = 0;
     public MyAlbumListAdapter(Context context, ArrayList<FMModel> datas) {
         super(context, R.layout.my_album_list_item, datas);
 
@@ -42,7 +59,7 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
                     parent, false);
         }
 
-        FMModel data = mDatas.get(position);
+        final FMModel data = mDatas.get(position);
         TextView content = PlusViewHolder.get(convertView, R.id.content);
         TextView date = PlusViewHolder.get(convertView, R.id.date);
         TextView reply = PlusViewHolder.get(convertView, R.id.reply);
@@ -65,7 +82,7 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
         writeReply.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                goToReply();
+                goToCommentActivity(data.getIdx());
             }
         });
 
@@ -89,15 +106,26 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
     }
 
     private void buryTreasure() {
-        //구현!!
-        PlusToaster.doIt(mContext, "준비중...");
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        if(LoginChecker.isLogIn((android.app.Activity) mContext)) { postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));}
+
+
+        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(BURY_TREASURE,
+                FMApiConstants.BURY_TREASURE, new PlusInputStreamStringConverter(),
+                postParams);
 
     }
 
-    private void goToReply() {
-//구현!!
-        PlusToaster.doIt(mContext, "준비중...");
+
+    private void goToCommentActivity(String idx) {
+        Intent intent = new Intent(mContext, CommentActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+        mContext.startActivity(intent);
+
     }
+
 
 
     private Bitmap getFrameImg(int imgId) {
@@ -119,6 +147,23 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
         return  result;
 
 
+
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case BURY_TREASURE:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(mContext,model.getResult().equals("success")?"보물을 묻었습니다":"보물을 묻지 못했습니다");
+                if(model.getResult().equals("success")) {
+                    //추가 액션??
+                }
+                break;
+
+        }
 
     }
 

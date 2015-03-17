@@ -34,12 +34,14 @@
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/completePost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="completePost"
             android:background="#00000000"
             android:textColor="#ffffff"
             android:textStyle="bold"
+            android:enabled="false"
             android:text="완료"
             android:textSize="18sp" />
 
@@ -74,6 +76,7 @@
             android:background="#ffffff"
             android:gravity="left"
             android:hint="사진설명"
+            android:maxLength="140"
             android:padding="10dp"
             android:textSize="14sp" />
 
@@ -87,7 +90,8 @@
         <LinearLayout
             android:id="@+id/barPhotoLocation"
             android:layout_width="match_parent"
-            android:layout_height="59dp"
+            android:layout_height="wrap_content"
+            android:minHeight="59dp"
             android:layout_below="@+id/line1"
             android:background="#ffffff"
             android:orientation="vertical">
@@ -106,6 +110,7 @@
                     android:background="@drawable/p32_icon_0005" />
 
                 <EditText
+                    android:id="@+id/locationSearchInput"
                     android:layout_width="0px"
                     android:layout_height="35dp"
                     android:layout_marginTop="3dp"
@@ -116,10 +121,13 @@
                     android:textSize="14sp" />
 
                 <Button
+                    android:id="@+id/locationSearchButton"
                     android:layout_width="43dp"
                     android:layout_height="29dp"
                     android:layout_marginTop="9dp"
                     android:layout_marginRight="15dp"
+                    android:onClick="performLocationSearch"
+                    android:enabled="false"
                     android:background="@drawable/location_search_button_selector" />
             </LinearLayout>
 
@@ -129,6 +137,10 @@
                 android:gravity="center"
                 android:text="사진을 드래그 하여 정확한 위치를 선택해 주세요"
                 android:textSize="12sp" />
+            <ListView
+                android:id="@+id/listSearchLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"> </ListView>
 
         </LinearLayout>
 
@@ -162,7 +174,7 @@
 
                 <ImageView
                     android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_height="27dp"
                     android:layout_marginLeft="21dp"
                     android:background="@drawable/p32_icon_0001" />
 
@@ -178,10 +190,16 @@
                     />
 
                 <CheckBox
+                    android:id="@+id/checkboxShareAll"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
+                    android:button="@drawable/location_checkbox_selector"
                     android:layout_marginRight="23dp" />
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#afbbcd" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -192,7 +210,7 @@
 
                 <ImageView
                     android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_height="27dp"
                     android:layout_marginLeft="21dp"
                     android:background="@drawable/p32_icon_0003" />
 
@@ -208,10 +226,16 @@
                     />
 
                 <CheckBox
+                    android:id="@+id/checkboxShareFriend"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
+                    android:button="@drawable/location_checkbox_selector"
                     android:layout_marginRight="23dp" />
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#afbbcd" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -222,7 +246,7 @@
 
                 <ImageView
                     android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_height="27dp"
                     android:layout_marginLeft="21dp"
                     android:background="@drawable/p32_icon_0002" />
 
@@ -238,9 +262,12 @@
                     />
 
                 <CheckBox
+                    android:id="@+id/checkboxPrivate"
                     android:layout_width="34dp"
                     android:layout_height="34dp"
-                    android:layout_marginRight="23dp" />
+                    android:layout_marginRight="23dp"
+                    android:button="@drawable/location_checkbox_selector"
+                    />
             </LinearLayout>
 
             <View

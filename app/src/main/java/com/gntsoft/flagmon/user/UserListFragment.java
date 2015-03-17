@@ -36,7 +36,7 @@ import java.util.List;
 public class UserListFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
 
-    private static final int GET_LIST_DATA = 0;
+    private static final int GET_USER_LIST_DATA = 0;
     String [] listOptionDatas = {"인기순","최근 등록순","거리순"};
     private int totalUserPost;
 
@@ -53,14 +53,15 @@ public class UserListFragment extends FMCommonFragment implements
 
     public void getDataFromServer(String sortType) {
 
-//특정 사용자 아이디등 처리!!
+//특정 사용자 이메일등 처리!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("user_email", "user@email.com"));
         postParams.add(new BasicNameValuePair("sort", sortType));
         if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
 
 
-        new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
-                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
+        new PlusHttpClient(mActivity, this, false).execute(GET_USER_LIST_DATA,
+                FMApiConstants.GET_USER_LIST_DATA, new PlusInputStreamStringConverter(),
                 postParams);
     }
 
@@ -149,7 +150,7 @@ public class UserListFragment extends FMCommonFragment implements
         if (datas == null)
             return;
         switch (from) {
-            case GET_LIST_DATA:
+            case GET_USER_LIST_DATA:
                 makeList(new FMListParser().doIt((String) datas));
                 showTotalUserPost();
                 break;

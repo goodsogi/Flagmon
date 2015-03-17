@@ -1,6 +1,8 @@
 package com.gntsoft.flagmon.myalbum;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.widget.GridView;
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.utils.FMLocationFinder;
 import com.pluslibrary.img.CameraAlbumActivity;
 import com.pluslibrary.img.PlusImageConstants;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -25,12 +28,20 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
     private static final int GET_MAIN_LIST = 0;
     private Object photosFromGallery;
+    private FMLocationFinder mFMLocationFinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_choose_photo);
+        runGPS();
         makeGalleryView();
+    }
+
+    private void runGPS() {
+        //위치 서버 등록 api 수정!!
+        mFMLocationFinder = FMLocationFinder.getInstance(this, "");
+        mFMLocationFinder.getCurrentLocation();
     }
 
     private void makeGalleryView() {
@@ -56,11 +67,41 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
 
 
     public void doCamera(View v) {
+
+        if(mFMLocationFinder.isGpsCatched()) {
+            goToCameraAlbumActivity();
+        } else {
+            showGPSAlertDialog();
+        }
+
+
+    }
+
+    private void showGPSAlertDialog() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("카메라에서 위치정보를 사용하도록 허용하시겠습니까?");
+        ab.setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                }).setPositiveButton("예", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //수정!!
+               mFMLocationFinder.getCurrentLocation();
+            }
+        });
+        ab.show();
+
+    }
+
+    private void goToCameraAlbumActivity() {
         Intent intent = new Intent(this, CameraAlbumActivity.class);
         intent.putExtra(PlusImageConstants.KEY_IMAGE_SOURCE,
                 PlusImageConstants.SOURCE_CAMERA);
         startActivityForResult(intent,
                 PlusImageConstants.FROM_CAMERA);
+
     }
 
     /**

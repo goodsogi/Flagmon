@@ -1,29 +1,32 @@
 package com.gntsoft.flagmon.myalbum;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.ExifInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.login.LoginFragment;
 import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMListParser;
+import com.gntsoft.flagmon.server.FMModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
+import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusImageByteConverter;
-import com.pluslibrary.utils.PlusPhoneNumberFinder;
-import com.pluslibrary.utils.PlusStringEmailChecker;
-import com.pluslibrary.utils.PlusTimeFormatter;
 import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
@@ -42,6 +45,7 @@ import java.util.List;
 public class PostSetLocationActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
     private static final int SEND_POST = 0;
+    private static final int SEARCH_LOCATION = 1;
     private Double mPhotoLat;
     private Double mPhotoLon;
 
@@ -49,13 +53,101 @@ public class PostSetLocationActivity extends FMCommonActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_set_location);
+        addListenerToView();
         getPhotoLatLon();
         showMap();
     }
 
+    private void addListenerToView() {
+        EditText locationSearchInput = (EditText) findViewById(R.id.locationSearchInput);
+        final Button locationSearchButton = (Button) findViewById(R.id.locationSearchButton);
+
+        final Button completePost = (Button) findViewById(R.id.completePost);
+
+        final CheckBox checkboxShareAll = (CheckBox) findViewById(R.id.checkboxShareAll);
+        final CheckBox checkboxShareFriend = (CheckBox) findViewById(R.id.checkboxShareFriend);
+        final CheckBox checkboxPrivate = (CheckBox) findViewById(R.id.checkboxPrivate);
+
+        locationSearchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable edit) {
+                String s = edit.toString();
+                if (s.length() > 0 && !locationSearchButton.isEnabled()) locationSearchButton.setEnabled(true);
+            }
+        });
+
+        EditText photoDescription = (EditText) findViewById(R.id.photoDescription);
+        photoDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable edit) {
+                String s = edit.toString();
+                if (s.length() > 0 && !completePost.isEnabled() && (checkboxShareAll.isChecked() || checkboxShareFriend.isChecked() || checkboxPrivate.isChecked()))
+                    completePost.setEnabled(true);
+            }
+        });
+
+
+        checkboxShareAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (checkboxShareFriend.isChecked()) checkboxShareFriend.setChecked(false);
+                    if (checkboxPrivate.isChecked()) checkboxPrivate.setChecked(false);
+                    if (!completePost.isEnabled()) completePost.setEnabled(true);
+
+                }
+            }
+        });
+
+        checkboxShareFriend.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (checkboxShareAll.isChecked()) checkboxShareAll.setChecked(false);
+                    if (checkboxPrivate.isChecked()) checkboxPrivate.setChecked(false);
+                    if (!completePost.isEnabled()) completePost.setEnabled(true);
+                }
+            }
+        });
+
+        checkboxPrivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (checkboxShareAll.isChecked()) checkboxShareAll.setChecked(false);
+                    if (checkboxShareFriend.isChecked()) checkboxShareFriend.setChecked(false);
+                    if (!completePost.isEnabled()) completePost.setEnabled(true);
+                }
+            }
+        });
+
+
+    }
+
+
+
 
     private void showMap() {
-
 
 
         Bundle bundle = new Bundle();
@@ -72,6 +164,23 @@ public class PostSetLocationActivity extends FMCommonActivity implements
 
     }
 
+    public void performLocationSearch(View v) {
+        PlusClickGuard.doIt(v);
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        if (LoginChecker.isLogIn(this)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(this, this, false).execute(SEARCH_LOCATION,
+                FMApiConstants.SEARCH_LOCATION, new PlusInputStreamStringConverter(),
+                postParams);
+
+
+    }
+
 
     public void showChooseShareTypeBar(View v) {
         PlusClickGuard.doIt(v);
@@ -79,7 +188,6 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         LinearLayout barChooseShareType = (LinearLayout) findViewById(R.id.barChooseShareType);
         barChooseShareType.setVisibility(View.VISIBLE);
     }
-
 
 
     public void onBackPressed() {
@@ -95,14 +203,40 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         switch (from) {
             case SEND_POST:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this,model.getResult().equals("success")?"포스팅되었습니다":"포스팅되지 못했습니다");
-                if(model.getResult().equals("success")) {
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "포스팅되었습니다" : "포스팅되지 못했습니다");
+                if (model.getResult().equals("success")) {
                     //추가 처리??
                 }
+                break;
+
+            case SEARCH_LOCATION:
+                makeList(new FMListParser().doIt((String) datas));
                 break;
         }
 
     }
+
+    private void makeList(final ArrayList<FMModel> datas) {
+
+        ListView list = (ListView) findViewById(R.id.listSearchLocation);
+
+        if (list == null || datas == null) return;
+        list.setAdapter(new SearchLocationListAdapter(this,
+                datas));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                moveMarkerToPostion();
+            }
+        });
+
+        //리스트 크기 제한(50dp??)
+    }
+
+    private void moveMarkerToPostion() {
+        //구현!!
+    }
+
 
     public void completePost(View v) {
         PlusClickGuard.doIt(v);
@@ -159,10 +293,8 @@ public class PostSetLocationActivity extends FMCommonActivity implements
 
         String date = exif.getAttribute(ExifInterface.TAG_DATETIME);
         //date가 null인 경우 처리!!
-        return date != null? date: "2014-03-09";
+        return date != null ? date : "2014-03-09";
     }
-
-
 
 
     public PhotoLocation getPhotoLocation(String filepath) {
@@ -212,31 +344,33 @@ public class PostSetLocationActivity extends FMCommonActivity implements
     }
 
 
-    private Double convertToDegree(String stringDMS){
+    private Double convertToDegree(String stringDMS) {
         Double result = null;
         String[] DMS = stringDMS.split(",", 3);
 
         String[] stringD = DMS[0].split("/", 2);
         Double D0 = new Double(stringD[0]);
         Double D1 = new Double(stringD[1]);
-        Double FloatD = D0/D1;
+        Double FloatD = D0 / D1;
 
         String[] stringM = DMS[1].split("/", 2);
         Double M0 = new Double(stringM[0]);
         Double M1 = new Double(stringM[1]);
-        Double FloatM = M0/M1;
+        Double FloatM = M0 / M1;
 
         String[] stringS = DMS[2].split("/", 2);
         Double S0 = new Double(stringS[0]);
         Double S1 = new Double(stringS[1]);
-        Double FloatS = S0/S1;
+        Double FloatS = S0 / S1;
 
-        result = new Double(FloatD + (FloatM/60) + (FloatS/3600));
+        result = new Double(FloatD + (FloatM / 60) + (FloatS / 3600));
 
         return result;
 
 
-    };
+    }
+
+    ;
 
     public void getPhotoLatLon() {
         String imgPath = getIntent().getStringExtra(FMConstants.KEY_IMAGE_PATH);

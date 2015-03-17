@@ -9,67 +9,89 @@ import android.widget.GridView;
 import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.neighbor.NeighborListAdapter;
 import com.gntsoft.flagmon.neighbor.NeighborListModel;
+import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FMListParser;
+import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
+import com.gntsoft.flagmon.utils.LoginChecker;
+import com.pluslibrary.server.PlusHttpClient;
+import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnny on 15. 3. 4.
  */
 public class GroupPostActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
-    private static final int GET_MAIN_LIST = 0;
+    private static final int GET_LIST_DATA = 0;
+    private static final int MAKE_ALBUM = 11;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_post);
-        makeSampleList();
+        getDataFromServer();
     }
 
-    private void makeSampleList() {
+    public void getDataFromServer() {
 
+//내 포스트 가져오기
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(this, this, false).execute(GET_LIST_DATA,
+                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    private void makeList(final ArrayList<FMModel> datas) {
+
+        //row 선택하는 기능 구현!!
         ListView list = (ListView) findViewById(R.id.list_group_post);
 
         if (list == null) return;
         list.setAdapter(new GroupPostListAdapter(this,
-                getSampleDatas()));
+                datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //goToDetail();
             }
         });
 
 
     }
 
-    private ArrayList<NeighborListModel> getSampleDatas() {
-        ArrayList<NeighborListModel> datas = new ArrayList<>();
 
-        for (int i = 0; i < 20; i++) {
-            NeighborListModel data = new NeighborListModel();
-            data.setTitle("YTN뉴스");
-            data.setContent("세월호 침몰 사건");
-            data.setTime("25m");
-            data.setReplyCount("50");
-            data.setPinCount("15");
-            data.setRegisterDate("2014.04.01 12:30");
-            data.setImg(R.drawable.sandarapark);
-            datas.add(data);
-        }
 
-        return datas;
-    }
 
 
     public void completePost(View v) {
 //구현!!
         PlusToaster.doIt(this, "준비중...");
+
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+
+
+        new PlusHttpClient(this, this, false).execute(MAKE_ALBUM,
+                FMApiConstants.MAKE_ALBUM, new PlusInputStreamStringConverter(),
+                postParams);
     }
 
     @Override
@@ -77,9 +99,16 @@ public class GroupPostActivity extends FMCommonActivity implements
         if (datas == null)
             return;
         switch (from) {
-            case GET_MAIN_LIST:
-                //makeList(datas);
+            case GET_LIST_DATA:
+                makeList(new FMListParser().doIt((String) datas));
                 break;
+
+            case MAKE_ALBUM:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(this,model.getResult().equals("success")?"앨범 만들었습니다":"앨범을 만들지 못했습니다");
+                if(model.getResult().equals("success")) {
+                    //추가 액션??
+                }
         }
 
     }

@@ -72,7 +72,7 @@ public class UserMapFragment extends FMCommonFragment implements
     private LocationManager mLocationManager;
     private boolean mIsGpsCatched;
     private static final int GET_TOTAL_USER_POST = 7;
-    private static final int GET_MAP_DATA = 0;
+    private static final int GET_USER_MAP_DATA = 0;
     private MapView mMapView;
     private Button mMyLocationButton;
 
@@ -91,14 +91,15 @@ public class UserMapFragment extends FMCommonFragment implements
 
     public void getDataFromServer(String sortType) {
 
-//특정 사용자 아이디등 처리!!
+//특정 사용자 이메일등 처리!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("user_email", "user@email.com"));
         postParams.add(new BasicNameValuePair("sort", sortType));
         if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
 
 
-        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
-                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
+        new PlusHttpClient(mActivity, this, false).execute(GET_USER_MAP_DATA,
+                FMApiConstants.GET_USER_MAP_DATA, new PlusInputStreamStringConverter(),
                 postParams);
     }
 
@@ -338,7 +339,7 @@ public class UserMapFragment extends FMCommonFragment implements
         if (datas == null)
             return;
         switch (from) {
-            case GET_MAP_DATA:
+            case GET_USER_MAP_DATA:
                 handleMapData(new FMMapParser().doIt((String) datas));
                 getTotalUserPost();
                 break;

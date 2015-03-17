@@ -96,7 +96,7 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
         writeReply.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                goToReply(data.getIdx());
+                goToCommentActivity(data.getIdx());
             }
         });
 
@@ -132,7 +132,7 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
 
     }
 
-    private void goToReply(String idx) {
+    private void goToCommentActivity(String idx) {
         Intent intent = new Intent(mContext, CommentActivity.class);
         intent.putExtra(FMConstants.KEY_POST_IDX, idx);
         mContext.startActivity(intent);
