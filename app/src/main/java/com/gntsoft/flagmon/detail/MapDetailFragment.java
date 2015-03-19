@@ -16,13 +16,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.utils.FMPhotoResizer;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -30,7 +29,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -39,18 +37,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.pluslibrary.server.PlusOnGetDataListener;
-import com.pluslibrary.utils.PlusOnClickListener;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 public class MapDetailFragment extends FMCommonFragment implements
         PlusOnGetDataListener, LocationListener {
     private static final long DELAY_TIME = 1000 * 10;
+    private static final int GET_MAP_DATA = 0;
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
     private boolean mIsGpsCatched;
-    private static final int GET_MAP_DATA = 0;
     private MapView mMapView;
 
     public MapDetailFragment() {
@@ -70,7 +64,8 @@ public class MapDetailFragment extends FMCommonFragment implements
 
     private BitmapDescriptor getMarKerImg(Bitmap original) {
         //마스킹
-        Bitmap scaledOriginal = getScaledOriginal(original);
+        //Bitmap scaledOriginal = getScaledOriginal(original);
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
         Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
         Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());

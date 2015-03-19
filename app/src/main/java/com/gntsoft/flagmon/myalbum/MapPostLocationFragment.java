@@ -10,7 +10,6 @@ import android.graphics.PorterDuffXfermode;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,6 +22,7 @@ import android.widget.Toast;
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.utils.FMPhotoResizer;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -38,16 +38,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pluslibrary.server.PlusOnGetDataListener;
 
-import java.io.File;
-import java.io.IOException;
-
 public class MapPostLocationFragment extends FMCommonFragment implements
         PlusOnGetDataListener, LocationListener, GoogleMap.OnMarkerDragListener {
     private static final long DELAY_TIME = 1000 * 10;
+    private static final int GET_MAP_DATA = 0;
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
     private boolean mIsGpsCatched;
-    private static final int GET_MAP_DATA = 0;
     private SupportMapFragment fragment;
     private MapView mMapView;
     private Button mMyLocationButton;
@@ -85,12 +82,12 @@ public class MapPostLocationFragment extends FMCommonFragment implements
 
     private BitmapDescriptor getMarKerImg(String filePath) {
         //마스킹
-        File imgFile = new File(filePath);
-        Bitmap original = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-        Bitmap scaledOriginal = getScaledOriginal(original);
+
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(filePath);
         Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
         Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
-        Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
+        // Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
+        Log.d("mask", "image witdh: " + scaledOriginal.getWidth() + " height: " + scaledOriginal.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas mCanvas = new Canvas(result);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);

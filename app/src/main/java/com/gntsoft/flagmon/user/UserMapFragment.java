@@ -1,7 +1,6 @@
 package com.gntsoft.flagmon.user;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,10 +27,10 @@ import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
-import com.gntsoft.flagmon.main.MainActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMMapParser;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.FMPhotoResizer;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -40,7 +39,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,14 +51,12 @@ import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusOnClickListener;
-import com.pluslibrary.utils.PlusViewHolder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by johnny on 15. 2. 27.
@@ -68,15 +64,14 @@ import java.util.Random;
 public class UserMapFragment extends FMCommonFragment implements
         PlusOnGetDataListener, LocationListener {
     private static final long DELAY_TIME = 1000 * 10;
+    private static final int GET_TOTAL_USER_POST = 7;
+    private static final int GET_USER_MAP_DATA = 0;
+    String[] mapOptionDatas = {"인기순", "최근 등록순"};
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
     private boolean mIsGpsCatched;
-    private static final int GET_TOTAL_USER_POST = 7;
-    private static final int GET_USER_MAP_DATA = 0;
     private MapView mMapView;
     private Button mMyLocationButton;
-
-    String [] mapOptionDatas = {"인기순","최근 등록순"};
 
     public UserMapFragment() {
         // TODO Auto-generated constructor stub
@@ -104,20 +99,19 @@ public class UserMapFragment extends FMCommonFragment implements
     }
 
 
-
-
-    private BitmapDescriptor getMarKerImg(Bitmap original) {
+    private BitmapDescriptor getMarKerImg(Bitmap original, String postType) {
 
         //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
         //마스킹
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
+        Bitmap frame = BitmapFactory.decodeResource(getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.thumbnail_1_0002);//0: 포스팅, 1: 앨범
         Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas mCanvas = new Canvas(result);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        mCanvas.drawBitmap(original, 0, 0, null);
+        mCanvas.drawBitmap(scaledOriginal, 0, 0, null);
         mCanvas.drawBitmap(mask, 0, 0, paint);
         mCanvas.drawBitmap(frame, 0, 0, null);
         paint.setXfermode(null);
@@ -425,7 +419,7 @@ public class UserMapFragment extends FMCommonFragment implements
     private void showMarkers(Bitmap bitmap,FMModel mapDataModel) {
         LatLng latLng = new LatLng(Double.parseDouble(mapDataModel.getLat()), Double.parseDouble(mapDataModel.getLon()));
         mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet(mapDataModel.getIdx())
-                .icon(getMarKerImg(bitmap)).anchor(0f, 1.0f));
+                .icon(getMarKerImg(bitmap, mapDataModel.getPostType())).anchor(0f, 1.0f));
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {

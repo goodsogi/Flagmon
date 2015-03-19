@@ -27,6 +27,8 @@ import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusImageByteConverter;
+import com.pluslibrary.utils.PlusLogger;
+import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
@@ -68,6 +70,34 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         final CheckBox checkboxShareFriend = (CheckBox) findViewById(R.id.checkboxShareFriend);
         final CheckBox checkboxPrivate = (CheckBox) findViewById(R.id.checkboxPrivate);
 
+
+        final LinearLayout barCheckboxShareAll = (LinearLayout) findViewById(R.id.barCheckboxShareAll);
+        final LinearLayout barCheckboxShareFriend = (LinearLayout) findViewById(R.id.barCheckboxShareFriend);
+        final LinearLayout barCheckboxPrivate = (LinearLayout) findViewById(R.id.barCheckboxPrivate);
+
+        barCheckboxShareAll.setOnClickListener(new PlusOnClickListener() {
+            @Override
+            protected void doIt() {
+                checkboxShareAll.setChecked(true);
+            }
+        });
+
+        barCheckboxShareFriend.setOnClickListener(new PlusOnClickListener() {
+            @Override
+            protected void doIt() {
+                checkboxShareFriend.setChecked(true);
+            }
+        });
+
+
+        barCheckboxPrivate.setOnClickListener(new PlusOnClickListener() {
+            @Override
+            protected void doIt() {
+                checkboxPrivate.setChecked(true);
+            }
+        });
+
+
         locationSearchInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -82,7 +112,8 @@ public class PostSetLocationActivity extends FMCommonActivity implements
             @Override
             public void afterTextChanged(Editable edit) {
                 String s = edit.toString();
-                if (s.length() > 0 && !locationSearchButton.isEnabled()) locationSearchButton.setEnabled(true);
+                if (s.length() > 0 && !locationSearchButton.isEnabled())
+                    locationSearchButton.setEnabled(true);
             }
         });
 
@@ -145,8 +176,6 @@ public class PostSetLocationActivity extends FMCommonActivity implements
     }
 
 
-
-
     private void showMap() {
 
 
@@ -203,6 +232,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         switch (from) {
             case SEND_POST:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusLogger.doIt(model.getMsg());
                 PlusToaster.doIt(this, model.getResult().equals("success") ? "포스팅되었습니다" : "포스팅되지 못했습니다");
                 if (model.getResult().equals("success")) {
                     //추가 처리??

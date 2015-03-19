@@ -29,6 +29,7 @@ import com.gntsoft.flagmon.detail.DetailActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMMapParser;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.FMPhotoResizer;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -60,15 +61,14 @@ import java.util.List;
 public class MapSearchFragment extends FMCommonFragment implements
         PlusOnGetDataListener, LocationListener {
     private static final long DELAY_TIME = 1000 * 10;
+    private static final int GET_MAP_DATA = 0;
+    String[] mapOptionDatas = {"인기순", "최근 등록순"};
     private GoogleMap mGoogleMap;
     private LocationManager mLocationManager;
     private boolean mIsGpsCatched;
-    private static final int GET_MAP_DATA = 0;
     private SupportMapFragment fragment;
     private MapView mMapView;
     private Button mMyLocationButton;
-
-    String [] mapOptionDatas = {"인기순","최근 등록순"};
 
     public MapSearchFragment() {
         // TODO Auto-generated constructor stub
@@ -392,6 +392,7 @@ public class MapSearchFragment extends FMCommonFragment implements
 
         //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
         //마스킹
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
         Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
         Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
@@ -399,7 +400,7 @@ public class MapSearchFragment extends FMCommonFragment implements
         Canvas mCanvas = new Canvas(result);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        mCanvas.drawBitmap(original, 0, 0, null);
+        mCanvas.drawBitmap(scaledOriginal, 0, 0, null);
         mCanvas.drawBitmap(mask, 0, 0, paint);
         mCanvas.drawBitmap(frame, 0, 0, null);
         paint.setXfermode(null);

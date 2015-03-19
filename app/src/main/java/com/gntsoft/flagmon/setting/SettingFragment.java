@@ -1,5 +1,6 @@
 package com.gntsoft.flagmon.setting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.R;
+import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
 
 /**
@@ -78,8 +80,12 @@ public class SettingFragment extends FMCommonFragment {
     }
 
     private void mananageFriend(View v) {
-//구현!!
-        PlusToaster.doIt(mActivity, "준비중...");
+
+        PlusClickGuard.doIt(v);
+
+        Intent intent = new Intent(mActivity, FindFriendActivity.class);
+        mActivity.startActivity(intent);
+
     }
 
     private void manageMon(View v) {

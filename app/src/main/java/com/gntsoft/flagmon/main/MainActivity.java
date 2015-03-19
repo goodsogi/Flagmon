@@ -4,51 +4,50 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.FMTabManager;
+import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.friend.FriendManager;
+import com.gntsoft.flagmon.login.LoginActivity;
+import com.gntsoft.flagmon.login.SignUpActivity;
 import com.gntsoft.flagmon.myalbum.MyAlbumManager;
 import com.gntsoft.flagmon.neighbor.NeighborManager;
 import com.gntsoft.flagmon.setting.SettingManager;
-import com.gntsoft.flagmon.login.LoginActivity;
-import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.login.SignUpActivity;
 import com.pluslibrary.utils.PlusClickGuard;
 
 
 public class MainActivity extends FMCommonActivity {
 
 
- //   private boolean login;
-  //  private int itemDatas;
- //   private int mainContentType;
+    //   private boolean login;
+    //  private int itemDatas;
+    //   private int mainContentType;
 //    String [] mapOptionDatas = {"인기순","최근 등록순"};
 
-//    String [] mapFriendOptionDatas = {"인기순","최근 등록순", "퍼간 날짜"};
+    //    String [] mapFriendOptionDatas = {"인기순","최근 등록순", "퍼간 날짜"};
 //    String [] listFriendOptionDatas = {"인기순","최근 등록순","퍼간 날짜","거리순"};
     private int mPressedTabId;
-  //  private int itemDatasFriend;
+    //  private int itemDatasFriend;
     private MyAlbumManager mMyAlbumManager;
     private FriendManager mFriendManager;
     private NeighborManager mNeighborManager;
     private SettingManager mSettingManager;
     private FMTabManager mSelectedTabManager;
+    private boolean mIsFirstRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mIsFirstRun = true;
         setLoginFalse();
         createTabManagers();
         Button neighbor = (Button) findViewById(R.id.tab_neighbor);
         changeTab(neighbor);
-
 
 
     }
@@ -65,7 +64,10 @@ public class MainActivity extends FMCommonActivity {
 
     public void onResume() {
         super.onResume();
-        if(mSelectedTabManager != null) mSelectedTabManager.chooseFragment();
+        if (mSelectedTabManager != null && !mIsFirstRun) {
+            mSelectedTabManager.chooseFragment();
+        }
+        mIsFirstRun = false;
     }
 
     private void createTabManagers() {
@@ -90,7 +92,7 @@ public class MainActivity extends FMCommonActivity {
 //    }
 
     public void changeTab(View v) {
-        if(mPressedTabId == v.getId()) return;
+        if (mPressedTabId == v.getId()) return;
 
         Button neighbor = (Button) findViewById(R.id.tab_neighbor);
         Button friend = (Button) findViewById(R.id.tab_friend);
@@ -166,7 +168,6 @@ public class MainActivity extends FMCommonActivity {
 //    }
 
 
-
 //    private void showNeighbor() {
 //        Button menu = (Button) findViewById(R.id.navi_menu);
 //        if (menu.isSelected()) {
@@ -178,7 +179,6 @@ public class MainActivity extends FMCommonActivity {
 //            showMap();
 //        }
 //    }
-
 
 
 //    private void showMyalbum() {
@@ -358,8 +358,6 @@ public class MainActivity extends FMCommonActivity {
 //    }
 
 
-
-
     public void signUp(View v) {
         PlusClickGuard.doIt(v);
 
@@ -373,8 +371,6 @@ public class MainActivity extends FMCommonActivity {
 //        Intent intent = new Intent(this, ChooseFriendActivity.class);
 //        startActivity(intent);
 //    }
-
-
 
 
 //    public String[] getItemDatas()

@@ -40,6 +40,8 @@ public class FMConstants {
     public static final String TWITTER_CONSUMER_SECRET = "1HSVkvTMkGIMoAh4DJB42ihK6VlRCevpVsJoILgfNoil6C0OE9";
     public static final String TWITTER_CALLBACK_URL = "twitter-callback:///";
     public static final String KEY_URL = "url";
-    public static final String URL_TWITTER_OAUTH_VERIFIER =  "oauth_verifier";
+    public static final String URL_TWITTER_OAUTH_VERIFIER = "oauth_verifier";
     public static final int TWITTER_OAUTH = 22;
+    public static final int REQUIRED_IMAGE_HEIGHT = 144;
+    public static final int REQUIRED_IMAGE_WIDTH = 144;
 }

@@ -1,28 +1,23 @@
 package com.gntsoft.flagmon.myalbum;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.neighbor.NeighborListAdapter;
-import com.gntsoft.flagmon.neighbor.NeighborListModel;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMListParser;
 import com.gntsoft.flagmon.server.FMModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
 import com.gntsoft.flagmon.utils.LoginChecker;
+import com.google.gson.Gson;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
-import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
@@ -38,6 +33,9 @@ public class GroupPostActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
     private static final int GET_LIST_DATA = 0;
     private static final int MAKE_ALBUM = 11;
+    private GroupPostListAdapter mAdapter;
+    private String idxs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +49,9 @@ public class GroupPostActivity extends FMCommonActivity implements
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        if (LoginChecker.isLogIn(this)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
         new PlusHttpClient(this, this, false).execute(GET_LIST_DATA,
@@ -65,8 +65,9 @@ public class GroupPostActivity extends FMCommonActivity implements
         ListView list = (ListView) findViewById(R.id.list_group_post);
 
         if (list == null) return;
-        list.setAdapter(new GroupPostListAdapter(this,
-                datas));
+        mAdapter = new GroupPostListAdapter(this,
+                datas);
+        list.setAdapter(mAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -77,16 +78,16 @@ public class GroupPostActivity extends FMCommonActivity implements
     }
 
 
-
-
-
     public void completePost(View v) {
 //구현!!
         PlusToaster.doIt(this, "준비중...");
 
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        postParams.add(new BasicNameValuePair("idxs", getIdxs()));
+        if (LoginChecker.isLogIn(this)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
         new PlusHttpClient(this, this, false).execute(MAKE_ALBUM,
@@ -105,11 +106,17 @@ public class GroupPostActivity extends FMCommonActivity implements
 
             case MAKE_ALBUM:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this,model.getResult().equals("success")?"앨범 만들었습니다":"앨범을 만들지 못했습니다");
-                if(model.getResult().equals("success")) {
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "앨범 만들었습니다" : "앨범을 만들지 못했습니다");
+                if (model.getResult().equals("success")) {
                     //추가 액션??
                 }
         }
 
+    }
+
+    public String getIdxs() {
+
+
+        return new Gson().toJson(mAdapter.getSelectedPostIdxs());
     }
 }

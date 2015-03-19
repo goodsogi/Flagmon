@@ -15,7 +15,7 @@ public class PostDetailParser {
         try {
 
             JSONArray jsonArray = new JSONArray(rawData);
-            for(int i=0; i<jsonArray.length();i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 FMModel data = new FMModel();
                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                 JSONObject subJsonObject = (JSONObject) jsonObject.opt("postview");
@@ -26,7 +26,7 @@ public class PostDetailParser {
                 data.setPostType(subJsonObject.optString("posttype"));
                 data.setAlbumName(subJsonObject.optString("album"));
                 data.setMemo(subJsonObject.optString("memo"));
-                data.setImgUrl(subJsonObject.optString("imgURL"));
+                data.setImgUrl("http://" + subJsonObject.optString("imgURL"));
                 data.setLat(subJsonObject.optString("lat"));
                 data.setLon(subJsonObject.optString("lon"));
                 data.setHitCount(subJsonObject.optString("hit"));

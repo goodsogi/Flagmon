@@ -20,10 +20,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="이전"
             android:clickable="true"
+            android:gravity="center"
             android:onClick="goBack"
+            android:text="이전"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -56,162 +56,164 @@
     </LinearLayout>
 
     <com.gntsoft.flagmon.utils.ScrollViewExt
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#efefef" >
+        android:background="#efefef">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="247dp">
 
-        <FrameLayout
-            android:id="@+id/container_detail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="247dp">
 
-        <!--<com.google.android.gms.maps.MapView-->
-        <!--android:id="@+id/mapview_detail"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"/>-->
+                <FrameLayout
+                    android:id="@+id/container_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
-        <!--<ImageView-->
-        <!--android:id="@+id/main_img"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--android:src="@drawable/sandarapark" />-->
+                <!--<com.google.android.gms.maps.MapView-->
+                <!--android:id="@+id/mapview_detail"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"/>-->
 
-        <Button
-            android:layout_width="63dp"
-            android:layout_height="63dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginTop="153dp"
-            android:background="@drawable/map_photo_selector"
-            android:onClick="changeMapPhoto" />
+                <!--<ImageView-->
+                <!--android:id="@+id/main_img"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:scaleType="centerCrop"-->
+                <!--android:src="@drawable/sandarapark" />-->
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="26dp"
-            android:layout_alignParentBottom="true"
-            android:background="#50575a5a"
-            android:orientation="horizontal">
+                <Button
+                    android:layout_width="63dp"
+                    android:layout_height="63dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="153dp"
+                    android:background="@drawable/map_photo_selector"
+                    android:onClick="changeMapPhoto" />
 
-            <ImageView
-                android:id="@+id/reply_icon"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_marginLeft="30dp"
-                android:onClick="goToCommentActivity"
-                android:src="@drawable/p05_box_icon_0001" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="26dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#50575a5a"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/reply_icon"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="30dp"
+                        android:onClick="goToCommentActivity"
+                        android:src="@drawable/p05_box_icon_0001" />
+
+                    <TextView
+                        android:id="@+id/reply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="2dp"
+                        android:gravity="center"
+                        android:onClick="goToCommentActivity"
+                        android:text="50"
+                        android:textColor="#ffffff"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:id="@+id/pin_icon"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="20dp"
+                        android:onClick="doPin"
+                        android:src="@drawable/p05_box_icon_0002" />
+
+                    <TextView
+                        android:id="@+id/pin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="2dp"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="doPin"
+                        android:text="15"
+                        android:textColor="#ffffff"
+                        android:textSize="12sp" />
+
+                    <View
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/viewCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="26dp"
+                        android:layout_marginRight="30dp"
+                        android:gravity="center"
+                        android:text="조회수 2335"
+                        android:textColor="#ffffff"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/menu_detail"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginRight="30dp"
+                        android:background="@drawable/p05_box_icon_0003"
+                        android:onClick="showMenuPopup"
+                        android:visibility="gone" />
+
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/reply"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="26dp"
-                android:layout_marginLeft="2dp"
-                android:gravity="center"
-                android:onClick="goToCommentActivity"
-                android:text="50"
-                android:textColor="#ffffff"
-                android:textSize="12sp" />
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:text="2014.04.16 12:30"
+                android:textColor="#394b71" />
 
-            <ImageView
-                android:id="@+id/pin_icon"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_marginLeft="20dp"
-                android:onClick="doPin"
-                android:src="@drawable/p05_box_icon_0002" />
 
             <TextView
-                android:id="@+id/pin"
-                android:layout_width="wrap_content"
-                android:layout_height="26dp"
-                android:layout_marginLeft="2dp"
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="7dp"
                 android:gravity="center"
-                android:text="15"
-                android:onClick="doPin"
-                android:clickable="true"
-                android:textColor="#ffffff"
-                android:textSize="12sp" />
+                android:lines="3"
+                android:text="박산다라는 어린 시절 무역업에 종사하는 아버지를 따라 대한민국에서 필리핀으로 이민을 가서 생활한다. 학교 행사에서 만난, 연예계에서 활동 중이던 친구가 필리핀 방송국 ABS-CBN의 스타 서클 퀘스트라고 하는 스타가 되기 위한 서바이벌 쇼의 오디션에 응시해 볼 것을 권하여 산다라는 쇼에 참가하게 된다. 최종 다섯 명이 확정되는 마지막 탈락자 선발전에서 약 50만 통의 휴대전화 문자 득표를 기록하였고, 이는 여성 출연자 사상 최대의 기록이었다. 쇼 전체를 통틀어 적어도 2백만여 통의 문자 득표를 획득했다고 추정된다." />
 
-            <View
-                android:layout_width="0px"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="26dp"
+                android:layout_marginTop="20dp"
+                android:background="#f7f8fa"
+                android:gravity="center"
+                android:text="근거리 다른 사진"
+                android:textColor="#627185" />
+
+            <GridView
+                android:id="@+id/gridview"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/viewCount"
-                android:layout_width="wrap_content"
-                android:layout_height="26dp"
-                android:layout_marginRight="30dp"
+                android:background="#ffffff"
                 android:gravity="center"
-                android:text="조회수 2335"
-                android:textColor="#ffffff"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/menu_detail"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_marginRight="30dp"
-                android:background="@drawable/p05_box_icon_0003"
-                android:onClick="showMenuPopup"
-                android:visibility="gone" />
-
-
+                android:horizontalSpacing="5dp"
+                android:numColumns="5"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="5dp" />
         </LinearLayout>
-
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="26dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center_vertical"
-        android:text="2014.04.16 12:30"
-        android:textColor="#394b71" />
-
-
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="7dp"
-        android:gravity="center"
-        android:lines="3"
-        android:text="박산다라는 어린 시절 무역업에 종사하는 아버지를 따라 대한민국에서 필리핀으로 이민을 가서 생활한다. 학교 행사에서 만난, 연예계에서 활동 중이던 친구가 필리핀 방송국 ABS-CBN의 스타 서클 퀘스트라고 하는 스타가 되기 위한 서바이벌 쇼의 오디션에 응시해 볼 것을 권하여 산다라는 쇼에 참가하게 된다. 최종 다섯 명이 확정되는 마지막 탈락자 선발전에서 약 50만 통의 휴대전화 문자 득표를 기록하였고, 이는 여성 출연자 사상 최대의 기록이었다. 쇼 전체를 통틀어 적어도 2백만여 통의 문자 득표를 획득했다고 추정된다." />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="26dp"
-        android:layout_marginTop="20dp"
-        android:background="#f7f8fa"
-        android:gravity="center"
-        android:text="근거리 다른 사진"
-        android:textColor="#627185" />
-
-    <GridView
-        android:id="@+id/gridview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:gravity="center"
-        android:horizontalSpacing="5dp"
-        android:numColumns="5"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp" />
-</LinearLayout>
     </com.gntsoft.flagmon.utils.ScrollViewExt>
 </LinearLayout>

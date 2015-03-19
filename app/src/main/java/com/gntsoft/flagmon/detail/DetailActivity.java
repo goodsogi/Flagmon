@@ -1,19 +1,9 @@
 package com.gntsoft.flagmon.detail;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -23,23 +13,21 @@ import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
+import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.comment.CommentActivity;
+import com.gntsoft.flagmon.login.LoginActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMListParser;
 import com.gntsoft.flagmon.server.FMModel;
 import com.gntsoft.flagmon.server.PostDetailParser;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
-import com.gntsoft.flagmon.utils.LoginChecker;
-import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.login.LoginActivity;
 import com.gntsoft.flagmon.user.UserPageActivity;
+import com.gntsoft.flagmon.utils.LoginChecker;
 import com.gntsoft.flagmon.utils.ScrollViewExt;
 import com.gntsoft.flagmon.utils.ScrollViewListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -62,15 +50,13 @@ public class DetailActivity extends FMCommonActivity implements
     private static final int REPORT_POST = 2;
     private static final int PERFORM_PIN = 22;
     private static final int GET_PHOTOS_NEARBY = 3;
+    private static final int GET_DETAIL = 0;
+    String[] menuItems = {"신고하기", "URL 복사"};
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private ImageView mMainImage;
-
-    String [] menuItems = {"신고하기", "URL 복사"};
     private boolean login;
     private ScrollViewExt mScrollView;
-
-    private static final int GET_DETAIL = 0;
     private String mImageUrl;
     private String mPhotoLat;
     private String mPhotoLon;
@@ -83,9 +69,8 @@ public class DetailActivity extends FMCommonActivity implements
         getDataFromServer();
 
 
-
         //addListenerToMainImage();
-      }
+    }
 
     public void getDataFromServer() {
 
@@ -130,36 +115,9 @@ public class DetailActivity extends FMCommonActivity implements
 //    }
 
 
-
-
-
-    private BitmapDescriptor getMarKerImg(int imgId) {
-        //마스킹
-        Bitmap original = BitmapFactory.decodeResource(getResources(), imgId);
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
-        Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
-        Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
-        Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas mCanvas = new Canvas(result);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        mCanvas.drawBitmap(original, 0, 0, null);
-        mCanvas.drawBitmap(mask, 0, 0, paint);
-        mCanvas.drawBitmap(frame, 0, 0, null);
-        paint.setXfermode(null);
-
-
-        return BitmapDescriptorFactory.fromBitmap(result);
-
-
-    }
-
-
-
-
     public void changeMapPhoto(View v) {
         PlusClickGuard.doIt(v);
-        if(!v.isSelected()) {
+        if (!v.isSelected()) {
             v.setSelected(true);
             showMap();
         } else {
@@ -170,6 +128,7 @@ public class DetailActivity extends FMCommonActivity implements
     }
 
     private void showMainPhoto() {
+        //posttype에 따라 PhotoDetailFragment와 AlbumPhotoDetailFragment를 선택!!
 
         Bundle bundle = new Bundle();
         bundle.putString(FMConstants.KEY_IMAGE_URL, mImageUrl);
@@ -178,9 +137,10 @@ public class DetailActivity extends FMCommonActivity implements
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_detail, fragment)
                 .commit();
-        }
+    }
 
     private void showMap() {
+        //posttype에 따라 MapDetailFragment와 AlbumMapDetailFragment를 선택!!
         Bundle bundle = new Bundle();
         bundle.putString(FMConstants.KEY_IMAGE_URL, mImageUrl);
         bundle.putString(FMConstants.KEY_PHOTO_LAT, mPhotoLat);
@@ -205,7 +165,7 @@ public class DetailActivity extends FMCommonActivity implements
         //!!사용자 고유번호 전달
         PlusClickGuard.doIt(v);
         Intent intent = new Intent(this, UserPageActivity.class);
-        startActivity(intent); 
+        startActivity(intent);
 
     }
 
@@ -213,9 +173,8 @@ public class DetailActivity extends FMCommonActivity implements
 
         PlusClickGuard.doIt(v);
 
-        if(LoginChecker.isLogIn(this)) performPin();
-                else showLoginAlertDialog();
-
+        if (LoginChecker.isLogIn(this)) performPin();
+        else showLoginAlertDialog();
 
 
     }
@@ -272,7 +231,7 @@ public class DetailActivity extends FMCommonActivity implements
     }
 
     private void doMenu(int whichButton) {
-        switch(whichButton) {
+        switch (whichButton) {
             case 0:
                 doReport();
                 break;
@@ -292,7 +251,9 @@ public class DetailActivity extends FMCommonActivity implements
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         //postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        if (LoginChecker.isLogIn(this)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
         new PlusHttpClient(this, this, false).execute(REPORT_POST,
@@ -311,22 +272,22 @@ public class DetailActivity extends FMCommonActivity implements
     @Override
     public void onSuccess(Integer from, Object datas) {
 
-        if(datas == null) return;
+        if (datas == null) return;
         switch (from) {
             case GET_DETAIL:
                 handleData(new PostDetailParser().doIt((String) datas));
                 break;
             case PERFORM_PIN:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this,model.getResult().equals("success")?"스크랩되었습니다":"스크랩되지 못했습니다");
-                if(model.getResult().equals("success")) {
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "스크랩되었습니다" : "스크랩되지 못했습니다");
+                if (model.getResult().equals("success")) {
                     //추가 액션??
                 }
                 break;
             case REPORT_POST:
                 ServerResultModel model2 = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this,model2.getResult().equals("success")?"해당 글을 신고했습니다":"해당 글을 신고지 못했습니다");
-                if(model2.getResult().equals("success")) {
+                PlusToaster.doIt(this, model2.getResult().equals("success") ? "해당 글을 신고했습니다" : "해당 글을 신고지 못했습니다");
+                if (model2.getResult().equals("success")) {
                     //추가 액션??
                 }
                 break;
@@ -372,14 +333,11 @@ public class DetailActivity extends FMCommonActivity implements
 
         showContent(fmModels);
 
-        getPhotosNearBy(fmModels.get(0).getLat(),fmModels.get(0).getLon());
+        getPhotosNearBy(fmModels.get(0).getLat(), fmModels.get(0).getLon());
 
         showMainPhoto();
 
         checkLogin();
-
-
-
 
 
     }
@@ -404,13 +362,9 @@ public class DetailActivity extends FMCommonActivity implements
         postParams.add(new BasicNameValuePair("lonLR", lonLR));
 
 
-
-
         new PlusHttpClient(this, this, false).execute(GET_PHOTOS_NEARBY,
                 FMApiConstants.GET_PHOTOS_NEARBY, new PlusInputStreamStringConverter(),
                 postParams);
-
-
 
 
     }
@@ -423,7 +377,6 @@ public class DetailActivity extends FMCommonActivity implements
         TextView reply = (TextView) findViewById(R.id.reply);
         TextView pin = (TextView) findViewById(R.id.pin);
         TextView distance = (TextView) findViewById(R.id.distance);
-
 
 
         content.setText(data.getMemo());

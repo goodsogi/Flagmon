@@ -11,11 +11,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.neighbor.NeighborListModel;
 import com.gntsoft.flagmon.server.FMModel;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -26,9 +26,12 @@ import java.util.ArrayList;
 public class GroupPostListAdapter extends FMCommonAdapter<FMModel> {
 
 
+    private final ArrayList<String> mSelectedPositions;
+
     public GroupPostListAdapter(Context context, ArrayList<FMModel> datas) {
         super(context, R.layout.group_post_list_item, datas);
 
+        mSelectedPositions = new ArrayList<>();
     }
 
 
@@ -39,6 +42,21 @@ public class GroupPostListAdapter extends FMCommonAdapter<FMModel> {
         }
 
         FMModel data = mDatas.get(position);
+        RelativeLayout rowContainer = PlusViewHolder.get(convertView, R.id.rowContainer);
+        rowContainer.setSelected(mSelectedPositions.contains(String.valueOf(position)));
+        rowContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v.isSelected()) {
+                    v.setSelected(false);
+                    mSelectedPositions.remove(String.valueOf(position));
+                } else {
+                    v.setSelected(true);
+                    mSelectedPositions.add(String.valueOf(position));
+                }
+            }
+        });
+
         TextView title = PlusViewHolder.get(convertView, R.id.title);
         TextView content = PlusViewHolder.get(convertView, R.id.content);
         TextView distance = PlusViewHolder.get(convertView, R.id.distance);
@@ -59,12 +77,19 @@ public class GroupPostListAdapter extends FMCommonAdapter<FMModel> {
         fetchImageFromServer(data, img);
 
 
-
         return convertView;
     }
 
+    public ArrayList<String> getSelectedPostIdxs() {
+        ArrayList<String> idxs = new ArrayList<>();
+        for (String position : mSelectedPositions) {
+            idxs.add(mDatas.get(Integer.parseInt(position)).getIdx());
+        }
+        return idxs;
+    }
+
     private void fetchImageFromServer(final FMModel fmModel, final ImageView imageView) {
-        mImageLoader.loadImage(fmModel.getImgUrl(),mOption,new ImageLoadingListener() {
+        mImageLoader.loadImage(fmModel.getImgUrl(), mOption, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
 
@@ -87,9 +112,6 @@ public class GroupPostListAdapter extends FMCommonAdapter<FMModel> {
 
             }
         });
-
-
-
 
 
     }

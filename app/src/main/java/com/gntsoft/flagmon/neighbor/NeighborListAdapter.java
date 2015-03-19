@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.FMPhotoResizer;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.pluslibrary.utils.PlusViewHolder;
@@ -80,7 +81,7 @@ public class NeighborListAdapter extends FMCommonAdapter<FMModel> {
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
 
-                imageView.setImageBitmap(getFrameImg(bitmap));
+                imageView.setImageBitmap(getFrameImg(bitmap, fmModel.getPostType()));
 
             }
 
@@ -96,16 +97,17 @@ public class NeighborListAdapter extends FMCommonAdapter<FMModel> {
 
     }
 
-    private Bitmap getFrameImg(Bitmap original) {
+    private Bitmap getFrameImg(Bitmap original, String postType) {
         //마스킹
-        Bitmap frame = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.thumbnail_2_0001);
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
+        Bitmap frame = BitmapFactory.decodeResource(mContext.getResources(), postType.equals("0") ? R.drawable.thumbnail_2_0001 : R.drawable.thumbnail_2_0002);
         Bitmap mask = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.main_list_mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas mCanvas = new Canvas(result);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        mCanvas.drawBitmap(original, 0, 0, null);
+        mCanvas.drawBitmap(scaledOriginal, 0, 0, null);
         mCanvas.drawBitmap(mask, 0, 0, paint);
         mCanvas.drawBitmap(frame, 0, 0, null);
         paint.setXfermode(null);
