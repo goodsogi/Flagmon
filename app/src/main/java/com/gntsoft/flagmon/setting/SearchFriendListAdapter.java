@@ -5,17 +5,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonAdapter;
-import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FriendModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
-import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -48,7 +46,7 @@ public class SearchFriendListAdapter extends FMCommonAdapter<FriendModel> implem
                     parent, false);
         }
 
-        FriendModel data = mDatas.get(position);
+        final FriendModel data = mDatas.get(position);
         TextView name = PlusViewHolder.get(convertView, R.id.name);
 
 
@@ -62,7 +60,7 @@ public class SearchFriendListAdapter extends FMCommonAdapter<FriendModel> implem
         addFriend.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                addFriend();
+                addFriend(data.getUserEmail());
             }
         });
 
@@ -70,13 +68,10 @@ public class SearchFriendListAdapter extends FMCommonAdapter<FriendModel> implem
         return convertView;
     }
 
-    private void addFriend() {
-        //수정!!
+    private void addFriend(String userEmail) {
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
-            postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
-        }
+        postParams.add(new BasicNameValuePair("user_email", userEmail));
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
 
 
         new PlusHttpClient((android.app.Activity) mContext, this, false).execute(ADD_FRIEND,

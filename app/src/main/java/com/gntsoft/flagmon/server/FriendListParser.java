@@ -1,8 +1,5 @@
 package com.gntsoft.flagmon.server;
 
-import com.gntsoft.flagmon.server.FMModel;
-import com.gntsoft.flagmon.setting.FriendModel;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,14 +15,16 @@ public class FriendListParser {
         try {
 
             JSONArray jsonArray = new JSONArray(rawData);
-            for(int i=0; i<jsonArray.length();i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 FriendModel data = new FriendModel();
                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                JSONObject subJsonObject = (JSONObject) jsonObject.opt("commentlist");
+                JSONObject subJsonObject = (JSONObject) jsonObject.opt("friendlist");
 
-                data.setId(subJsonObject.optString("uid"));
-                data.setProfileImageUrl(subJsonObject.optString("imgURL"));
-                data.setName(subJsonObject.optString("unm"));
+                data.setIdx(subJsonObject.optString("idx"));
+                data.setProfileImageUrl(subJsonObject.optString("profile_url"));
+                data.setName(subJsonObject.optString("friend_name"));
+                data.setUserEmail(subJsonObject.optString("is_favorite"));
+                data.setIsFavorite(subJsonObject.optString("friend_email"));
 
                 model.add(data);
             }

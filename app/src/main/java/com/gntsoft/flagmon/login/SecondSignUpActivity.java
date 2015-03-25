@@ -1,6 +1,5 @@
 package com.gntsoft.flagmon.login;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,9 +12,9 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.gntsoft.flagmon.FMCommonActivity;
-import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
 import com.pluslibrary.server.PlusHttpClient;
@@ -36,13 +35,9 @@ import java.util.List;
  */
 public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetDataListener {
     private static final int SIGN_UP = 11;
-    private EditText mUserSexView;
-    String[] sexs = {"남", "여"};
-    final int DRAWABLE_LEFT = 0;
-    final int DRAWABLE_TOP = 1;
     final int DRAWABLE_RIGHT = 2;
-    final int DRAWABLE_BOTTOM = 3;
-    private String userSex;
+    String[] sexs = {"남", "여"};
+    private EditText mUserSexView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +45,6 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         setContentView(R.layout.activity_second_signup);
 
         addButtonListener();
-
 
 
     }
@@ -84,8 +78,6 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         });
 
 
-
-
         final EditText userAgeView = (EditText) findViewById(R.id.userAge);
         userAgeView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -107,13 +99,14 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         });
 
 
-       final CheckBox servicePolicy = (CheckBox) findViewById(R.id.checkbox_service);
+        final CheckBox servicePolicy = (CheckBox) findViewById(R.id.checkbox_service);
         final CheckBox privacyPolicy = (CheckBox) findViewById(R.id.checkbox_privacy);
         final CheckBox locationPolicy = (CheckBox) findViewById(R.id.checkbox_location);
         servicePolicy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked&&privacyPolicy.isChecked()&&locationPolicy.isChecked()) enableFinishButton();
+                if (isChecked && privacyPolicy.isChecked() && locationPolicy.isChecked())
+                    enableFinishButton();
             }
         });
 
@@ -121,7 +114,8 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         privacyPolicy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked&&servicePolicy.isChecked()&&locationPolicy.isChecked()) enableFinishButton();
+                if (isChecked && servicePolicy.isChecked() && locationPolicy.isChecked())
+                    enableFinishButton();
             }
         });
 
@@ -129,7 +123,8 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         locationPolicy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked&&privacyPolicy.isChecked()&&servicePolicy.isChecked()) enableFinishButton();
+                if (isChecked && privacyPolicy.isChecked() && servicePolicy.isChecked())
+                    enableFinishButton();
             }
         });
     }
@@ -163,12 +158,12 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
     public void showPolicy(View v) {
         PlusClickGuard.doIt(v);
         Intent intent = new Intent(this, PolicyActivity.class);
-        intent.putExtra(FMConstants.KEY_POLICY_TYPE,getPolicyType(v));
+        intent.putExtra(FMConstants.KEY_POLICY_TYPE, getPolicyType(v));
         startActivity(intent);
     }
 
     private int getPolicyType(View v) {
-        switch(v.getId()) {
+        switch (v.getId()) {
             case R.id.text_service:
                 return FMConstants.POLICY_SERVICE;
 
@@ -193,7 +188,7 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         EditText userAgeView = (EditText) findViewById(R.id.userAge);
         String userAge = userAgeView.getText().toString();
 
-        if(userAge.equals("")) {
+        if (userAge.equals("")) {
             PlusToaster.doIt(this, "나이를 입력해주세요");
             return;
         }
@@ -221,19 +216,19 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
     }
 
     public String getUserSex() {
-        return mUserSexView.getText().toString().equals(sexs[0])? "M":"W";
+        return mUserSexView.getText().toString().equals(sexs[0]) ? "M" : "W";
     }
 
     @Override
     public void onSuccess(Integer from, Object datas) {
-        if(datas == null) return;
+        if (datas == null) return;
         switch (from) {
 
             case SIGN_UP:
 
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this,model.getResult().equals("success")?"회원가입되었습니다":"회원가입되지 못했습니다");
-                if(model.getResult().equals("success")) finish();
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "회원가입되었습니다" : "회원가입되지 못했습니다");
+                if (model.getResult().equals("success")) finish();
                 break;
 
         }

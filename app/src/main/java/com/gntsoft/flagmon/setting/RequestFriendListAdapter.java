@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.FriendModel;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 import com.pluslibrary.utils.PlusViewHolder;
@@ -43,8 +44,8 @@ public class RequestFriendListAdapter extends FMCommonAdapter<FriendModel> {
 
         name.setText(data.getName());
 
-        Button sendRequest = PlusViewHolder.get(convertView, R.id.sendRequest);
-        sendRequest.setOnClickListener(new PlusOnClickListener() {
+        Button sendFriendRequest = PlusViewHolder.get(convertView, R.id.sendFriendRequest);
+        sendFriendRequest.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
                 sendRequest();

@@ -34,12 +34,16 @@
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/completePost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
+            android:background="#00000000"
+            android:enabled="false"
             android:onClick="completePost"
             android:text="완료"
-            android:textSize="18sp" />
+            android:textColor="@drawable/complete_color_selector"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -63,7 +67,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="앨범명을 입력해주세요"
+            android:background="#00000000"
+            android:hint="앨범명을 입력해주세요"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -73,5 +78,6 @@
     <ListView
         android:id="@+id/list_group_post"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:background="#ffffff"></ListView>
 </LinearLayout>

@@ -37,7 +37,7 @@ public class SettingFragment extends FMCommonFragment {
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         LinearLayout manageFriend = (LinearLayout) mActivity.findViewById(R.id.manageFriend);
         manageFriend.setOnClickListener(new View.OnClickListener() {
             @Override

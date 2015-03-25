@@ -3,8 +3,6 @@ package com.gntsoft.flagmon.myalbum;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonAdapter;
@@ -37,8 +35,6 @@ public class SearchLocationListAdapter extends FMCommonAdapter<FMModel> {
 
         //수정!!
         locationName.setText(data.getUserName());
-
-
 
 
         return convertView;

@@ -20,7 +20,6 @@ import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.comment.CommentActivity;
-import com.gntsoft.flagmon.neighbor.NeighborListModel;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
@@ -29,7 +28,6 @@ import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
-import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 import com.pluslibrary.utils.PlusViewHolder;
@@ -47,6 +45,7 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
         PlusOnGetDataListener {
 
     private static final int BURY_TREASURE = 0;
+
     public MyAlbumListAdapter(Context context, ArrayList<FMModel> datas) {
         super(context, R.layout.my_album_list_item, datas);
 
@@ -99,9 +98,6 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
 //                mOption);
 
 
-
-
-
         return convertView;
     }
 
@@ -109,7 +105,9 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        if(LoginChecker.isLogIn((android.app.Activity) mContext)) { postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));}
+        if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
+            postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
+        }
 
 
         new PlusHttpClient((android.app.Activity) mContext, this, false).execute(BURY_TREASURE,
@@ -127,12 +125,11 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
     }
 
 
-
     private Bitmap getFrameImg(int imgId) {
         //마스킹
         Bitmap original = BitmapFactory.decodeResource(mContext.getResources(), imgId);
         Bitmap frame = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.thumbnail_2_0001);
-        Bitmap mask = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.main_list_mask);
+        Bitmap mask = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.main_list_mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas mCanvas = new Canvas(result);
@@ -144,8 +141,7 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
         paint.setXfermode(null);
 
 
-        return  result;
-
+        return result;
 
 
     }
@@ -157,8 +153,8 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
         switch (from) {
             case BURY_TREASURE:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(mContext,model.getResult().equals("success")?"보물을 묻었습니다":"보물을 묻지 못했습니다");
-                if(model.getResult().equals("success")) {
+                PlusToaster.doIt(mContext, model.getResult().equals("success") ? "보물을 묻었습니다" : "보물을 묻지 못했습니다");
+                if (model.getResult().equals("success")) {
                     //추가 액션??
                 }
                 break;
@@ -166,9 +162,6 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
         }
 
     }
-
-
-
 
 
 }

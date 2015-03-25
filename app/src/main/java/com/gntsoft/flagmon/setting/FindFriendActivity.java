@@ -9,8 +9,9 @@ import android.widget.ListView;
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
-import com.gntsoft.flagmon.server.FriendListParser;
-import com.gntsoft.flagmon.utils.LoginChecker;
+import com.gntsoft.flagmon.server.FriendModel;
+import com.gntsoft.flagmon.server.GotFriendRequestParser;
+import com.gntsoft.flagmon.server.SentFriendRequestParser;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -39,10 +40,8 @@ public class FindFriendActivity extends FMCommonActivity implements
     }
 
     private void getSentFriendRequestDataFromServer() {
-        //특정 사용자 아이디등 처리!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        //postParams.add(new BasicNameValuePair("sort", sortType));
-        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
 
 
         new PlusHttpClient(this, this, false).execute(GET_SENT_FRIEND_REQUEST,
@@ -51,10 +50,8 @@ public class FindFriendActivity extends FMCommonActivity implements
     }
 
     private void getGotFriendRequestDataFromServer() {
-        //특정 사용자 아이디등 처리!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-       // postParams.add(new BasicNameValuePair("sort", sortType));
-        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
 
 
         new PlusHttpClient(this, this, false).execute(GET_GOT_FRIEND_REQUEST,
@@ -99,21 +96,16 @@ public class FindFriendActivity extends FMCommonActivity implements
     }
 
 
-
-
-
-
     @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
             return;
         switch (from) {
             case GET_GOT_FRIEND_REQUEST:
-                //파서 수정!!
-                makeGotFriendRequestList(new FriendListParser().doIt((String) datas));
+                makeGotFriendRequestList(new GotFriendRequestParser().doIt((String) datas));
                 break;
             case GET_SENT_FRIEND_REQUEST:
-                makeSentFriendRequestList(new FriendListParser().doIt((String) datas));
+                makeSentFriendRequestList(new SentFriendRequestParser().doIt((String) datas));
                 break;
         }
 

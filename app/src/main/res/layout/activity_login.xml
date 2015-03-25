@@ -50,9 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="30dp"
-        android:onClick="doLogin"
         android:background="@drawable/login_btn"
-        />
+        android:onClick="doLogin" />
 
     <View
         android:layout_width="match_parent"
@@ -71,8 +70,7 @@
             android:layout_height="33dp"
             android:layout_marginRight="82dp"
             android:background="@drawable/join_btn_selector"
-            android:onClick="signUp"
-             />
+            android:onClick="signUp" />
 
         <Button
             android:layout_width="86dp"

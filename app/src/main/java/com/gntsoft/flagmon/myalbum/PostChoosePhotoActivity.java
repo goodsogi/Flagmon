@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -14,7 +15,9 @@ import android.widget.GridView;
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.GalleryPhotoModel;
 import com.gntsoft.flagmon.utils.FMLocationFinder;
+import com.gntsoft.flagmon.utils.FMLocationListener;
 import com.pluslibrary.img.CameraAlbumActivity;
 import com.pluslibrary.img.PlusImageConstants;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -25,9 +28,8 @@ import java.util.ArrayList;
  * Created by johnny on 15. 3. 3.
  */
 public class PostChoosePhotoActivity extends FMCommonActivity implements
-        PlusOnGetDataListener {
+        PlusOnGetDataListener, FMLocationListener {
     private static final int GET_MAIN_LIST = 0;
-    private Object photosFromGallery;
     private FMLocationFinder mFMLocationFinder;
 
     @Override
@@ -39,9 +41,8 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
     }
 
     private void runGPS() {
-        //위치 서버 등록 api 수정!!
-        mFMLocationFinder = FMLocationFinder.getInstance(this, "");
-        mFMLocationFinder.getCurrentLocation();
+        mFMLocationFinder = FMLocationFinder.getInstance(this, this);
+        mFMLocationFinder.doIt();
     }
 
     private void makeGalleryView() {
@@ -68,7 +69,7 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
 
     public void doCamera(View v) {
 
-        if(mFMLocationFinder.isGpsCatched()) {
+        if (mFMLocationFinder.isGpsCatched()) {
             goToCameraAlbumActivity();
         } else {
             showGPSAlertDialog();
@@ -88,7 +89,7 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
                 }).setPositiveButton("예", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //수정!!
-               mFMLocationFinder.getCurrentLocation();
+                mFMLocationFinder.getCurrentLocation();
             }
         });
         ab.show();
@@ -127,9 +128,6 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
     }
 
 
-
-
-
     @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
@@ -146,8 +144,8 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
     public ArrayList<GalleryPhotoModel> getPhotosFromGallery() {
         ArrayList<GalleryPhotoModel> model = new ArrayList<>();
 
-        final String[] columns = { MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media._ID };
+        final String[] columns = {MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media._ID};
         final String orderBy = MediaStore.Images.Media._ID;
         Cursor imagecursor = managedQuery(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null,
@@ -171,7 +169,11 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
         }
 
 
-
         return model;
+    }
+
+    @Override
+    public void onGPSCatched(Location location) {
+
     }
 }

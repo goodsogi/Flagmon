@@ -23,7 +23,6 @@ import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
-import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -35,7 +34,7 @@ public class ListNeighborFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
 
     private static final int GET_LIST_DATA = 0;
-    String [] listOptionDatas = {"인기순","최근 등록순","거리순"};
+    String[] listOptionDatas = {"인기순", "최근 등록순", "거리순"};
 
     public ListNeighborFragment() {
         // TODO Auto-generated constructor stub
@@ -54,7 +53,9 @@ public class ListNeighborFragment extends FMCommonFragment implements
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
         postParams.add(new BasicNameValuePair("sort", sortType));
-        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
         new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
@@ -63,15 +64,12 @@ public class ListNeighborFragment extends FMCommonFragment implements
     }
 
 
-
     private void goToDetail(String idx) {
         Intent intent = new Intent(mActivity, DetailActivity.class);
         intent.putExtra(FMConstants.KEY_POST_IDX, idx);
 
         startActivity(intent);
     }
-
-
 
 
     @Override
@@ -83,7 +81,7 @@ public class ListNeighborFragment extends FMCommonFragment implements
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         Button sort = (Button) mActivity.findViewById(R.id.sort);
         sort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,13 +114,16 @@ public class ListNeighborFragment extends FMCommonFragment implements
 
 
         switch (whichButton) {
-            case 0: sortByPopular();
+            case 0:
+                sortByPopular();
                 break;
 
-            case 1: sortByRecent();
+            case 1:
+                sortByRecent();
                 break;
 
-            case 2:sortByDistance();
+            case 2:
+                sortByDistance();
                 break;
 
         }
@@ -160,8 +161,8 @@ public class ListNeighborFragment extends FMCommonFragment implements
         ListView list = (ListView) mActivity
                 .findViewById(R.id.list_neighbor);
 
-        if (list == null||datas==null) return;
-        list.setAdapter(new NeighborListAdapter(mActivity,
+        if (list == null || datas == null) return;
+        list.setAdapter(new FMListAdapter(mActivity,
                 datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -170,7 +171,6 @@ public class ListNeighborFragment extends FMCommonFragment implements
             }
         });
     }
-
 
 
 }

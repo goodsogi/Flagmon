@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.R;
-import com.pluslibrary.utils.PlusOnClickListener;
+import com.gntsoft.flagmon.server.GalleryPhotoModel;
 import com.pluslibrary.utils.PlusViewHolder;
 
 import java.util.ArrayList;
@@ -32,7 +32,6 @@ public class PostGridViewAdapter extends FMCommonAdapter<GalleryPhotoModel> {
         }
         ImageView img = PlusViewHolder.get(convertView, R.id.gridview_img);
         img.setImageBitmap(mDatas.get(position).getThumnail());
-
 
 
         return convertView;

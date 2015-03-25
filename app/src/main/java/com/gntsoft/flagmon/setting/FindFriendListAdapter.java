@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
@@ -13,6 +12,7 @@ import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FriendModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
 import com.gntsoft.flagmon.utils.LoginChecker;

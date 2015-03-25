@@ -39,9 +39,9 @@ public class AlbumPhotoDetailFragment extends FMCommonFragment implements
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         ImageView mainImage = (ImageView) mActivity.findViewById(R.id.main_img);
-        mImageLoader.displayImage(getArguments().getString(FMConstants.KEY_IMAGE_URL,""),mainImage, mOption);
+        mImageLoader.displayImage(getArguments().getString(FMConstants.KEY_IMAGE_URL, ""), mainImage, mOption);
         mainImage.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
@@ -52,7 +52,7 @@ public class AlbumPhotoDetailFragment extends FMCommonFragment implements
 
     private void goToImageViewer() {
         Intent intent = new Intent(mActivity, ImageViewerActivity.class);
-        intent.putExtra(FMConstants.KEY_IMAGE_URL, getArguments().getString(FMConstants.KEY_IMAGE_URL,""));
+        intent.putExtra(FMConstants.KEY_IMAGE_URL, getArguments().getString(FMConstants.KEY_IMAGE_URL, ""));
         startActivity(intent);
 
     }

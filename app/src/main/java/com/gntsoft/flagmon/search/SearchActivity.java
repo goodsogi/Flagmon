@@ -1,10 +1,7 @@
 package com.gntsoft.flagmon.search;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,15 +12,12 @@ import android.widget.TextView;
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.detail.PhotoDetailFragment;
-import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
 
 /**
  * Created by johnny on 15. 3. 2.
  */
 public class SearchActivity extends FMCommonActivity {
-
 
 
     private int mMainContentType;
@@ -37,11 +31,11 @@ public class SearchActivity extends FMCommonActivity {
         init();
 
 
-            }
+    }
 
     private void init() {
 
-        mMainContentType = getIntent().getIntExtra(FMConstants.KEY_MAIN_CONTENT_TYPE,0);
+        mMainContentType = getIntent().getIntExtra(FMConstants.KEY_MAIN_CONTENT_TYPE, 0);
 
         final EditText editText = (EditText) findViewById(R.id.searchInput);
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -57,7 +51,7 @@ public class SearchActivity extends FMCommonActivity {
 
         editText.postDelayed(new Runnable() {
             public void run() {
-                InputMethodManager manager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+                InputMethodManager manager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                 manager.showSoftInput(editText, 0);
             }
         }, 100);
@@ -77,13 +71,12 @@ public class SearchActivity extends FMCommonActivity {
     }
 
 
-
     public void doSearch(View v) {
         EditText searchView = (EditText) findViewById(R.id.searchInput);
         mKeyword = searchView.getText().toString();
 
-        if(mKeyword.equals("")) {
-            PlusToaster.doIt(this,"검색어를 입력해주세요");
+        if (mKeyword.equals("")) {
+            PlusToaster.doIt(this, "검색어를 입력해주세요");
             return;
 
         }
@@ -93,7 +86,7 @@ public class SearchActivity extends FMCommonActivity {
     }
 
     private void showSearchResult(String sortType) {
-        if(mMainContentType == FMConstants.CONTENT_MAP) searchMap(sortType);
+        if (mMainContentType == FMConstants.CONTENT_MAP) searchMap(sortType);
         else searchList(sortType);
     }
 
@@ -108,7 +101,6 @@ public class SearchActivity extends FMCommonActivity {
                 .commit();
 
     }
-
 
 
 }

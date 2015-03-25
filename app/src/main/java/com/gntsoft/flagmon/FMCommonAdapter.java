@@ -2,8 +2,6 @@ package com.gntsoft.flagmon;
 
 import android.content.Context;
 
-import com.pluslibrary.common.CommonAdapter;
-
 import java.util.ArrayList;
 
 /**

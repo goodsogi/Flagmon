@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
@@ -19,9 +18,8 @@ import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
-import com.gntsoft.flagmon.setting.FriendModel;
+import com.gntsoft.flagmon.server.FriendModel;
 import com.gntsoft.flagmon.user.UserPageActivity;
-import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -46,7 +44,7 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
     private final Fragment mFragment;
 
 
-    public ChooseFriendListAdapter(Context context,Fragment fragment, ArrayList<FriendModel> datas) {
+    public ChooseFriendListAdapter(Context context, Fragment fragment, ArrayList<FriendModel> datas) {
         super(context, R.layout.choose_friend_list_item, datas);
         mFragment = fragment;
 
@@ -59,7 +57,7 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
                     parent, false);
         }
 
-        FriendModel data = mDatas.get(position);
+        final FriendModel data = mDatas.get(position);
         TextView name = PlusViewHolder.get(convertView, R.id.name);
 
 
@@ -69,7 +67,7 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
         img.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                goToUserPage();
+                goToUserPage(data.getUserEmail(), data.getName());
             }
         });
         name.setText(data.getName());
@@ -78,7 +76,7 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
         delete.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                deleteFriend();
+                deleteFriend(data.getIdx());
             }
         });
 
@@ -86,7 +84,7 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
         select.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                selectFriend();
+                selectFriend(data.getIdx());
             }
         });
 
@@ -94,20 +92,21 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
         return convertView;
     }
 
-    private void goToUserPage() {
-        //!!사용자 고유번호 전달
+    private void goToUserPage(String userEmail, String userName) {
         Intent intent = new Intent(mContext, UserPageActivity.class);
+        intent.putExtra(FMConstants.KEY_USER_EMAIL, userEmail);
+        intent.putExtra(FMConstants.KEY_USER_NAME, userName);
         mContext.startActivity(intent);
 
     }
 
-    private void deleteFriend() {
+    private void deleteFriend(String idx) {
 
-        showDeleteFriendAlertDialog();
+        showDeleteFriendAlertDialog(idx);
 
     }
 
-    private void showDeleteFriendAlertDialog() {
+    private void showDeleteFriendAlertDialog(final String idx) {
         AlertDialog.Builder ab = new AlertDialog.Builder(mContext, AlertDialog.THEME_HOLO_LIGHT);
         ab.setTitle("친구를 삭제하시겠습니까?");
         ab.setNegativeButton("아니오",
@@ -117,20 +116,17 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
                     }
                 }).setPositiveButton("예", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                performDeleteFriend();
+                performDeleteFriend(idx);
             }
         });
         ab.show();
 
     }
 
-    private void performDeleteFriend() {
-        //수정!!
+    private void performDeleteFriend(String idx) {
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
-            postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
-        }
+        postParams.add(new BasicNameValuePair("idx", idx));
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
 
 
         new PlusHttpClient((android.app.Activity) mContext, this, false).execute(DELETE_FRIEND,
@@ -139,13 +135,10 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
 
     }
 
-    private void selectFriend() {
-        //수정!!
+    private void selectFriend(String idx) {
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
-            postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
-        }
+        postParams.add(new BasicNameValuePair("idx", idx));
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
 
 
         new PlusHttpClient((android.app.Activity) mContext, this, false).execute(SELECT_FRIEND,
@@ -172,7 +165,7 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
                     //추가 액션??
                     //친구를 상단으로 이동
                     //리스트 갱신
-                    ((ChooseFriendFragment) mFragment).getDataFromServer();
+                    ((FriendListFragment) mFragment).getDataFromServer();
                 }
                 break;
         }

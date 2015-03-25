@@ -4,6 +4,7 @@ import android.media.ExifInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMListParser;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.PhotoLocationModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
 import com.gntsoft.flagmon.utils.LoginChecker;
@@ -38,6 +40,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -232,6 +235,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         switch (from) {
             case SEND_POST:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                Log.d("flagmon", model.getMsg());
                 PlusLogger.doIt(model.getMsg());
                 PlusToaster.doIt(this, model.getResult().equals("success") ? "포스팅되었습니다" : "포스팅되지 못했습니다");
                 if (model.getResult().equals("success")) {
@@ -280,6 +284,12 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         }
 
         String imgUrl = getIntent().getStringExtra(FMConstants.KEY_IMAGE_PATH);
+        String encodedPhotoDescription = null;
+        try {
+            encodedPhotoDescription = URLEncoder.encode(photoDescription, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
 
         MultipartEntity entity = new MultipartEntity();
@@ -292,7 +302,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
                 entity.addPart("photo", PlusImageByteConverter.doIt(imgUrl));
             }
             entity.addPart("memo", new StringBody(
-                    photoDescription));
+                    encodedPhotoDescription));
             entity.addPart("lat", new StringBody(String.valueOf(
                     mPhotoLat)));
             entity.addPart("lon", new StringBody(String.valueOf(
@@ -327,7 +337,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
     }
 
 
-    public PhotoLocation getPhotoLocation(String filepath) {
+    public PhotoLocationModel getPhotoLocation(String filepath) {
         ExifInterface exif = null;
         try {
             exif = new ExifInterface(filepath);
@@ -341,7 +351,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
 
         // your Final lat Long Values
         Double lat, lon;
-        PhotoLocation photoLocation = new PhotoLocation();
+        PhotoLocationModel photoLocation = new PhotoLocationModel();
         if ((LATITUDE != null)
                 && (LATITUDE_REF != null)
                 && (LONGITUDE != null)
@@ -404,7 +414,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
 
     public void getPhotoLatLon() {
         String imgPath = getIntent().getStringExtra(FMConstants.KEY_IMAGE_PATH);
-        PhotoLocation photoLocation =
+        PhotoLocationModel photoLocation =
                 getPhotoLocation(imgPath);
 
         mPhotoLat = photoLocation.getLat();

@@ -9,7 +9,6 @@ import android.widget.FrameLayout;
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
-import com.pluslibrary.server.PlusOnGetDataListener;
 
 /**
  * Created by johnny on 15. 3. 2.
@@ -32,10 +31,9 @@ public class LoginFragment extends FMCommonFragment {
         topBarContainer.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(mActivity);
-        View inviteTopBar = inflater.inflate(R.layout.top_bar_invite,null);
+        View inviteTopBar = inflater.inflate(R.layout.top_bar_invite, null);
         topBarContainer.addView(inviteTopBar);
     }
-
 
 
     @Override
@@ -44,7 +42,7 @@ public class LoginFragment extends FMCommonFragment {
         View rootView = inflater.inflate(R.layout.fragment_login,
                 container, false);
         int tabName = this.getArguments().getInt(FMConstants.KEY_TAB_NAME);
-        setBackgound(rootView,tabName);
+        setBackgound(rootView, tabName);
         return rootView;
     }
 
@@ -55,7 +53,7 @@ public class LoginFragment extends FMCommonFragment {
 
     private int getBackgroundResource(int tabName) {
 
-        switch(tabName) {
+        switch (tabName) {
             case FMConstants.TAB_FRIEND:
                 return R.drawable.p09_bg;
 
@@ -66,13 +64,12 @@ public class LoginFragment extends FMCommonFragment {
                 return R.drawable.p11_bg;
 
 
-
         }
         return R.drawable.p09_bg;
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         // TODO Auto-generated method stub
 
     }

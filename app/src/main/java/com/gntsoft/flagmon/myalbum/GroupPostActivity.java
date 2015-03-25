@@ -1,8 +1,12 @@
 package com.gntsoft.flagmon.myalbum;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
@@ -40,7 +44,33 @@ public class GroupPostActivity extends FMCommonActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_post);
+        addListenerToView();
         getDataFromServer();
+    }
+
+    private void addListenerToView() {
+
+        EditText albumNameInput = (EditText) findViewById(R.id.albumNameInput);
+        final Button completePost = (Button) findViewById(R.id.completePost);
+        albumNameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable edit) {
+                String s = edit.toString();
+                if (s.length() > 0 && !completePost.isEnabled())
+                    completePost.setEnabled(true);
+            }
+        });
+
     }
 
     public void getDataFromServer() {

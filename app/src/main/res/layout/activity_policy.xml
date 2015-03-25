@@ -92,7 +92,7 @@
         android:background="#ffffff">
 
         <TextView
-            android:id="@+id/policy_content"
+            android:id="@+id/policyContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </ScrollView>

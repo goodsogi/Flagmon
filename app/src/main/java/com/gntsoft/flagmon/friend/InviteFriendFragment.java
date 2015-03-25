@@ -9,13 +9,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.gntsoft.flagmon.FMCommonFragment;
-import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.setting.FindFriendActivity;
-import com.gntsoft.flagmon.setting.SettingFragment;
-import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
-import com.pluslibrary.utils.PlusOnClickListener;
 
 /**
  * Created by johnny on 15. 3. 3.
@@ -32,12 +28,13 @@ public class InviteFriendFragment extends FMCommonFragment {
         super.onActivityCreated(savedInstanceState);
         showInviteFriendTopBar();
     }
+
     private void showInviteFriendTopBar() {
         FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
         topBarContainer.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(mActivity);
-        View inviteTopBar = inflater.inflate(R.layout.top_bar_invite_friend,null);
+        View inviteTopBar = inflater.inflate(R.layout.top_bar_invite_friend, null);
         topBarContainer.addView(inviteTopBar);
     }
 
@@ -50,7 +47,7 @@ public class InviteFriendFragment extends FMCommonFragment {
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         Button findFriend = (Button) mActivity.findViewById(R.id.findFriend);
         findFriend.setOnClickListener(new View.OnClickListener() {
             @Override

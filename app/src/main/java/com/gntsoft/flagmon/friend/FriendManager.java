@@ -1,7 +1,6 @@
 package com.gntsoft.flagmon.friend;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +14,7 @@ import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.login.LoginFragment;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FriendListParser;
-import com.gntsoft.flagmon.setting.FriendModel;
+import com.gntsoft.flagmon.server.FriendModel;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
@@ -31,11 +30,10 @@ import java.util.List;
 /**
  * Created by johnny on 15. 3. 3.
  */
-public class FriendManager implements FMTabManager,PlusOnGetDataListener {
-
-    private final Activity mActivity;
+public class FriendManager implements FMTabManager, PlusOnGetDataListener {
 
     private static final int CHECK_IF_HAS_FRIEND = 0;
+    private final Activity mActivity;
 
     public FriendManager(Activity activity) {
         mActivity = activity;
@@ -60,16 +58,16 @@ public class FriendManager implements FMTabManager,PlusOnGetDataListener {
         chooseFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToChooseFriendFragment(v);
+                goToFriendListFragment(v);
             }
         });
     }
 
-    private void goToChooseFriendFragment(View v) {
+    private void goToFriendListFragment(View v) {
         PlusClickGuard.doIt(v);
 
         mActivity.getFragmentManager().beginTransaction()
-                .replace(R.id.container_main, new ChooseFriendFragment())
+                .replace(R.id.container_main, new FriendListFragment())
                 .commit();
     }
 
@@ -98,15 +96,12 @@ public class FriendManager implements FMTabManager,PlusOnGetDataListener {
     }
 
 
-
-
-
     private void showFriendTopBar() {
         FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
         topBarContainer.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(mActivity);
-        View inviteTopBar = inflater.inflate(R.layout.top_bar_friend,null);
+        View inviteTopBar = inflater.inflate(R.layout.top_bar_friend, null);
         topBarContainer.addView(inviteTopBar);
     }
 
@@ -132,9 +127,7 @@ public class FriendManager implements FMTabManager,PlusOnGetDataListener {
     private void checkIfHasFriend() {
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        //postParams.add(new BasicNameValuePair("sort", sortType));
-        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mActivity).getUserAuthKey()));}
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mActivity).getUserAuthKey()));
 
 
         new PlusHttpClient(mActivity, this, false).execute(CHECK_IF_HAS_FRIEND,
@@ -158,7 +151,7 @@ public class FriendManager implements FMTabManager,PlusOnGetDataListener {
 
     private void handleIfHasFriend(ArrayList<FriendModel> friendModels) {
 
-        if(friendModels.size() > 0) {
+        if (friendModels.size() > 0) {
             showFriendTopBar();
             addButtonListener();
             showMapFriend();

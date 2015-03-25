@@ -1,24 +1,20 @@
 package com.gntsoft.flagmon.user;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
-import com.gntsoft.flagmon.comment.CommentActivity;
+import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.login.LoginActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
-import com.gntsoft.flagmon.server.FMMapParser;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
 import com.gntsoft.flagmon.utils.LoginChecker;
-import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.login.LoginActivity;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -37,17 +33,22 @@ import java.util.List;
 public class UserPageActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
 
-    private int mtotalUserPost;
     private static final int ADD_FRIEND = 0;
+    private int mtotalUserPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_page);
+        showUserName();
         showMap();
 
     }
 
+    private void showUserName() {
+        TextView userName = (TextView) findViewById(R.id.userName);
+        userName.setText(getIntent().getStringExtra(FMConstants.KEY_USER_NAME));
+    }
 
 
     @Override
@@ -57,8 +58,8 @@ public class UserPageActivity extends FMCommonActivity implements
         switch (from) {
             case ADD_FRIEND:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this,model.getResult().equals("success")?"친구 추가되었습니다":"친구 추가되지 못했습니다");
-                if(model.getResult().equals("success")) {
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "친구 추가되었습니다" : "친구 추가되지 못했습니다");
+                if (model.getResult().equals("success")) {
                     //추가 액션??
                 }
                 break;
@@ -68,15 +69,11 @@ public class UserPageActivity extends FMCommonActivity implements
     }
 
 
-
-
-
     public void addFriend(View v) {
 
         PlusClickGuard.doIt(v);
-        if(LoginChecker.isLogIn(this)) showLoginAlertDialog();
+        if (LoginChecker.isLogIn(this)) showLoginAlertDialog();
         else showAddFriendAlertDialog();
-
 
 
     }
@@ -102,7 +99,9 @@ public class UserPageActivity extends FMCommonActivity implements
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         //postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        if (LoginChecker.isLogIn(this)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
         new PlusHttpClient(this, this, false).execute(ADD_FRIEND,
@@ -147,6 +146,7 @@ public class UserPageActivity extends FMCommonActivity implements
 
     private void showList() {
 
+
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_user, new UserListFragment())
                 .commit();
@@ -155,6 +155,8 @@ public class UserPageActivity extends FMCommonActivity implements
     }
 
     private void showMap() {
+
+
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_user, new UserMapFragment())
                 .commit();

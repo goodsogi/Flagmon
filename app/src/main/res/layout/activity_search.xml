@@ -35,11 +35,11 @@
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_margin="7dp"
-            android:paddingLeft="7dp"
-            android:inputType="text"
-            android:imeOptions="actionSearch"
+            android:layout_weight="1"
             android:background="@drawable/white_bar_bg"
-            android:layout_weight="1" />
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingLeft="7dp" />
 
 
         <Button
@@ -52,8 +52,7 @@
             android:id="@+id/sort"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/option_btn_selector"
-             />
+            android:background="@drawable/option_btn_selector" />
     </LinearLayout>
 
     <FrameLayout

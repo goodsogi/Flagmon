@@ -20,7 +20,6 @@ import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.comment.CommentActivity;
-import com.gntsoft.flagmon.neighbor.NeighborListModel;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
@@ -46,6 +45,7 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
         PlusOnGetDataListener {
 
     private static final int SCRAP_THIS = 0;
+
     public FriendListAdapter(Context context, ArrayList<FMModel> datas) {
         super(context, R.layout.friend_list_item, datas);
 
@@ -113,9 +113,6 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
 //                mOption);
 
 
-
-
-
         return convertView;
     }
 
@@ -123,7 +120,9 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        if(LoginChecker.isLogIn((android.app.Activity) mContext)) { postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));}
+        if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
+            postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
+        }
 
 
         new PlusHttpClient((android.app.Activity) mContext, this, false).execute(SCRAP_THIS,
@@ -143,7 +142,7 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
         //마스킹
         Bitmap original = BitmapFactory.decodeResource(mContext.getResources(), imgId);
         Bitmap frame = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.thumbnail_2_0001);
-        Bitmap mask = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.main_list_mask);
+        Bitmap mask = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.main_list_mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas mCanvas = new Canvas(result);
@@ -155,8 +154,7 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
         paint.setXfermode(null);
 
 
-        return  result;
-
+        return result;
 
 
     }
@@ -168,8 +166,8 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
         switch (from) {
             case SCRAP_THIS:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(mContext,model.getResult().equals("success")?"스크했습니다":"스크랩하지 못했습니다");
-                if(model.getResult().equals("success")) {
+                PlusToaster.doIt(mContext, model.getResult().equals("success") ? "스크했습니다" : "스크랩하지 못했습니다");
+                if (model.getResult().equals("success")) {
                     //추가 액션??
                 }
                 break;
@@ -177,9 +175,6 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
         }
 
     }
-
-
-
 
 
 }

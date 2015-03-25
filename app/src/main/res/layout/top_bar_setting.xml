@@ -4,9 +4,9 @@
     android:layout_height="48dp"
     android:background="@drawable/navigation_bar_bg"
     android:gravity="center_vertical"
+    android:paddingLeft="15dp"
     android:text="설정"
     android:textColor="#ffffff"
-    android:paddingLeft="15dp"
-    android:textSize="24sp"
+    android:textSize="18sp"
     android:textStyle="bold" />
 

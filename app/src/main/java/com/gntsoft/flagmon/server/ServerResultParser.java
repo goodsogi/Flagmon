@@ -1,10 +1,6 @@
 package com.gntsoft.flagmon.server;
 
-import com.pluslibrary.server.PlusInputStreamStringConverter;
-
 import org.json.JSONObject;
-
-import java.io.InputStream;
 
 /**
  * 서버 응답 파서
@@ -19,7 +15,8 @@ public class ServerResultParser {
 
             JSONObject jsonObject = new JSONObject(serverResultData);
 
-            model.setMsg(jsonObject.optString("t"));
+            if (jsonObject.has("t")) model.setMsg(jsonObject.optString("t"));
+            if (jsonObject.has("msg")) model.setMsg(jsonObject.optString("msg"));
             model.setResult(jsonObject.optString("result"));
 
 

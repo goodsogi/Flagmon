@@ -1,11 +1,11 @@
 package com.gntsoft.flagmon.login;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -34,18 +34,23 @@ import java.util.regex.Pattern;
 /**
  * Created by johnny on 15. 2. 27.
  */
-public class LoginActivity  extends FMCommonActivity implements PlusOnGetDataListener {
+public class LoginActivity extends FMCommonActivity implements PlusOnGetDataListener {
+    private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z]+)(?=.*[!@#$%^*+=-]|.*[0-9]+).{8,16}$";
+    private static final int LOG_IN = 11;
     final int DRAWABLE_LEFT = 0;
     final int DRAWABLE_TOP = 1;
     final int DRAWABLE_RIGHT = 2;
-
     final int DRAWABLE_BOTTOM = 3;
-    private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z]+)(?=.*[!@#$%^*+=-]|.*[0-9]+).{8,16}$";
-    private static final int LOG_IN = 11;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //임시로 로그인처리
+//        saveLoginInfo("a0dcee3f02a21423286469e912d1902a18baec4b427b468cdb176d5f6f668e82");
+//        finish();
+
         addButtonListener();
     }
 
@@ -56,8 +61,9 @@ public class LoginActivity  extends FMCommonActivity implements PlusOnGetDataLis
         switch (from) {
             case LOG_IN:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this,model.getResult().equals("success")?"로그인되었습니다":"로그인되지 못했습니다");
-                if(model.getResult().equals("success")) {
+                Log.d("flagmon", "user auth key: " + model.getMsg());
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "로그인되었습니다" : "로그인되지 못했습니다");
+                if (model.getResult().equals("success")) {
                     saveLoginInfo(model.getMsg());
                     finish();
                 }
@@ -126,13 +132,13 @@ public class LoginActivity  extends FMCommonActivity implements PlusOnGetDataLis
         return false;
     }
 
-   public void goToFindPassword(View v) {
-       PlusClickGuard.doIt(v);
+    public void goToFindPassword(View v) {
+        PlusClickGuard.doIt(v);
 
-       Intent intent = new Intent(this, FindPasswordActivity.class);
-       startActivity(intent);
+        Intent intent = new Intent(this, FindPasswordActivity.class);
+        startActivity(intent);
 
-   }
+    }
 
     public void doLogin(View v) {
         PlusClickGuard.doIt(v);
@@ -140,26 +146,26 @@ public class LoginActivity  extends FMCommonActivity implements PlusOnGetDataLis
         EditText userEmailView = (EditText) findViewById(R.id.userEmail);
         String userEmail = userEmailView.getText().toString();
 
-        if(userEmail.equals("")) {
-            PlusToaster.doIt(this,"이메일을 입력해주세요.");
+        if (userEmail.equals("")) {
+            PlusToaster.doIt(this, "이메일을 입력해주세요.");
             return;
         }
 
-        if(!PlusStringEmailChecker.doIt(userEmail)) {
-            PlusToaster.doIt(this,"아이디는 이메일 주소 형식입니다.");
+        if (!PlusStringEmailChecker.doIt(userEmail)) {
+            PlusToaster.doIt(this, "아이디는 이메일 주소 형식입니다.");
             return;
         }
 
         EditText userPasswordView = (EditText) findViewById(R.id.userPassword);
         String userPassword = userPasswordView.getText().toString();
 
-        if(userPassword.equals("")) {
-            PlusToaster.doIt(this,"비밀번호를 입력해주세요.");
+        if (userPassword.equals("")) {
+            PlusToaster.doIt(this, "비밀번호를 입력해주세요.");
             return;
         }
 
-        if(!isPasswordValid(userPassword)) {
-            PlusToaster.doIt(this,"비밀번호는 영문 숫자 조합 8자리 이상입니다.");
+        if (!isPasswordValid(userPassword)) {
+            PlusToaster.doIt(this, "비밀번호는 영문 숫자 조합 8자리 이상입니다.");
             return;
 
         }
@@ -196,7 +202,7 @@ public class LoginActivity  extends FMCommonActivity implements PlusOnGetDataLis
     public void showPolicy(View v) {
         PlusClickGuard.doIt(v);
         Intent intent = new Intent(this, PolicyActivity.class);
-        intent.putExtra(FMConstants.KEY_POLICY_TYPE,FMConstants.POLICY_SERVICE);
+        intent.putExtra(FMConstants.KEY_POLICY_TYPE, FMConstants.POLICY_SERVICE);
         startActivity(intent);
     }
 

@@ -22,6 +22,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@drawable/post_btn_selector" />
+
     <Button
         android:id="@+id/groupPost"
         android:layout_width="48dp"

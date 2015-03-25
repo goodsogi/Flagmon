@@ -9,13 +9,11 @@ import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonAdapter;
-import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
-import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.FriendModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
-import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -50,7 +48,7 @@ public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> im
                     parent, false);
         }
 
-        FriendModel data = mDatas.get(position);
+        final FriendModel data = mDatas.get(position);
         TextView name = PlusViewHolder.get(convertView, R.id.name);
 
 
@@ -64,7 +62,7 @@ public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> im
         ignore.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                ignoreRequest();
+                ignoreRequest(data.getIdx());
             }
         });
 
@@ -72,7 +70,7 @@ public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> im
         accept.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                acceptRequest();
+                acceptRequest(data.getIdx());
             }
         });
 
@@ -80,11 +78,10 @@ public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> im
         return convertView;
     }
 
-    private void acceptRequest() {
-        //수정!!
+    private void acceptRequest(String idx) {
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        if(LoginChecker.isLogIn((android.app.Activity) mContext)) { postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));}
+        postParams.add(new BasicNameValuePair("idx", idx));
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
 
 
         new PlusHttpClient((android.app.Activity) mContext, this, false).execute(ACCEPT_REQUEST,
@@ -92,12 +89,10 @@ public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> im
                 postParams);
     }
 
-    private void ignoreRequest() {
-//수정!!
+    private void ignoreRequest(String idx) {
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        if(LoginChecker.isLogIn((android.app.Activity) mContext)) { postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));}
-
+        postParams.add(new BasicNameValuePair("idx", idx));
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
 
         new PlusHttpClient((android.app.Activity) mContext, this, false).execute(IGNORE_REQUEST,
                 FMApiConstants.IGNORE_REQUEST, new PlusInputStreamStringConverter(),
@@ -111,15 +106,15 @@ public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> im
         switch (from) {
             case ACCEPT_REQUEST:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(mContext,model.getResult().equals("success")?"친구 신청을 수락했습니다":"친구 신청을 수락하지 못했습니다");
-                if(model.getResult().equals("success")) {
+                PlusToaster.doIt(mContext, model.getResult().equals("success") ? "친구 신청을 수락했습니다" : "친구 신청을 수락하지 못했습니다");
+                if (model.getResult().equals("success")) {
                     //추가 액션??
                 }
                 break;
             case IGNORE_REQUEST:
                 ServerResultModel model2 = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(mContext,model2.getResult().equals("success")?"친구 신청을 무시했습니다":"친구 신청을 무시하지 못했습니다");
-                if(model2.getResult().equals("success")) {
+                PlusToaster.doIt(mContext, model2.getResult().equals("success") ? "친구 신청을 무시했습니다" : "친구 신청을 무시하지 못했습니다");
+                if (model2.getResult().equals("success")) {
                     //추가 액션??
                 }
                 break;

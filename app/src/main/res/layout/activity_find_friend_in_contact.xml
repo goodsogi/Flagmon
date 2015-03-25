@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -30,26 +32,31 @@
     <TextView
         android:id="@+id/contactFriendCount"
         android:layout_width="match_parent"
-        android:layout_height="45dp" android:gravity="center_vertical" android:paddingLeft="13dp"
-        android:textColor="#657487"
+        android:layout_height="45dp"
         android:background="#eff1f3"
-        />
+        android:gravity="center_vertical"
+        android:paddingLeft="13dp"
+        android:textColor="#657487" />
+
     <ListView
         android:id="@+id/listContact"
-        android:background="#ffffff"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:background="#ffffff"></ListView>
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="45dp" android:gravity="center_vertical" android:paddingLeft="13dp"
-        android:textColor="#657487"
+        android:layout_height="45dp"
         android:background="#eff1f3"
+        android:gravity="center_vertical"
+        android:paddingLeft="13dp"
         android:text="Flagmon에 없는 친구들을 초대하세요"
-        />
+        android:textColor="#657487" />
+
     <ListView
         android:id="@+id/listContactNotFlagmon"
-        android:background="#ffffff"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:background="#ffffff"></ListView>
 
 </LinearLayout>

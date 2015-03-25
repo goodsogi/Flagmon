@@ -12,11 +12,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
-import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FriendListParser;
-import com.gntsoft.flagmon.utils.LoginChecker;
+import com.gntsoft.flagmon.server.FriendModel;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -35,6 +34,7 @@ public class SearchFriendByNameActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
 
     private static final int SEARCH_fRIENDS_BY_NAME = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +60,7 @@ public class SearchFriendByNameActivity extends FMCommonActivity implements
 
         editText.postDelayed(new Runnable() {
             public void run() {
-                InputMethodManager manager = (InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+                InputMethodManager manager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
                 manager.showSoftInput(editText, 0);
             }
         }, 100);
@@ -71,7 +71,7 @@ public class SearchFriendByNameActivity extends FMCommonActivity implements
         EditText searchView = (EditText) findViewById(R.id.searchInput);
         String keyword = searchView.getText().toString();
 
-        if(keyword.equals("")) {
+        if (keyword.equals("")) {
             PlusToaster.doIt(this, "검색어를 입력해주세요");
             return;
 
@@ -82,12 +82,10 @@ public class SearchFriendByNameActivity extends FMCommonActivity implements
     }
 
     private void performSearch(String keyword) {
-        //srchPost에 검색어 넣나?? 수정!!??
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        postParams.add(new BasicNameValuePair("srchPost", keyword));
-        if(LoginChecker.isLogIn(this)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        postParams.add(new BasicNameValuePair("name", keyword));
+        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
 
 
         new PlusHttpClient(this, this, false).execute(SEARCH_fRIENDS_BY_NAME,

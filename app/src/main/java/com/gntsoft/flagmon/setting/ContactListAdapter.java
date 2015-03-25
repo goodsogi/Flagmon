@@ -24,7 +24,6 @@ import com.gntsoft.flagmon.server.ServerResultParser;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -50,7 +49,7 @@ public class ContactListAdapter extends CursorAdapter implements
     protected DisplayImageOptions mOption;
 
     public ContactListAdapter(Context context, Cursor cursor) {
-        super(context, cursor,0);
+        super(context, cursor, 0);
         mContext = context;
         // UIL 초기화
         mImageLoader = ImageLoader.getInstance();
@@ -61,6 +60,7 @@ public class ContactListAdapter extends CursorAdapter implements
                 .cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 
     }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
 
@@ -113,6 +113,7 @@ public class ContactListAdapter extends CursorAdapter implements
                 FMApiConstants.SEND_FRIEND_REQUEST, new PlusInputStreamStringConverter(),
                 postParams);
     }
+
     @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)

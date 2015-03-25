@@ -15,8 +15,7 @@ import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
-import com.gntsoft.flagmon.neighbor.NeighborListAdapter;
-import com.gntsoft.flagmon.neighbor.NeighborListModel;
+import com.gntsoft.flagmon.neighbor.FMListAdapter;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMListParser;
 import com.gntsoft.flagmon.server.FMModel;
@@ -37,7 +36,7 @@ public class ListSearchFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
 
     private static final int GET_LIST_DATA = 0;
-    String [] mapOptionDatas = {"인기순","최근 등록순"};
+    String[] mapOptionDatas = {"인기순", "최근 등록순"};
 
     public ListSearchFragment() {
         // TODO Auto-generated constructor stub
@@ -57,7 +56,9 @@ public class ListSearchFragment extends FMCommonFragment implements
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
         postParams.add(new BasicNameValuePair("sort", sortType));
         postParams.add(new BasicNameValuePair("srchPost", getArguments().getString(FMConstants.KEY_KEYWORD)));
-        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
         new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
@@ -73,9 +74,6 @@ public class ListSearchFragment extends FMCommonFragment implements
     }
 
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,7 +83,7 @@ public class ListSearchFragment extends FMCommonFragment implements
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         Button sort = (Button) mActivity.findViewById(R.id.sort);
         sort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,17 +116,17 @@ public class ListSearchFragment extends FMCommonFragment implements
 
 
         switch (whichButton) {
-            case 0: sortByPopular();
+            case 0:
+                sortByPopular();
                 break;
 
-            case 1: sortByRecent();
+            case 1:
+                sortByRecent();
                 break;
-
 
 
         }
     }
-
 
 
     private void sortByRecent() {
@@ -154,7 +152,7 @@ public class ListSearchFragment extends FMCommonFragment implements
 
     private void makeList(final ArrayList<FMModel> datas) {
 
-        if(datas == null || datas.size() == 0) {
+        if (datas == null || datas.size() == 0) {
             PlusToaster.doIt(mActivity, "검색결과가 없습니다");
             return;
         }
@@ -163,7 +161,7 @@ public class ListSearchFragment extends FMCommonFragment implements
                 .findViewById(R.id.list_search);
 
         if (list == null) return;
-        list.setAdapter(new NeighborListAdapter(mActivity,
+        list.setAdapter(new FMListAdapter(mActivity,
                 datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

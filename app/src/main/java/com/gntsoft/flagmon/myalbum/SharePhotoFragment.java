@@ -34,7 +34,7 @@ public class SharePhotoFragment extends FMCommonFragment {
         topBarContainer.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(mActivity);
-        View inviteTopBar = inflater.inflate(R.layout.top_bar_share_photo,null);
+        View inviteTopBar = inflater.inflate(R.layout.top_bar_share_photo, null);
         topBarContainer.addView(inviteTopBar);
     }
 
@@ -48,7 +48,7 @@ public class SharePhotoFragment extends FMCommonFragment {
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         Button post = (Button) mActivity.findViewById(R.id.post);
         post.setOnClickListener(new View.OnClickListener() {
             @Override

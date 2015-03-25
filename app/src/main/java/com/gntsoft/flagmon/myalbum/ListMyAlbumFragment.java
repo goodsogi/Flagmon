@@ -17,14 +17,12 @@ import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMListParser;
-import com.gntsoft.flagmon.server.FMMapParser;
 import com.gntsoft.flagmon.server.FMModel;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
-import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -39,7 +37,7 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
 
     private static final int GET_LIST_DATA = 0;
-    String [] listFriendOptionDatas = {"인기순","최근 등록순","퍼간 날짜","거리순"};
+    String[] listFriendOptionDatas = {"인기순", "최근 등록순", "퍼간 날짜", "거리순"};
 
     public ListMyAlbumFragment() {
         // TODO Auto-generated constructor stub
@@ -58,7 +56,9 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
         postParams.add(new BasicNameValuePair("sort", sortType));
-        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
         new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
@@ -71,7 +71,7 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
         ListView list = (ListView) mActivity
                 .findViewById(R.id.list_my_album);
 
-        if (list == null||datas==null) return;
+        if (list == null || datas == null) return;
         list.setAdapter(new MyAlbumListAdapter(mActivity,
                 datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -91,7 +91,6 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -101,7 +100,7 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         Button sort = (Button) mActivity.findViewById(R.id.sort);
         sort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,14 +131,18 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
 
     private void doSortFriend(int whichButton) {
         switch (whichButton) {
-            case 0: sortByPopular();
+            case 0:
+                sortByPopular();
                 break;
 
-            case 1: sortByRecent();
+            case 1:
+                sortByRecent();
                 break;
-            case 2: sortByPin();
+            case 2:
+                sortByPin();
                 break;
-            case 3:sortByDistance();
+            case 3:
+                sortByDistance();
                 break;
 
         }
@@ -156,7 +159,6 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
     }
 
 
-
     private void sortByRecent() {
         getDataFromServer(FMConstants.SORT_BY_RECENT);
     }
@@ -167,7 +169,7 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
 
     @Override
     public void onSuccess(Integer from, Object datas) {
-        if(datas == null) return;
+        if (datas == null) return;
         switch (from) {
             case GET_LIST_DATA:
                 makeList(new FMListParser().doIt((String) datas));

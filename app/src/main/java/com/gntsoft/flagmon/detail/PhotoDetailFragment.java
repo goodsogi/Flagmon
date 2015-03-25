@@ -1,6 +1,5 @@
 package com.gntsoft.flagmon.detail;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,7 +27,7 @@ public class PhotoDetailFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-           }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,9 +38,9 @@ public class PhotoDetailFragment extends FMCommonFragment implements
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         ImageView mainImage = (ImageView) mActivity.findViewById(R.id.main_img);
-        mImageLoader.displayImage(getArguments().getString(FMConstants.KEY_IMAGE_URL,""),mainImage, mOption);
+        mImageLoader.displayImage(getArguments().getString(FMConstants.KEY_IMAGE_URL, ""), mainImage, mOption);
         mainImage.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
@@ -52,7 +51,7 @@ public class PhotoDetailFragment extends FMCommonFragment implements
 
     private void goToImageViewer() {
         Intent intent = new Intent(mActivity, ImageViewerActivity.class);
-        intent.putExtra(FMConstants.KEY_IMAGE_URL, getArguments().getString(FMConstants.KEY_IMAGE_URL,""));
+        intent.putExtra(FMConstants.KEY_IMAGE_URL, getArguments().getString(FMConstants.KEY_IMAGE_URL, ""));
         startActivity(intent);
 
     }

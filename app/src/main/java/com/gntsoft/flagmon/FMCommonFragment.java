@@ -9,33 +9,31 @@ import android.os.Bundle;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 /**
  * 공통 fragment
- * 
+ *
  * @author jeff
- * 
  */
 public abstract class FMCommonFragment extends Fragment {
-	protected Activity mActivity;
+    protected Activity mActivity;
     protected ImageLoader mImageLoader;
     protected DisplayImageOptions mOption;
 
-	public FMCommonFragment() {
-	}
+    public FMCommonFragment() {
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-		mActivity = getActivity();
+        mActivity = getActivity();
         initUIL();
-		// 리스너 등록
-		addListenerButton();
+        // 리스너 등록
+        addListenerToButton();
 
-		
-	}
+
+    }
 
     private void initUIL() {
         mImageLoader = ImageLoader.getInstance();
@@ -47,14 +45,14 @@ public abstract class FMCommonFragment extends Fragment {
     }
 
     /**
-	 * 리스너 등록
-	 */
-	abstract protected void addListenerButton();
+     * 리스너 등록
+     */
+    abstract protected void addListenerToButton();
 
     protected String getUserAuthKey() {
         SharedPreferences sharedPreference = mActivity.getSharedPreferences(
                 FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY,"");
+        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY, "");
     }
 
 }

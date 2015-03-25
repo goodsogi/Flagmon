@@ -9,183 +9,159 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.pluslibrary.PlusConstants;
 import com.pluslibrary.R;
-import com.pluslibrary.server.PlusHttpClient;
-import com.pluslibrary.server.PlusInputStreamStringConverter;
-import com.pluslibrary.server.PlusOnGetDataListener;
-import com.pluslibrary.utils.PlusPhoneNumberFinder;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 현재 위치 가져오기
- * 
+ *
  * @author jeff
- * 
  */
-public class FMLocationFinder implements android.location.LocationListener ,
-PlusOnGetDataListener {
+public class FMLocationFinder implements android.location.LocationListener {
 
-	private static final int SEND_LOCATION = 0;
-	private Activity mActivity;
-	private LocationManager mLocationManager;
-	private String mProvider;
-	private String mApiUrl;
-
+    private static final long DELAY_TIME = 1000 * 10;
     private static FMLocationFinder instance;
+    private Activity mActivity;
+    private LocationManager mLocationManager;
+    private String mProvider;
     private boolean mIsGpsCatched;
+    private FMLocationListener mListener;
 
-    private FMLocationFinder(Activity activity, String apiUrl) {
-		mActivity = activity;
-		mApiUrl = apiUrl;
+    private FMLocationFinder(Activity activity, FMLocationListener listener) {
+        mActivity = activity;
+        mListener = listener;
 
         mLocationManager = (LocationManager) mActivity
                 .getSystemService(Context.LOCATION_SERVICE);
 
-	}
+    }
 
-    public static FMLocationFinder getInstance(Activity activity, String apiUrl) {
-        if(instance == null) return instance = new FMLocationFinder(activity, apiUrl);
+    public static FMLocationFinder getInstance(Activity activity, FMLocationListener listener) {
+        if (instance == null) return instance = new FMLocationFinder(activity, listener);
         else return instance;
     }
-	
-	
-	public boolean doIt() {
-		if(canGetLocation()) {
-			getCurrentLocation();
-			return true;
-		} else {
-			moveToSetting();
-			return false;
-		}
-	}
-
-	public boolean canGetLocation() {
-		int status = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(mActivity);
-		if (status != ConnectionResult.SUCCESS)
-			return false;
 
 
-		Criteria criteria = new Criteria();
-		mProvider = mLocationManager.getBestProvider(criteria, true);
+    public boolean doIt() {
+        if (canGetLocation()) {
+            getCurrentLocation();
+            return true;
+        } else {
+            moveToSetting();
+            return false;
+        }
+    }
 
-		if (mProvider == null
-				|| mProvider.equals(LocationManager.PASSIVE_PROVIDER))
-			return false;
+    public boolean canGetLocation() {
+        int status = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(mActivity);
+        if (status != ConnectionResult.SUCCESS)
+            return false;
 
-		// 구글 플레이 서비스를 사용할 수 있고 설정에서 위치 정보 액세스가 on된 경우
-		return true;
 
-	}
+        Criteria criteria = new Criteria();
+        mProvider = mLocationManager.getBestProvider(criteria, true);
 
-	/**
-	 * 위치 정보 액세스 설정으로 이동
-	 */
+        if (mProvider == null
+                || mProvider.equals(LocationManager.PASSIVE_PROVIDER))
+            return false;
 
-	public void moveToSetting() {
+        // 구글 플레이 서비스를 사용할 수 있고 설정에서 위치 정보 액세스가 on된 경우
+        return true;
 
-		new AlertDialog.Builder(mActivity)
-				.setTitle(R.string.location_popup_title)
-				.setMessage(R.string.turn_on_location_service)
-				.setNeutralButton(R.string.confirm,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								mActivity
-										.startActivityForResult(
-												new Intent(
-														android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS),
-												PlusConstants.REQUEST_LOCATION_AGREEMENT);
-							}
-						})
-				.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					@Override
-					public void onCancel(DialogInterface dialog) {
-					}
-				}).show();
+    }
 
-	}
+    /**
+     * 위치 정보 액세스 설정으로 이동
+     */
 
-	/**
-	 * 현재 위치 가져오기
-	 */
-	public void getCurrentLocation() {
-		// TODO Auto-generated method stub
-		// mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-		// 1000, 10, this);
-		// 네트워크 제공자가 제공하는 위치. GPS를 사용하면 변경 필요!!
-		mIsGpsCatched = false;
-		mLocationManager.requestLocationUpdates(
-				LocationManager.GPS_PROVIDER, 1000, 10, this);
+    public void moveToSetting() {
 
-	}
+        new AlertDialog.Builder(mActivity)
+                .setTitle(R.string.location_popup_title)
+                .setMessage(R.string.turn_on_location_service)
+                .setNeutralButton(R.string.confirm,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                mActivity
+                                        .startActivityForResult(
+                                                new Intent(
+                                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS),
+                                                PlusConstants.REQUEST_LOCATION_AGREEMENT);
+                            }
+                        })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                    }
+                }).show();
 
-	@Override
-	public void onLocationChanged(final Location location) {
+    }
 
-		mLocationManager.removeUpdates(this);
+    /**
+     * 현재 위치 가져오기
+     */
+    public void getCurrentLocation() {
+        // TODO Auto-generated method stub
+        // mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+        // 1000, 10, this);
+        // 네트워크 제공자가 제공하는 위치. GPS를 사용하면 변경 필요!!
+        mIsGpsCatched = false;
+        mLocationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 1000, 10, this);
+
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                if (!mIsGpsCatched) {
+//
+//                    mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+//                            0, 0, FMLocationFinder.this);
+//                }
+//
+//            }
+//        }, DELAY_TIME);
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        mLocationManager.removeUpdates(this);
         mIsGpsCatched = true;
+        mListener.onGPSCatched(location);
 
-		//서버 등록
-		
-		List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-		postParams.add(new BasicNameValuePair("id", PlusPhoneNumberFinder
-				.doIt(mActivity)));
-		postParams.add(new BasicNameValuePair("lat", String
-				.valueOf(location.getLatitude())));
-		postParams.add(new BasicNameValuePair("lng", String
-				.valueOf(location.getLongitude())));
-		
-		new PlusHttpClient(mActivity, this, false).execute(SEND_LOCATION,
-				mApiUrl, new PlusInputStreamStringConverter(), postParams);
-		
-	}
+
+    }
 
 
     public boolean isGpsCatched() {
         return mIsGpsCatched;
     }
 
-	@Override
-	public void onProviderDisabled(String arg0) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onProviderDisabled(String arg0) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void onProviderEnabled(String arg0) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onProviderEnabled(String arg0) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	
-	@Override
-	public void onSuccess(Integer from, Object datas) {
-		switch (from) {
-		case SEND_LOCATION:
-			Log.i("plus", "위치 등록 결과: " + datas);
-			break;
-
-		default:
-			break;
-		}
-	}
 
 }

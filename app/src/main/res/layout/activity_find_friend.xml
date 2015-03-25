@@ -44,12 +44,12 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="#ffffff"
+        android:clickable="true"
         android:drawableLeft="@drawable/facebook"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:onClick="findFriendOnFacebook"
         android:paddingLeft="10dp"
-        android:clickable="true"
         android:text="Facebook에서 친구 찾기"
         android:textColor="#000000" />
 
@@ -57,12 +57,12 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="#ffffff"
+        android:clickable="true"
         android:drawableLeft="@drawable/twitter"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:onClick="findFriendOnTwitter"
         android:paddingLeft="10dp"
-        android:clickable="true"
         android:text="Twitter에서 친구 찾기"
         android:textColor="#000000" />
 
@@ -70,12 +70,12 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="#ffffff"
+        android:clickable="true"
         android:drawableLeft="@drawable/contact"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:onClick="findFriendInContact"
         android:paddingLeft="10dp"
-        android:clickable="true"
         android:text="연락처로부터 친구 찾기"
         android:textColor="#000000" />
 
@@ -83,13 +83,13 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="#ffffff"
+        android:clickable="true"
         android:drawableLeft="@drawable/search_name"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:onClick="searchFriendByName"
         android:paddingLeft="10dp"
         android:text="이름으로 검색"
-        android:clickable="true"
         android:textColor="#000000" />
 
     <TextView

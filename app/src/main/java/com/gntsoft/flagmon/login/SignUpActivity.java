@@ -1,6 +1,5 @@
 package com.gntsoft.flagmon.login;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -12,14 +11,12 @@ import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
-import com.gntsoft.flagmon.server.FMMapParser;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
-import com.pluslibrary.utils.PlusStringEmailChecker;
 import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
@@ -34,13 +31,9 @@ import java.util.regex.Pattern;
  * Created by johnny on 15. 2. 26.
  */
 public class SignUpActivity extends FMCommonActivity implements PlusOnGetDataListener {
-    final int DRAWABLE_LEFT = 0;
-    final int DRAWABLE_TOP = 1;
-    final int DRAWABLE_RIGHT = 2;
-    final int DRAWABLE_BOTTOM = 3;
     private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z]+)(?=.*[!@#$%^*+=-]|.*[0-9]+).{8,16}$";
-
     private static final int CHECK_EMAIL = 11;
+    final int DRAWABLE_RIGHT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,15 +162,15 @@ public class SignUpActivity extends FMCommonActivity implements PlusOnGetDataLis
 
     @Override
     public void onSuccess(Integer from, Object datas) {
-        if(datas == null) return;
+        if (datas == null) return;
         switch (from) {
 
             case CHECK_EMAIL:
 
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
                 PlusToaster.doIt(this, model.getResult().equals("success") ? "이메일을 사용할 수 있습니다" :
-                        model.getMsg().equals("not email")? "이메일이 유효하지 않습니다":"이미 사용중인 이메일입니다");
-                if(model.getResult().equals("success")) checkPasswordAndName();
+                        model.getMsg().equals("not email") ? "이메일이 유효하지 않습니다" : "이미 사용중인 이메일입니다");
+                if (model.getResult().equals("success")) checkPasswordAndName();
                 break;
 
         }
@@ -210,7 +203,7 @@ public class SignUpActivity extends FMCommonActivity implements PlusOnGetDataLis
             return;
         }
 
-goToSecondSignUpActivity(userEmail, userPassword, userName);
+        goToSecondSignUpActivity(userEmail, userPassword, userName);
 
     }
 

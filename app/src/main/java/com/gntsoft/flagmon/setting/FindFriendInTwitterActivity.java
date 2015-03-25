@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.FriendModel;
 
 import java.util.ArrayList;
 
@@ -29,9 +30,9 @@ import twitter4j.auth.RequestToken;
  */
 public class FindFriendInTwitterActivity extends FMCommonActivity {
 
+    ArrayList<FriendModel> mModel = new ArrayList<>();
     // Twitter
     private Twitter mTwitter;
-    ArrayList<FriendModel> mModel = new ArrayList<>();
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -66,11 +67,82 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
         mProgressDialog.show();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Twitter Oauth
+        if (requestCode == FMConstants.TWITTER_OAUTH
+                && resultCode == Activity.RESULT_OK) {
+            showProgressDialog("친구 데이터 가져오는중...");
+            getAccessToken(data);
+            return;
+
+        }
+    }
+
+    private void getAccessToken(Intent data) {
+
+        String oauthVerifier = (String) data.getExtras().get(
+                FMConstants.URL_TWITTER_OAUTH_VERIFIER);
+        new GetTwitterAccessTokenTask().execute(oauthVerifier);
+
+    }
+
+    private void showFriendCount() {
+        TextView twitterFriendCount = (TextView) findViewById(R.id.twitterFriendCount);
+        twitterFriendCount.setText(mModel.size() + "명의 Twitter 친구가 Flagmon에 있습니다");
+    }
+
+    private void makeList() {
+        ListView list = (ListView) findViewById(R.id.listTwitter);
+
+        if (list == null || mModel == null) return;
+        list.setAdapter(new FindFriendListAdapter(this,
+                mModel));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });
+
+    }
+
+    public void getTwitterUserId() {
+
+        new GetUserIdTask().execute();
+    }
+
+    private void getFriendsData(IDs ids) {
+        long[] friendIds = ids.getIDs();
+        int friendIdsSize = friendIds.length;
+        for (int i = 0; i < friendIdsSize; i++) {
+            getUser(friendIds[i], i == friendIdsSize - 1);
+        }
+    }
+
+    private void addUserToModel(User user) {
+        FriendModel data = new FriendModel();
+        //수정이 필요할 수 있음!!
+        data.setIdx(String.valueOf(user.getId()));
+        data.setName(user.getName());
+        data.setProfileImageUrl(user.getProfileImageURL());
+        mModel.add(data);
+    }
+
+    private void getUser(long id, boolean isEnd) {
+        new GetUserTask().execute(id, isEnd);
+    }
+
+    private void getFriendIds(Long id) {
+
+        new GetFriendIdsTask().execute(id);
+    }
+
     /**
      * Get Twitter request token
      *
      * @author user
-     *
      */
     class GetTwitterRequestTokenTask extends
             AsyncTask<Void, Void, RequestToken> {
@@ -112,34 +184,10 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Twitter Oauth
-        if (requestCode == FMConstants.TWITTER_OAUTH
-                && resultCode == Activity.RESULT_OK) {
-            showProgressDialog("친구 데이터 가져오는중...");
-            getAccessToken(data);
-            return;
-
-        }
-    }
-
-
-    private void getAccessToken(Intent data) {
-
-        String oauthVerifier = (String) data.getExtras().get(
-                FMConstants.URL_TWITTER_OAUTH_VERIFIER);
-        new GetTwitterAccessTokenTask().execute(oauthVerifier);
-
-    }
-
     /**
      * Get Twitter access token
      *
      * @author user
-     *
      */
     class GetTwitterAccessTokenTask extends
             AsyncTask<String, Void, AccessToken> {
@@ -170,37 +218,9 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
             getTwitterUserId();
 
 
-
         }
 
     }
-
-    private void showFriendCount() {
-        TextView twitterFriendCount = (TextView) findViewById(R.id.twitterFriendCount);
-        twitterFriendCount.setText(mModel.size() + "명의 Twitter 친구가 Flagmon에 있습니다");
-    }
-
-    private void makeList() {
-        ListView list = (ListView) findViewById(R.id.listTwitter);
-
-        if (list == null || mModel == null) return;
-        list.setAdapter(new FindFriendListAdapter(this,
-                mModel));
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            }
-        });
-
-    }
-
-
-    public void getTwitterUserId() {
-
-        new GetUserIdTask().execute();
-    }
-
-
 
     class GetUserIdTask extends
             AsyncTask<String, Void, Long> {
@@ -241,7 +261,7 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
             IDs ids;
 
             try {
-                return  mTwitter.getFriendsIDs(userId, cursor);
+                return mTwitter.getFriendsIDs(userId, cursor);
 
             } catch (TwitterException e) {
                 e.printStackTrace();
@@ -265,14 +285,6 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
 
     }
 
-    private void getFriendsData(IDs ids) {
-        long[] friendIds = ids.getIDs();
-        int friendIdsSize = friendIds.length;
-        for(int i=0; i<friendIdsSize; i++){
-            getUser(friendIds[i], i == friendIdsSize -1);
-        }
-    }
-
     class GetUserTask extends
             AsyncTask<Object, Void, User> {
 
@@ -286,7 +298,7 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
             mIsEnd = (boolean) params[1];
 
             try {
-                return  mTwitter.showUser(userId);
+                return mTwitter.showUser(userId);
 
             } catch (TwitterException e) {
                 e.printStackTrace();
@@ -303,7 +315,7 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
             addUserToModel(user);
 
 
-            if(mIsEnd) {
+            if (mIsEnd) {
                 makeList();
                 showFriendCount();
                 mProgressDialog.dismiss();
@@ -312,26 +324,6 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
 
         }
 
-    }
-
-    private void addUserToModel(User user) {
-        FriendModel data = new FriendModel();
-        //수정이 필요할 수 있음!!
-        data.setId(String.valueOf(user.getId()));
-        data.setName(user.getName());
-        data.setProfileImageUrl(user.getProfileImageURL());
-        mModel.add(data);
-    }
-
-
-    private void getUser(long id, boolean isEnd) {
-        new GetUserTask().execute(id, isEnd);
-    }
-
-
-    private void getFriendIds(Long id) {
-
-        new GetFriendIdsTask().execute(id);
     }
 
 

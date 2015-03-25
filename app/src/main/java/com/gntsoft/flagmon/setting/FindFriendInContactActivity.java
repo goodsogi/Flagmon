@@ -9,9 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.R;
@@ -20,7 +18,7 @@ import com.gntsoft.flagmon.R;
  * Created by johnny on 15. 3. 11.
  */
 public class FindFriendInContactActivity extends FMCommonActivity implements
-       LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     // Defines the text expression
 //    @SuppressLint("InlinedApi")
@@ -48,8 +46,6 @@ public class FindFriendInContactActivity extends FMCommonActivity implements
         };
     }
 
-    private ListView mContactsList;
-    private ContactListAdapter mContactListAdapter;
     /*
          * Defines an array that contains column names to move from
          * the Cursor to the ListView.
@@ -69,6 +65,8 @@ public class FindFriendInContactActivity extends FMCommonActivity implements
     private final static int[] TO_IDS = {
             android.R.id.text1
     };
+    private ListView mContactsList;
+    private ContactListAdapter mContactListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +85,7 @@ public class FindFriendInContactActivity extends FMCommonActivity implements
                 (ListView) findViewById(R.id.listContact);
         // Gets a CursorAdapter
         mContactListAdapter = new ContactListAdapter(
-                this,null);
+                this, null);
         // Sets the adapter for the ListView
         mContactsList.setAdapter(mContactListAdapter);
 
@@ -139,7 +137,6 @@ public class FindFriendInContactActivity extends FMCommonActivity implements
         mContactListAdapter.swapCursor(cursor);
         showFriendCount(cursor);
     }
-
 
 
     @Override

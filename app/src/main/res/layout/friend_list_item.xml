@@ -86,14 +86,15 @@
         android:layout_below="@+id/img"
         android:layout_marginTop="6dp"
         android:scaleType="centerCrop" />
+
     <ImageView
         android:id="@+id/scrapPost"
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:layout_alignTop="@+id/big_img"
         android:layout_alignRight="@+id/big_img"
-        android:layout_marginTop="6dp"
+        android:layout_alignTop="@+id/big_img"
         android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
         android:background="@drawable/scrap" />
 
 

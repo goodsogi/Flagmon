@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
@@ -26,8 +25,6 @@ import com.gntsoft.flagmon.user.UserPageActivity;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.gntsoft.flagmon.utils.ScrollViewExt;
 import com.gntsoft.flagmon.utils.ScrollViewListener;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -52,14 +49,13 @@ public class DetailActivity extends FMCommonActivity implements
     private static final int GET_PHOTOS_NEARBY = 3;
     private static final int GET_DETAIL = 0;
     String[] menuItems = {"신고하기", "URL 복사"};
-    private MapView mMapView;
-    private GoogleMap mGoogleMap;
-    private ImageView mMainImage;
-    private boolean login;
+
     private ScrollViewExt mScrollView;
     private String mImageUrl;
     private String mPhotoLat;
     private String mPhotoLon;
+    private String mUserEmail;
+    private String mUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +65,6 @@ public class DetailActivity extends FMCommonActivity implements
         getDataFromServer();
 
 
-        //addListenerToMainImage();
     }
 
     public void getDataFromServer() {
@@ -103,16 +98,6 @@ public class DetailActivity extends FMCommonActivity implements
         menuButton.setVisibility(View.VISIBLE);
 
     }
-
-//    private void addListenerToMainImage() {
-//        mMainImage = (ImageView) findViewById(R.id.main_img);
-//        mMainImage.setOnClickListener(new PlusOnClickListener() {
-//            @Override
-//            protected void isLogIn() {
-//                goToImageViewer();
-//            }
-//        });
-//    }
 
 
     public void changeMapPhoto(View v) {
@@ -162,9 +147,11 @@ public class DetailActivity extends FMCommonActivity implements
     }
 
     public void goToUserPage(View v) {
-        //!!사용자 고유번호 전달
         PlusClickGuard.doIt(v);
         Intent intent = new Intent(this, UserPageActivity.class);
+        intent.putExtra(FMConstants.KEY_USER_EMAIL, mUserEmail);
+        intent.putExtra(FMConstants.KEY_USER_NAME, mUserName);
+
         startActivity(intent);
 
     }
@@ -377,18 +364,23 @@ public class DetailActivity extends FMCommonActivity implements
         TextView reply = (TextView) findViewById(R.id.reply);
         TextView pin = (TextView) findViewById(R.id.pin);
         TextView distance = (TextView) findViewById(R.id.distance);
+        TextView viewCount = (TextView) findViewById(R.id.viewCount);
 
-
+        userName.setText(data.getUserName());
         content.setText(data.getMemo());
         date.setText(data.getRegisterDate());
         reply.setText(data.getReplyCount());
         pin.setText(data.getScrapCount());
+        viewCount.setText("조회수 " + data.getHitCount());
         //거리 처리!!
         //distance.setText(data.getDistance());
 
         mImageUrl = data.getImgUrl();
         mPhotoLat = data.getLat();
         mPhotoLon = data.getLon();
+        mUserEmail = data.getUserId();
+        mUserName = data.getUserName();
+
 
     }
 

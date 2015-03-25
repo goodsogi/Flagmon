@@ -19,6 +19,7 @@ import com.facebook.model.GraphObjectList;
 import com.facebook.model.GraphUser;
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.server.FriendModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -124,7 +125,7 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
                     FriendModel data = new FriendModel();
                     JSONObject object = (JSONObject) array.get(i);
                     //수정이 필요할 수 있음!!
-                    data.setId(object.optString("id"));
+                    data.setIdx(object.optString("id"));
                     data.setName(object.optString("name"));
                     data.setProfileImageUrl(object.optString("picture"));
                     model.add(data);

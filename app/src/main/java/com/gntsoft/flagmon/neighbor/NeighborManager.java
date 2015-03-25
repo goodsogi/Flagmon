@@ -79,7 +79,7 @@ public class NeighborManager implements FMTabManager {
         PlusClickGuard.doIt(v);
 
         Intent intent = new Intent(mActivity, SearchActivity.class);
-        intent.putExtra(FMConstants.KEY_MAIN_CONTENT_TYPE,mContentType);
+        intent.putExtra(FMConstants.KEY_MAIN_CONTENT_TYPE, mContentType);
         mActivity.startActivity(intent);
     }
 

@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="433dp">
 
-        <TextView
+    <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="7dp"
         android:layout_marginTop="7dp"
-            android:textSize="20sp"
-        android:textColor="#3c4e76" />
+        android:textColor="#3c4e76"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/distance"
@@ -70,12 +70,12 @@
         android:scaleType="centerCrop" />
 
     <!--<Button-->
-        <!--android:layout_width="22dp"-->
-        <!--android:layout_height="22dp"-->
-        <!--android:layout_alignBottom="@+id/big_img"-->
-        <!--android:layout_marginBottom="6dp"-->
-        <!--android:layout_marginLeft="6dp"-->
-        <!--android:background="@drawable/p27_2_icon_0001" />-->
+    <!--android:layout_width="22dp"-->
+    <!--android:layout_height="22dp"-->
+    <!--android:layout_alignBottom="@+id/big_img"-->
+    <!--android:layout_marginBottom="6dp"-->
+    <!--android:layout_marginLeft="6dp"-->
+    <!--android:background="@drawable/p27_2_icon_0001" />-->
 
     <TextView
         android:id="@+id/content"

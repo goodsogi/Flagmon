@@ -46,8 +46,6 @@ public class CommentListAdapter extends FMCommonAdapter<FMModel> {
         time.setText(data.getRegisterDate());
 
 
-
-
         return convertView;
     }
 

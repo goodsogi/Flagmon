@@ -46,16 +46,6 @@ public class SettingManager implements FMTabManager {
     }
 
 
-    private void toggleMenu(View v) {
-//        if (v.isSelected()) {
-//            v.setSelected(false);
-//            showMap();
-//        } else {
-//            v.setSelected(true);
-//            showList();
-//        }
-    }
-
     private void showSettingFragment() {
         mActivity.getFragmentManager().beginTransaction()
                 .replace(R.id.container_main, new SettingFragment())

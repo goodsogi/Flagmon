@@ -22,7 +22,7 @@
 
 
     <Button
-        android:id="@+id/sendRequest"
+        android:id="@+id/sendFriendRequest"
         android:layout_width="40dp"
         android:layout_height="27dp"
         android:layout_marginRight="12dp"

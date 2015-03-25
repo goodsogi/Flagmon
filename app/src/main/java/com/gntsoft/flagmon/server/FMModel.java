@@ -20,6 +20,7 @@ public class FMModel {
     private String replyCount;
     private String scrapCount;
     private String photoCount;
+    private String userEmail;
 
 
     public String getIdx() {
@@ -140,5 +141,14 @@ public class FMModel {
 
     public void setPhotoIdx(String photoIdx) {
         this.photoIdx = photoIdx;
+    }
+
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

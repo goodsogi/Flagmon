@@ -34,6 +34,7 @@ public class PostDetailParser {
                 data.setReplyCount(subJsonObject.optString("replycnt"));
                 data.setScrapCount(subJsonObject.optString("scrapcnt"));
                 data.setPhotoCount(subJsonObject.optString("readcnt"));
+                data.setUserEmail(subJsonObject.optString("userEmail"));
                 model.add(data);
             }
 

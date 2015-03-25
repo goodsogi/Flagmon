@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" android:background="#ffffff">
+    android:background="#ffffff"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/manageFriend"
@@ -15,24 +16,23 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginLeft="12dp"
-            android:background="@drawable/friend_management"
-             />
+            android:background="@drawable/friend_management" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:textSize="16sp"
             android:text="친구관리"
-           />
+            android:textSize="16sp" />
     </LinearLayout>
-   <View
-       android:layout_width="match_parent"
-       android:layout_height="1px"
-       android:background="#d3d3d3"
-       android:layout_marginLeft="7dp"
-       android:layout_marginRight="7dp"
-       />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:background="#d3d3d3" />
+
     <LinearLayout
         android:id="@+id/manageMon"
         android:layout_width="match_parent"
@@ -44,23 +44,23 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginLeft="12dp"
-            android:background="@drawable/mon_management"
-            />
+            android:background="@drawable/mon_management" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp" android:textSize="16sp"
+            android:layout_marginLeft="15dp"
             android:text="MON관리"
-            />
+            android:textSize="16sp" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#d3d3d3"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
-        />
+        android:background="#d3d3d3" />
+
     <LinearLayout
         android:id="@+id/showUserInfo"
         android:layout_width="match_parent"
@@ -72,23 +72,23 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginLeft="12dp"
-            android:background="@drawable/user_info"
-            />
+            android:background="@drawable/user_info" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="회원정보" android:textSize="16sp"
-            />
+            android:text="회원정보"
+            android:textSize="16sp" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#d3d3d3"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
-        />
+        android:background="#d3d3d3" />
+
     <LinearLayout
         android:id="@+id/showNoti"
         android:layout_width="match_parent"
@@ -100,23 +100,23 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginLeft="12dp"
-            android:background="@drawable/noti"
-            />
+            android:background="@drawable/noti" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="공지사항" android:textSize="16sp"
-            />
+            android:text="공지사항"
+            android:textSize="16sp" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#d3d3d3"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
-        />
+        android:background="#d3d3d3" />
+
     <LinearLayout
         android:id="@+id/setAlarm"
         android:layout_width="match_parent"
@@ -128,24 +128,22 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginLeft="12dp"
-            android:background="@drawable/alarm"
-            />
+            android:background="@drawable/alarm" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="알림설정" android:textSize="16sp"
-            />
+            android:text="알림설정"
+            android:textSize="16sp" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#d3d3d3"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
-        />
-
+        android:background="#d3d3d3" />
 
 
 </LinearLayout>

@@ -15,7 +15,7 @@ public class ReplyParser {
         try {
 
             JSONArray jsonArray = new JSONArray(rawData);
-            for(int i=0; i<jsonArray.length();i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 FMModel data = new FMModel();
                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                 JSONObject subJsonObject = (JSONObject) jsonObject.opt("commentlist");

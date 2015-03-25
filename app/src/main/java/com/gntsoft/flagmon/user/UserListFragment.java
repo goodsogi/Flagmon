@@ -16,8 +16,7 @@ import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
-import com.gntsoft.flagmon.neighbor.NeighborListAdapter;
-import com.gntsoft.flagmon.neighbor.NeighborListModel;
+import com.gntsoft.flagmon.neighbor.FMListAdapter;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMListParser;
 import com.gntsoft.flagmon.server.FMModel;
@@ -37,7 +36,7 @@ public class UserListFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
 
     private static final int GET_USER_LIST_DATA = 0;
-    String [] listOptionDatas = {"인기순","최근 등록순","거리순"};
+    String[] listOptionDatas = {"인기순", "최근 등록순", "거리순"};
     private int totalUserPost;
 
     public UserListFragment() {
@@ -55,9 +54,11 @@ public class UserListFragment extends FMCommonFragment implements
 
 //특정 사용자 이메일등 처리!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("user_email", "user@email.com"));
+        postParams.add(new BasicNameValuePair("user_email", mActivity.getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL)));
         postParams.add(new BasicNameValuePair("sort", sortType));
-        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
         new PlusHttpClient(mActivity, this, false).execute(GET_USER_LIST_DATA,
@@ -74,9 +75,6 @@ public class UserListFragment extends FMCommonFragment implements
     }
 
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,7 +84,7 @@ public class UserListFragment extends FMCommonFragment implements
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         Button sort = (Button) mActivity.findViewById(R.id.sort);
         sort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,13 +117,16 @@ public class UserListFragment extends FMCommonFragment implements
 
 
         switch (whichButton) {
-            case 0: sortByPopular();
+            case 0:
+                sortByPopular();
                 break;
 
-            case 1: sortByRecent();
+            case 1:
+                sortByRecent();
                 break;
 
-            case 2:sortByDistance();
+            case 2:
+                sortByDistance();
                 break;
 
         }
@@ -168,8 +169,8 @@ public class UserListFragment extends FMCommonFragment implements
         ListView list = (ListView) mActivity
                 .findViewById(R.id.list_user);
 
-        if (list == null||datas==null) return;
-        list.setAdapter(new NeighborListAdapter(mActivity,
+        if (list == null || datas == null) return;
+        list.setAdapter(new FMListAdapter(mActivity,
                 datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

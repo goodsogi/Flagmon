@@ -1,9 +1,6 @@
 package com.gntsoft.flagmon.comment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -50,7 +47,6 @@ public class CommentActivity extends FMCommonActivity implements
     }
 
 
-
     public void getDataFromServer() {
 
 
@@ -68,13 +64,9 @@ public class CommentActivity extends FMCommonActivity implements
     }
 
 
-
-
-
-
     public void sendComment(View v) {
         PlusClickGuard.doIt(v);
-        if(LoginChecker.isLogIn(this)) sendCommentToServer();
+        if (LoginChecker.isLogIn(this)) sendCommentToServer();
         else goToLogin(v);
     }
 
@@ -87,7 +79,7 @@ public class CommentActivity extends FMCommonActivity implements
         EditText commentInputView = (EditText) findViewById(R.id.commentInput);
         String commentInput = commentInputView.getText().toString();
 
-        if(commentInput.equals("")) {
+        if (commentInput.equals("")) {
             PlusToaster.doIt(this, "댓글을 입력해주세요");
             return;
         }
@@ -114,10 +106,9 @@ public class CommentActivity extends FMCommonActivity implements
     }
 
 
-
     @Override
     public void onSuccess(Integer from, Object datas) {
-        if(datas == null) return;
+        if (datas == null) return;
         switch (from) {
 
             case GET_COMMENTS:
@@ -127,7 +118,7 @@ public class CommentActivity extends FMCommonActivity implements
             case SEND_COMMENT:
 
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this,model.getResult().equals("success")?"댓글을 달았습니다":"댓글을 달지 못했습니다");
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "댓글을 달았습니다" : "댓글을 달지 못했습니다");
                 //if(model.getResult().equals("success")) finish();
                 break;
 
@@ -139,7 +130,7 @@ public class CommentActivity extends FMCommonActivity implements
 
         ListView list = (ListView) findViewById(R.id.list_reply);
 
-        if (list == null||datas==null) return;
+        if (list == null || datas == null) return;
         list.setAdapter(new CommentListAdapter(this,
                 datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

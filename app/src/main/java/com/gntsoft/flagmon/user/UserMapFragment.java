@@ -1,7 +1,6 @@
 package com.gntsoft.flagmon.user;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,34 +10,27 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMCommonMapFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMMapParser;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.FMLocationFinder;
+import com.gntsoft.flagmon.utils.FMLocationListener;
 import com.gntsoft.flagmon.utils.FMPhotoResizer;
 import com.gntsoft.flagmon.utils.LoginChecker;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -61,16 +53,12 @@ import java.util.List;
 /**
  * Created by johnny on 15. 2. 27.
  */
-public class UserMapFragment extends FMCommonFragment implements
-        PlusOnGetDataListener, LocationListener {
-    private static final long DELAY_TIME = 1000 * 10;
-    private static final int GET_TOTAL_USER_POST = 7;
+public class UserMapFragment extends FMCommonMapFragment implements
+        PlusOnGetDataListener, FMLocationListener {
+    private static final int GET_TOTAL_REPLY_PIN = 7;
     private static final int GET_USER_MAP_DATA = 0;
     String[] mapOptionDatas = {"인기순", "최근 등록순"};
-    private GoogleMap mGoogleMap;
-    private LocationManager mLocationManager;
-    private boolean mIsGpsCatched;
-    private MapView mMapView;
+
     private Button mMyLocationButton;
 
     public UserMapFragment() {
@@ -88,9 +76,11 @@ public class UserMapFragment extends FMCommonFragment implements
 
 //특정 사용자 이메일등 처리!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("user_email", "user@email.com"));
+        postParams.add(new BasicNameValuePair("user_email", mActivity.getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL)));
         postParams.add(new BasicNameValuePair("sort", sortType));
-        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
         new PlusHttpClient(mActivity, this, false).execute(GET_USER_MAP_DATA,
@@ -123,147 +113,16 @@ public class UserMapFragment extends FMCommonFragment implements
     }
 
 
-    private void setUpMap(Bundle savedInstanceState, View rootView) {
-
-
-        MapsInitializer.initialize(getActivity());
-
-        switch (GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity())) {
-            case ConnectionResult.SUCCESS:
-                Toast.makeText(getActivity(), "SUCCESS", Toast.LENGTH_SHORT).show();
-                mMapView = (MapView) rootView.findViewById(R.id.mapview);
-                mMapView.onCreate(savedInstanceState);
-                // Gets to GoogleMap from the MapView and does initialization stuff
-                if (mMapView != null) {
-                    mGoogleMap = mMapView.getMap();
-//                    mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
-//                    mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
-//                    mGoogleMap.setMyLocationEnabled(true);
-//??수정
-                    double lat = 36.986828;
-                    double lng = 127.936019;
-                    LatLng position = new LatLng(lat, lng);
-
-
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 7);
-                    mGoogleMap.animateCamera(cameraUpdate);
-
-                    mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(Marker marker) {
-
-//                Intent board = new Intent(MainActivity.this, AllListDetailActivity.class);
-//                board.putExtra("data", mDatas.get(Integer.parseInt(marker
-//                        .getSnippet())));
-//                startActivity(board);
-                            return false;
-                        }
-                    });
-                }
-                break;
-            case ConnectionResult.SERVICE_MISSING:
-                Toast.makeText(getActivity(), "SERVICE MISSING", Toast.LENGTH_SHORT).show();
-                break;
-            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
-                Toast.makeText(getActivity(), "UPDATE REQUIRED", Toast.LENGTH_SHORT).show();
-                break;
-            default:
-                Toast.makeText(getActivity(), GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()), Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    public void onResume() {
-        mMapView.onResume();
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mMapView.onLowMemory();
-    }
-
-    /**
-     * location listener 제거
-     */
-    public void removeLocationListener() {
-
-        mLocationManager.removeUpdates(this);
-        mIsGpsCatched = false;
-
-    }
-
-
-    @Override
-    public void onLocationChanged(Location location) {
-        removeLocationListener();
-        mMyLocationButton.setSelected(true);
-        mIsGpsCatched = true;
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
-        //showHouseMarkers();
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
-    }
-
-    private void getCurrentLocation() {
-
-        mLocationManager = (LocationManager) mActivity.getSystemService(Context.LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                0, 0, this);
-        mIsGpsCatched = false;
-        //테스트용
-//		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-//				5000, 5, this);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                if (!mIsGpsCatched) {
-
-                    mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                            0, 0, UserMapFragment.this);
-                }
-
-            }
-        }, DELAY_TIME);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user_map,
                 container, false);
-        setUpMap(savedInstanceState, rootView);
         return rootView;
     }
 
     @Override
-    protected void addListenerButton() {
+    protected void addListenerToButton() {
         // TODO Auto-generated method stub
         mMyLocationButton = (Button) mActivity.findViewById(R.id.my_location);
         mMyLocationButton.setOnClickListener(new PlusOnClickListener() {
@@ -282,6 +141,11 @@ public class UserMapFragment extends FMCommonFragment implements
                 showSortPopup(v);
             }
         });
+    }
+
+    private void getCurrentLocation() {
+        FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
+        locationFinder.doIt();
     }
 
     public void showSortPopup(View v) {
@@ -306,17 +170,17 @@ public class UserMapFragment extends FMCommonFragment implements
 
 
         switch (whichButton) {
-            case 0: sortByPopular();
+            case 0:
+                sortByPopular();
                 break;
 
-            case 1: sortByRecent();
+            case 1:
+                sortByRecent();
                 break;
-
 
 
         }
     }
-
 
 
     private void sortByRecent() {
@@ -337,7 +201,7 @@ public class UserMapFragment extends FMCommonFragment implements
                 handleMapData(new FMMapParser().doIt((String) datas));
                 getTotalUserPost();
                 break;
-            case GET_TOTAL_USER_POST:
+            case GET_TOTAL_REPLY_PIN:
                 //파서등 수정!!
                 showTotalUserPost(new FMMapParser().doIt((String) datas));
                 ((UserPageActivity) mActivity).setTotalUserPost(10);
@@ -350,9 +214,8 @@ public class UserMapFragment extends FMCommonFragment implements
 //수정!!
         TextView reply = (TextView) mActivity.findViewById(R.id.reply);
         TextView pin = (TextView) mActivity.findViewById(R.id.pin);
-      reply.setText(fmModels.get(0).getScrapCount());
+        reply.setText(fmModels.get(0).getScrapCount());
         pin.setText(fmModels.get(0).getScrapCount());
-
 
 
     }
@@ -362,11 +225,13 @@ public class UserMapFragment extends FMCommonFragment implements
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
-        new PlusHttpClient(mActivity, this, false).execute(GET_TOTAL_USER_POST,
-                FMApiConstants.GET_TOTAL_USER_POST, new PlusInputStreamStringConverter(),
+        new PlusHttpClient(mActivity, this, false).execute(GET_TOTAL_REPLY_PIN,
+                FMApiConstants.GET_TOTAL_REPLY_PIN, new PlusInputStreamStringConverter(),
                 postParams);
 
 
@@ -376,8 +241,7 @@ public class UserMapFragment extends FMCommonFragment implements
 
         mGoogleMap.clear();
 
-        for (int i = 0; i < datas.size(); i++)
-        {
+        for (int i = 0; i < datas.size(); i++) {
             fetchImageFromServer(datas.get(i), i);
 
 
@@ -385,7 +249,7 @@ public class UserMapFragment extends FMCommonFragment implements
     }
 
     private void fetchImageFromServer(final FMModel mapDataModel, final int position) {
-        mImageLoader.loadImage(mapDataModel.getImgUrl(),mOption,new ImageLoadingListener() {
+        mImageLoader.loadImage(mapDataModel.getImgUrl(), mOption, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
 
@@ -399,7 +263,7 @@ public class UserMapFragment extends FMCommonFragment implements
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
 
-                showMarkers(bitmap,mapDataModel);
+                showMarkers(bitmap, mapDataModel);
 
 
             }
@@ -411,12 +275,9 @@ public class UserMapFragment extends FMCommonFragment implements
         });
 
 
-
-
-
     }
 
-    private void showMarkers(Bitmap bitmap,FMModel mapDataModel) {
+    private void showMarkers(Bitmap bitmap, FMModel mapDataModel) {
         LatLng latLng = new LatLng(Double.parseDouble(mapDataModel.getLat()), Double.parseDouble(mapDataModel.getLon()));
         mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet(mapDataModel.getIdx())
                 .icon(getMarKerImg(bitmap, mapDataModel.getPostType())).anchor(0f, 1.0f));
@@ -435,6 +296,12 @@ public class UserMapFragment extends FMCommonFragment implements
         intent.putExtra(FMConstants.KEY_POST_IDX, idx);
 
         startActivity(intent);
+    }
+
+    @Override
+    public void onGPSCatched(Location location) {
+        mMyLocationButton.setSelected(true);
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
     }
 
 

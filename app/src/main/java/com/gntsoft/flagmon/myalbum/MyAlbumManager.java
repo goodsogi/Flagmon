@@ -34,8 +34,8 @@ import java.util.List;
  */
 public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
 
-    private final Activity mActivity;
     private static final int GET_LIST_DATA = 0;
+    private final Activity mActivity;
 
     public MyAlbumManager(Activity activity) {
         mActivity = activity;
@@ -44,7 +44,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
     public void chooseFragment() {
         if (!LoginChecker.isLogIn(mActivity))
             showLogin(FMConstants.TAB_MYALBUM);
-         else checkIfhasPost();
+        else checkIfhasPost();
 
 
     }
@@ -67,7 +67,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
         });
 
         Button groupPost = (Button) mActivity.findViewById(R.id.groupPost);
-        doPost.setOnClickListener(new View.OnClickListener() {
+        groupPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToGroupPost(v);
@@ -100,7 +100,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
     private void showListMyAlbum() {
         showGroupPostButton();
         mActivity.getFragmentManager().beginTransaction()
-                .replace(R.id.container_main, new MapMyAlbumFragment())
+                .replace(R.id.container_main, new ListMyAlbumFragment())
                 .commit();
 
 
@@ -116,7 +116,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
         topBarContainer.removeAllViews();
 
         LayoutInflater inflater = LayoutInflater.from(mActivity);
-        View myAlbumTopBar = inflater.inflate(R.layout.top_bar_my_album,null);
+        View myAlbumTopBar = inflater.inflate(R.layout.top_bar_my_album, null);
         topBarContainer.addView(myAlbumTopBar);
     }
 
@@ -159,7 +159,9 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
-        if(LoginChecker.isLogIn(mActivity)) { postParams.add(new BasicNameValuePair("key", getUserAuthKey()));}
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
 
 
         new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
@@ -172,12 +174,12 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
     protected String getUserAuthKey() {
         SharedPreferences sharedPreference = mActivity.getSharedPreferences(
                 FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY,"");
+        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY, "");
     }
 
     @Override
     public void onSuccess(Integer from, Object datas) {
-        if(datas == null) return;
+        if (datas == null) return;
         switch (from) {
             case GET_LIST_DATA:
                 handleHasPost(new FMListParser().doIt((String) datas));
@@ -187,7 +189,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
     }
 
     private void handleHasPost(ArrayList<FMModel> fmModels) {
-        if(fmModels != null && fmModels.size() > 0) {
+        if (fmModels != null && fmModels.size() > 0) {
             showMapMyAlbumFragment();
         } else {
             showSharePhotoFragment();

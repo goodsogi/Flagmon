@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -35,11 +37,11 @@
         android:orientation="horizontal">
 
 
-
         <ImageView
             android:layout_width="55dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="15dp" android:background="@drawable/friend_search"/>
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/friend_search" />
 
         <!--아래 두 속성을 지정해야 imeOptions가 작동함 -->
         <!--android:inputType="text"-->
@@ -49,14 +51,14 @@
             android:id="@+id/searchInput"
             android:layout_width="0px"
             android:layout_height="match_parent"
-            android:paddingLeft="3dp"
-            android:paddingRight="15dp"
-            android:inputType="text"
-            android:imeOptions="actionSearch"
+            android:layout_weight="1"
             android:background="#00000000"
             android:hint="검색할 이름을 입력하세요"
-            android:textColorHint="#9a9a9a"
-            android:layout_weight="1" />
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingLeft="3dp"
+            android:paddingRight="15dp"
+            android:textColorHint="#9a9a9a" />
 
 
         <Button
@@ -71,8 +73,8 @@
 
     <ListView
         android:id="@+id/listSearch"
-        android:background="#ffffff"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:background="#ffffff"></ListView>
 
 </LinearLayout>

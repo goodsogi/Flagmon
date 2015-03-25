@@ -1,7 +1,7 @@
 package com.gntsoft.flagmon.server;
 
 public class ServerResultModel {
-	private String result;
+    private String result;
     private String msg;
 
     public String getResult() {
