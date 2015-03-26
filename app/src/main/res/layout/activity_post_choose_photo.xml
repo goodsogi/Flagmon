@@ -23,7 +23,7 @@
             android:clickable="true"
             android:gravity="center"
             android:onClick="goBack"
-            android:text="이전"
+            android:text="@string/back"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
-            android:text="촬영"
+            android:text="@string/do_camera"
             android:textColor="#3b4d75"
             android:textSize="16sp"
             android:textStyle="bold" />

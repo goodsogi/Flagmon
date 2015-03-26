@@ -68,15 +68,6 @@ public class SentFriendRequestListAdapter extends FMCommonAdapter<FriendModel> i
         return convertView;
     }
 
-    private void cancelRequest(String idx) {
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("idx", idx));
-        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
-        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(CANCEL_REQUEST,
-                FMApiConstants.CANCEL_REQUEST, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
     @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
@@ -91,6 +82,15 @@ public class SentFriendRequestListAdapter extends FMCommonAdapter<FriendModel> i
                 break;
         }
 
+    }
+
+    private void cancelRequest(String idx) {
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("idx", idx));
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
+        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(CANCEL_REQUEST,
+                FMApiConstants.CANCEL_REQUEST, new PlusInputStreamStringConverter(),
+                postParams);
     }
 
 

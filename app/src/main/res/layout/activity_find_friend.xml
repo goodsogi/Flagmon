@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="친구찾기"
+            android:text="@string/find_friend"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -35,7 +35,7 @@
         android:background="#eff1f3"
         android:gravity="center_vertical"
         android:paddingLeft="13dp"
-        android:text="친구 찾기"
+        android:text="@string/find_friend"
         android:textColor="#657487"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -50,7 +50,7 @@
         android:gravity="center_vertical"
         android:onClick="findFriendOnFacebook"
         android:paddingLeft="10dp"
-        android:text="Facebook에서 친구 찾기"
+        android:text="@string/find_friend_at_facebook"
         android:textColor="#000000" />
 
     <TextView
@@ -63,7 +63,7 @@
         android:gravity="center_vertical"
         android:onClick="findFriendOnTwitter"
         android:paddingLeft="10dp"
-        android:text="Twitter에서 친구 찾기"
+        android:text="@string/find_friend_at_twitter"
         android:textColor="#000000" />
 
     <TextView
@@ -76,7 +76,7 @@
         android:gravity="center_vertical"
         android:onClick="findFriendInContact"
         android:paddingLeft="10dp"
-        android:text="연락처로부터 친구 찾기"
+        android:text="@string/find_friend_at_contact"
         android:textColor="#000000" />
 
     <TextView
@@ -89,7 +89,7 @@
         android:gravity="center_vertical"
         android:onClick="searchFriendByName"
         android:paddingLeft="10dp"
-        android:text="이름으로 검색"
+        android:text="@string/search_by_name"
         android:textColor="#000000" />
 
     <TextView
@@ -98,7 +98,7 @@
         android:background="#eff1f3"
         android:gravity="center_vertical"
         android:paddingLeft="13dp"
-        android:text="받은 신청"
+        android:text="@string/got_request"
         android:textColor="#657487"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -115,7 +115,7 @@
         android:background="#eff1f3"
         android:gravity="center_vertical"
         android:paddingLeft="13dp"
-        android:text="보낸 신청"
+        android:text="@string/sent_request"
         android:textColor="#657487"
         android:textSize="18sp"
         android:textStyle="bold" />

@@ -43,6 +43,32 @@ public class MapDetailFragment extends FMCommonMapFragment implements
 
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_map_detail,
+                container, false);
+        //setUpMap(savedInstanceState, rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_MAP_DATA:
+                makeList(datas);
+                break;
+        }
+
+    }
+
+    @Override
+    protected void addListenerToButton() {
+        // TODO Auto-generated method stub
+
+    }
 
     private BitmapDescriptor getMarKerImg(Bitmap original) {
         //마스킹
@@ -66,41 +92,13 @@ public class MapDetailFragment extends FMCommonMapFragment implements
 
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map_detail,
-                container, false);
-        //setUpMap(savedInstanceState, rootView);
-        return rootView;
-    }
-
-    @Override
-    protected void addListenerToButton() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_MAP_DATA:
-                makeList(datas);
-                break;
-        }
-
-    }
-
     private void makeList(Object datas) {
 
 
     }
 
 
-    public void getImageFromServer() {
+    private void getImageFromServer() {
         mImageLoader.loadImage(
                 getArguments().getString(FMConstants.KEY_IMAGE_URL),
                 mOption, new ImageLoadingListener() {

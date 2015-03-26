@@ -32,6 +32,56 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
     private static final int GET_MAIN_LIST = 0;
     private FMLocationFinder mFMLocationFinder;
 
+    public void doCamera(View v) {
+
+        if (mFMLocationFinder.isGpsCatched()) {
+            launchCameraAlbumActivity();
+        } else {
+            showGPSAlertDialog();
+        }
+
+
+    }
+
+    /**
+     * 이미지 가져오기
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != Activity.RESULT_OK)
+            return;
+        switch (requestCode) {
+
+            // 카메라로 찍은 이미지 가져오기
+            case PlusImageConstants.FROM_CAMERA:
+                String imgUri = data.getStringExtra(PlusImageConstants.EXTRA_IMAGE_PATH);
+
+                launchPostSetLocationActivity(imgUri);
+
+                break;
+        }
+
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_MAIN_LIST:
+                //makeList(datas);
+                break;
+        }
+
+    }
+
+    @Override
+    public void onGPSCatched(Location location) {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,28 +104,16 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                moveToPostSetLocationActivity(model.get(position).getImagePath());
+                launchPostSetLocationActivity(model.get(position).getImagePath());
             }
         });
     }
 
-    private void moveToPostSetLocationActivity(String imagePath) {
+    private void launchPostSetLocationActivity(String imagePath) {
 
         Intent intent = new Intent(this, PostSetLocationActivity.class);
         intent.putExtra(FMConstants.KEY_IMAGE_PATH, imagePath);
         startActivity(intent);
-    }
-
-
-    public void doCamera(View v) {
-
-        if (mFMLocationFinder.isGpsCatched()) {
-            goToCameraAlbumActivity();
-        } else {
-            showGPSAlertDialog();
-        }
-
-
     }
 
     private void showGPSAlertDialog() {
@@ -96,7 +134,7 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
 
     }
 
-    private void goToCameraAlbumActivity() {
+    private void launchCameraAlbumActivity() {
         Intent intent = new Intent(this, CameraAlbumActivity.class);
         intent.putExtra(PlusImageConstants.KEY_IMAGE_SOURCE,
                 PlusImageConstants.SOURCE_CAMERA);
@@ -105,43 +143,7 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
 
     }
 
-    /**
-     * 이미지 가져오기
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode != Activity.RESULT_OK)
-            return;
-        switch (requestCode) {
-
-            // 카메라로 찍은 이미지 가져오기
-            case PlusImageConstants.FROM_CAMERA:
-                String imgUri = data.getStringExtra(PlusImageConstants.EXTRA_IMAGE_PATH);
-
-                moveToPostSetLocationActivity(imgUri);
-
-                break;
-        }
-
-    }
-
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_MAIN_LIST:
-                //makeList(datas);
-                break;
-        }
-
-    }
-
-
-    public ArrayList<GalleryPhotoModel> getPhotosFromGallery() {
+    private ArrayList<GalleryPhotoModel> getPhotosFromGallery() {
         ArrayList<GalleryPhotoModel> model = new ArrayList<>();
 
         final String[] columns = {MediaStore.Images.Media.DATA,
@@ -170,10 +172,5 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
 
 
         return model;
-    }
-
-    @Override
-    public void onGPSCatched(Location location) {
-
     }
 }

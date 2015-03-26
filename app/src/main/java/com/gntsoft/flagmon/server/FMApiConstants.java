@@ -4,10 +4,6 @@ package com.gntsoft.flagmon.server;
  * Created by johnny on 15. 3. 6.
  */
 public class FMApiConstants {
-    public static final String FIND_TREASURE = " http://www.www.flagaround.com/site/searchtreasure.php"; //url 수정이 필요할 수 있음 !!(/json/이 없음)
-    public static final String GET_POLICY_SERVICE = "http://flagaround.com/site/web/agreement.html";
-    public static final String GET_POLICY_LOCATION = "http://flagaround.com/site/web/agreement.html";
-    public static final String GET_POLICY_PRIVACY = "http://flagaround.com/site/web/agreement.html";
     private static final String API_MAIN = "http://flagaround.com/site/json/";
     public static final String SIGN_UP = API_MAIN + "signup_ok.php";
     public static final String CHECK_EMAIL = API_MAIN + "email_chk.php";
@@ -41,4 +37,8 @@ public class FMApiConstants {
     public static final String SEARCH_LOCATION = API_MAIN + "";
     public static final String BURY_TREASURE = API_MAIN + "";
     public static final String MAKE_ALBUM = API_MAIN + "";
+    public static final String FIND_TREASURE = " http://www.www.flagaround.com/site/searchtreasure.php"; //url 수정이 필요할 수 있음 !!(/json/이 없음)
+    public static final String GET_POLICY_SERVICE = "http://flagaround.com/site/web/agreement.html";
+    public static final String GET_POLICY_LOCATION = "http://flagaround.com/site/web/agreement.html";
+    public static final String GET_POLICY_PRIVACY = "http://flagaround.com/site/web/agreement.html";
 }

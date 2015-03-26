@@ -34,37 +34,6 @@ public class FindPasswordActivity extends FMCommonActivity implements
     final int DRAWABLE_RIGHT = 2;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_password);
-        addButtonListener();
-    }
-
-    private void addButtonListener() {
-        final EditText userEmailView = (EditText) findViewById(R.id.userEmail);
-        userEmailView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int leftEdgeOfRightDrawable = userEmailView.getRight()
-                            - userEmailView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-                    // when EditBox has padding, adjust leftEdge like
-                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
-                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
-                        // clicked on clear icon
-                        userEmailView.setText("");
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-
-
-    }
-
-    @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
             return;
@@ -80,7 +49,6 @@ public class FindPasswordActivity extends FMCommonActivity implements
         }
 
     }
-
 
     public void requestPassword(View v) {
         //특정 사용자 아이디등 처리!!
@@ -111,12 +79,42 @@ public class FindPasswordActivity extends FMCommonActivity implements
 
     }
 
-
     public void showPolicy(View v) {
         PlusClickGuard.doIt(v);
         Intent intent = new Intent(this, PolicyActivity.class);
         intent.putExtra(FMConstants.KEY_POLICY_TYPE, FMConstants.POLICY_SERVICE);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_find_password);
+        addButtonListener();
+    }
+
+    private void addButtonListener() {
+        final EditText userEmailView = (EditText) findViewById(R.id.userEmail);
+        userEmailView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    int leftEdgeOfRightDrawable = userEmailView.getRight()
+                            - userEmailView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+                    // when EditBox has padding, adjust leftEdge like
+                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
+                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
+                        // clicked on clear icon
+                        userEmailView.setText("");
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+
     }
 
 

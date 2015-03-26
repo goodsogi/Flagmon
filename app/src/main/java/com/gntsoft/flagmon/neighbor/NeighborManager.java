@@ -27,11 +27,11 @@ public class NeighborManager implements FMTabManager {
 
     public void chooseFragment() {
         showNeighborTopBar();
-        addButtonListener();
+        addListenerToButton();
         showMap();
     }
 
-    private void addButtonListener() {
+    private void addListenerToButton() {
         Button naviMenu = (Button) mActivity.findViewById(R.id.naviMenu);
         naviMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,7 +44,7 @@ public class NeighborManager implements FMTabManager {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToSearch(v);
+                launchSearchActivity(v);
             }
         });
     }
@@ -75,7 +75,7 @@ public class NeighborManager implements FMTabManager {
 
     }
 
-    private void goToSearch(View v) {
+    private void launchSearchActivity(View v) {
         PlusClickGuard.doIt(v);
 
         Intent intent = new Intent(mActivity, SearchActivity.class);

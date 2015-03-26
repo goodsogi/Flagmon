@@ -29,16 +29,6 @@ public class SharePhotoFragment extends FMCommonFragment {
 
     }
 
-    private void showSharePhotoTopBar() {
-        FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
-        topBarContainer.removeAllViews();
-
-        LayoutInflater inflater = LayoutInflater.from(mActivity);
-        View inviteTopBar = inflater.inflate(R.layout.top_bar_share_photo, null);
-        topBarContainer.addView(inviteTopBar);
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,13 +43,22 @@ public class SharePhotoFragment extends FMCommonFragment {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToPost(v);
+                launchPostChoosePhotoActivity(v);
             }
         });
 
     }
 
-    private void goToPost(View v) {
+    private void showSharePhotoTopBar() {
+        FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
+        topBarContainer.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
+        View inviteTopBar = inflater.inflate(R.layout.top_bar_share_photo, null);
+        topBarContainer.addView(inviteTopBar);
+    }
+
+    private void launchPostChoosePhotoActivity(View v) {
         PlusClickGuard.doIt(v);
 
         Intent intent = new Intent(mActivity, PostChoosePhotoActivity.class);

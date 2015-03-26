@@ -66,49 +66,12 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
                 postParams);
     }
 
-    private void makeList(final ArrayList<FMModel> datas) {
-
-        ListView list = (ListView) mActivity
-                .findViewById(R.id.list_my_album);
-
-        if (list == null || datas == null) return;
-        list.setAdapter(new MyAlbumListAdapter(mActivity,
-                datas));
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToDetail(datas.get(position).getIdx());
-            }
-        });
-
-
-    }
-
-    private void goToDetail(String idx) {
-        Intent intent = new Intent(mActivity, DetailActivity.class);
-        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
-        startActivity(intent);
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list_my_album,
                 container, false);
         return rootView;
-    }
-
-    @Override
-    protected void addListenerToButton() {
-        Button sort = (Button) mActivity.findViewById(R.id.sort);
-        sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSortPopupFriend(v);
-            }
-        });
-
     }
 
     public void showSortPopupFriend(View v) {
@@ -127,6 +90,53 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
                     }
                 });
         ab.show();
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null) return;
+        switch (from) {
+            case GET_LIST_DATA:
+                makeList(new FMListParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    @Override
+    protected void addListenerToButton() {
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopupFriend(v);
+            }
+        });
+
+    }
+
+    private void makeList(final ArrayList<FMModel> datas) {
+
+        ListView list = (ListView) mActivity
+                .findViewById(R.id.list_my_album);
+
+        if (list == null || datas == null) return;
+        list.setAdapter(new MyAlbumListAdapter(mActivity,
+                datas));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                launchDetailActivity(datas.get(position).getIdx());
+            }
+        });
+
+
+    }
+
+    private void launchDetailActivity(String idx) {
+        Intent intent = new Intent(mActivity, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+        startActivity(intent);
     }
 
     private void doSortFriend(int whichButton) {
@@ -158,24 +168,12 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
         getDataFromServer(FMConstants.SORT_BY_PIN);
     }
 
-
     private void sortByRecent() {
         getDataFromServer(FMConstants.SORT_BY_RECENT);
     }
 
     private void sortByPopular() {
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null) return;
-        switch (from) {
-            case GET_LIST_DATA:
-                makeList(new FMListParser().doIt((String) datas));
-                break;
-        }
-
     }
 
 }

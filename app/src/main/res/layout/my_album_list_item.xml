@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/content"
         android:gravity="center_horizontal"
-        android:text="더보기"
+        android:text="@string/view_more"
         android:textColor="#adadad" />
 
     <Button

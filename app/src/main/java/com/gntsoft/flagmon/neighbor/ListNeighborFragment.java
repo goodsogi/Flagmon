@@ -47,49 +47,12 @@ public class ListNeighborFragment extends FMCommonFragment implements
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
-    public void getDataFromServer(String sortType) {
-
-
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        postParams.add(new BasicNameValuePair("sort", sortType));
-        if (LoginChecker.isLogIn(mActivity)) {
-            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        }
-
-
-        new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
-                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
-
-    private void goToDetail(String idx) {
-        Intent intent = new Intent(mActivity, DetailActivity.class);
-        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
-
-        startActivity(intent);
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list_neighbor,
                 container, false);
         return rootView;
-    }
-
-    @Override
-    protected void addListenerToButton() {
-        Button sort = (Button) mActivity.findViewById(R.id.sort);
-        sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSortPopup(v);
-            }
-        });
-
     }
 
     public void showSortPopup(View v) {
@@ -108,6 +71,53 @@ public class ListNeighborFragment extends FMCommonFragment implements
                     }
                 });
         ab.show();
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_LIST_DATA:
+                makeList(new FMListParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    @Override
+    protected void addListenerToButton() {
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopup(v);
+            }
+        });
+
+    }
+
+    private void getDataFromServer(String sortType) {
+
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        postParams.add(new BasicNameValuePair("sort", sortType));
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
+                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    private void lauchDetailActivity(String idx) {
+        Intent intent = new Intent(mActivity, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+
+        startActivity(intent);
     }
 
     private void doSort(int whichButton) {
@@ -143,19 +153,6 @@ public class ListNeighborFragment extends FMCommonFragment implements
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_LIST_DATA:
-                makeList(new FMListParser().doIt((String) datas));
-                break;
-        }
-
-    }
-
     private void makeList(final ArrayList<FMModel> datas) {
 
         ListView list = (ListView) mActivity
@@ -167,7 +164,7 @@ public class ListNeighborFragment extends FMCommonFragment implements
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToDetail(datas.get(position).getIdx());
+                lauchDetailActivity(datas.get(position).getIdx());
             }
         });
     }

@@ -39,25 +39,6 @@ public class AlbumPhotoDetailFragment extends FMCommonFragment implements
     }
 
     @Override
-    protected void addListenerToButton() {
-        ImageView mainImage = (ImageView) mActivity.findViewById(R.id.main_img);
-        mImageLoader.displayImage(getArguments().getString(FMConstants.KEY_IMAGE_URL, ""), mainImage, mOption);
-        mainImage.setOnClickListener(new PlusOnClickListener() {
-            @Override
-            protected void doIt() {
-                goToImageViewer();
-            }
-        });
-    }
-
-    private void goToImageViewer() {
-        Intent intent = new Intent(mActivity, ImageViewerActivity.class);
-        intent.putExtra(FMConstants.KEY_IMAGE_URL, getArguments().getString(FMConstants.KEY_IMAGE_URL, ""));
-        startActivity(intent);
-
-    }
-
-    @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
             return;
@@ -68,5 +49,25 @@ public class AlbumPhotoDetailFragment extends FMCommonFragment implements
 //        }
 
     }
+
+    @Override
+    protected void addListenerToButton() {
+        ImageView mainImage = (ImageView) mActivity.findViewById(R.id.main_img);
+        mImageLoader.displayImage(getArguments().getString(FMConstants.KEY_IMAGE_URL, ""), mainImage, mOption);
+        mainImage.setOnClickListener(new PlusOnClickListener() {
+            @Override
+            protected void doIt() {
+                launchImageViewerActivity();
+            }
+        });
+    }
+
+    private void launchImageViewerActivity() {
+        Intent intent = new Intent(mActivity, ImageViewerActivity.class);
+        intent.putExtra(FMConstants.KEY_IMAGE_URL, getArguments().getString(FMConstants.KEY_IMAGE_URL, ""));
+        startActivity(intent);
+
+    }
+
 
 }

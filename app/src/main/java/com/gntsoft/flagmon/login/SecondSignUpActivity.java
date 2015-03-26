@@ -39,17 +39,78 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
     String[] sexs = {"남", "여"};
     private EditText mUserSexView;
 
+    public void showPolicy(View v) {
+        PlusClickGuard.doIt(v);
+        Intent intent = new Intent(this, PolicyActivity.class);
+        intent.putExtra(FMConstants.KEY_POLICY_TYPE, getPolicyType(v));
+        startActivity(intent);
+    }
+
+    public void finishSignUp(View v) {
+        PlusClickGuard.doIt(v);
+
+        String userEmail = getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL);
+        String userPassword = getIntent().getStringExtra(FMConstants.KEY_USER_PASSWORD);
+        String userName = getIntent().getStringExtra(FMConstants.KEY_USER_NAME);
+
+
+        EditText userAgeView = (EditText) findViewById(R.id.userAge);
+        String userAge = userAgeView.getText().toString();
+
+        if (userAge.equals("")) {
+            PlusToaster.doIt(this, "나이를 입력해주세요");
+            return;
+        }
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("user_email", userEmail));
+        postParams.add(new BasicNameValuePair("user_pw", userPassword));
+        postParams.add(new BasicNameValuePair("user_gender", getUserSex()));
+        postParams.add(new BasicNameValuePair("user_name", userName));
+        // postParams.add(new BasicNameValuePair("where", mArea));
+        //생년월일에 나이??
+        postParams.add(new BasicNameValuePair("user_birth", userAge));
+
+//        SharedPreferences sharedPreference = getSharedPreferences(
+//                PlusConstants.PREF_NAME, Context.MODE_PRIVATE);
+//        String token = sharedPreference.getString(
+//                PlusGcmRegister.PROPERTY_REG_ID, "");
+//        postParams.add(new BasicNameValuePair("deviceid", token));
+//        postParams.add(new BasicNameValuePair("alarm2", soundNoti));
+//        postParams.add(new BasicNameValuePair("alarm1", vibrationNoti));
+
+        new PlusHttpClient(this, this, false).execute(SIGN_UP,
+                FMApiConstants.SIGN_UP, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null) return;
+        switch (from) {
+
+            case SIGN_UP:
+
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "회원가입되었습니다" : "회원가입되지 못했습니다");
+                if (model.getResult().equals("success")) finish();
+                break;
+
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second_signup);
 
-        addButtonListener();
+        addListenerToButton();
 
 
     }
 
-    private void addButtonListener() {
+    private void addListenerToButton() {
         mUserSexView = (EditText) findViewById(R.id.userSex);
         mUserSexView.setOnClickListener(new PlusOnClickListener() {
             @Override
@@ -155,13 +216,6 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         mUserSexView.setText(sexs[whichButton]);
     }
 
-    public void showPolicy(View v) {
-        PlusClickGuard.doIt(v);
-        Intent intent = new Intent(this, PolicyActivity.class);
-        intent.putExtra(FMConstants.KEY_POLICY_TYPE, getPolicyType(v));
-        startActivity(intent);
-    }
-
     private int getPolicyType(View v) {
         switch (v.getId()) {
             case R.id.text_service:
@@ -176,62 +230,7 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         return FMConstants.POLICY_SERVICE;
     }
 
-
-    public void finishSignUp(View v) {
-        PlusClickGuard.doIt(v);
-
-        String userEmail = getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL);
-        String userPassword = getIntent().getStringExtra(FMConstants.KEY_USER_PASSWORD);
-        String userName = getIntent().getStringExtra(FMConstants.KEY_USER_NAME);
-
-
-        EditText userAgeView = (EditText) findViewById(R.id.userAge);
-        String userAge = userAgeView.getText().toString();
-
-        if (userAge.equals("")) {
-            PlusToaster.doIt(this, "나이를 입력해주세요");
-            return;
-        }
-
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("user_email", userEmail));
-        postParams.add(new BasicNameValuePair("user_pw", userPassword));
-        postParams.add(new BasicNameValuePair("user_gender", getUserSex()));
-        postParams.add(new BasicNameValuePair("user_name", userName));
-        // postParams.add(new BasicNameValuePair("where", mArea));
-        //생년월일에 나이??
-        postParams.add(new BasicNameValuePair("user_birth", userAge));
-
-//        SharedPreferences sharedPreference = getSharedPreferences(
-//                PlusConstants.PREF_NAME, Context.MODE_PRIVATE);
-//        String token = sharedPreference.getString(
-//                PlusGcmRegister.PROPERTY_REG_ID, "");
-//        postParams.add(new BasicNameValuePair("deviceid", token));
-//        postParams.add(new BasicNameValuePair("alarm2", soundNoti));
-//        postParams.add(new BasicNameValuePair("alarm1", vibrationNoti));
-
-        new PlusHttpClient(this, this, false).execute(SIGN_UP,
-                FMApiConstants.SIGN_UP, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
-    public String getUserSex() {
+    private String getUserSex() {
         return mUserSexView.getText().toString().equals(sexs[0]) ? "M" : "W";
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null) return;
-        switch (from) {
-
-            case SIGN_UP:
-
-                ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this, model.getResult().equals("success") ? "회원가입되었습니다" : "회원가입되지 못했습니다");
-                if (model.getResult().equals("success")) finish();
-                break;
-
-        }
-
     }
 }

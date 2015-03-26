@@ -30,13 +30,13 @@ import com.pluslibrary.utils.PlusScreenMeasureTool;
  */
 public class ImageViewerActivity extends FMCommonActivity implements OnTouchListener {
 
+    @SuppressWarnings("unused")
+    private static final float MIN_ZOOM = 1f, MAX_ZOOM = 1f;
     // The 3 states (events) which the user is trying to perform
     static final int NONE = 0;
     int mode = NONE;
     static final int DRAG = 1;
     static final int ZOOM = 2;
-    @SuppressWarnings("unused")
-    private static final float MIN_ZOOM = 1f, MAX_ZOOM = 1f;
     // 이미지 다운로드
     protected ImageLoader mImageLoader;
     protected DisplayImageOptions mOption;
@@ -62,74 +62,6 @@ public class ImageViewerActivity extends FMCommonActivity implements OnTouchList
         // 화면크기 계산
         mScreenWidth = PlusScreenMeasureTool.getScreenWidth(this);
         showImage();
-    }
-
-    private void showImage() {
-        // UIL 초기화
-        mImageLoader = ImageLoader.getInstance();
-
-        mOption = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.empty_photo)
-                .showImageOnFail(R.drawable.empty_photo).cacheInMemory(false)
-                .cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        // 이미지
-        final ImageView img = (ImageView) findViewById(R.id.img);
-
-
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT);
-
-        img.setLayoutParams(params);
-        img.setOnTouchListener(ImageViewerActivity.this);
-
-
-        mImageLoader.loadImage(
-                getIntent().getStringExtra(FMConstants.KEY_IMAGE_URL),
-                mOption, new ImageLoadingListener() {
-
-                    @Override
-                    public void onLoadingStarted(String arg0, View arg1) {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void onLoadingFailed(String arg0, View arg1,
-                                                FailReason arg2) {
-
-                    }
-
-                    @Override
-                    public void onLoadingComplete(String arg0, View arg1,
-                                                  Bitmap bitmap) {
-
-                        img.setImageBitmap(getScaledRatioBitmap(bitmap));
-
-                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                                FrameLayout.LayoutParams.MATCH_PARENT,
-                                FrameLayout.LayoutParams.MATCH_PARENT);
-
-                        img.setLayoutParams(params);
-                        img.setOnTouchListener(ImageViewerActivity.this);
-
-                    }
-
-                    @Override
-                    public void onLoadingCancelled(String arg0, View arg1) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-
-    }
-
-    protected Bitmap getScaledRatioBitmap(Bitmap bitmap) {
-
-        return Bitmap.createScaledBitmap(bitmap, mScreenWidth, mScreenHeight,
-                false);
-
     }
 
     @Override
@@ -208,6 +140,74 @@ public class ImageViewerActivity extends FMCommonActivity implements OnTouchList
         view.setImageMatrix(matrix); // display the transformation on screen
 
         return true; // indicate event was handled
+    }
+
+    protected Bitmap getScaledRatioBitmap(Bitmap bitmap) {
+
+        return Bitmap.createScaledBitmap(bitmap, mScreenWidth, mScreenHeight,
+                false);
+
+    }
+
+    private void showImage() {
+        // UIL 초기화
+        mImageLoader = ImageLoader.getInstance();
+
+        mOption = new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(R.drawable.empty_photo)
+                .showImageOnFail(R.drawable.empty_photo).cacheInMemory(false)
+                .cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
+
+        // 이미지
+        final ImageView img = (ImageView) findViewById(R.id.img);
+
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
+
+        img.setLayoutParams(params);
+        img.setOnTouchListener(ImageViewerActivity.this);
+
+
+        mImageLoader.loadImage(
+                getIntent().getStringExtra(FMConstants.KEY_IMAGE_URL),
+                mOption, new ImageLoadingListener() {
+
+                    @Override
+                    public void onLoadingStarted(String arg0, View arg1) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String arg0, View arg1,
+                                                FailReason arg2) {
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String arg0, View arg1,
+                                                  Bitmap bitmap) {
+
+                        img.setImageBitmap(getScaledRatioBitmap(bitmap));
+
+                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                                FrameLayout.LayoutParams.MATCH_PARENT,
+                                FrameLayout.LayoutParams.MATCH_PARENT);
+
+                        img.setLayoutParams(params);
+                        img.setOnTouchListener(ImageViewerActivity.this);
+
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String arg0, View arg1) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
     }
 
 	/*

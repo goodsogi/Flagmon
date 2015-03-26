@@ -78,27 +78,6 @@ public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> im
         return convertView;
     }
 
-    private void acceptRequest(String idx) {
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("idx", idx));
-        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
-
-
-        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(ACCEPT_REQUEST,
-                FMApiConstants.ACCEPT_REQUEST, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
-    private void ignoreRequest(String idx) {
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("idx", idx));
-        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
-
-        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(IGNORE_REQUEST,
-                FMApiConstants.IGNORE_REQUEST, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
     @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
@@ -120,6 +99,27 @@ public class GotFriendRequestListAdapter extends FMCommonAdapter<FriendModel> im
                 break;
         }
 
+    }
+
+    private void acceptRequest(String idx) {
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("idx", idx));
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
+
+
+        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(ACCEPT_REQUEST,
+                FMApiConstants.ACCEPT_REQUEST, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    private void ignoreRequest(String idx) {
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("idx", idx));
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
+
+        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(IGNORE_REQUEST,
+                FMApiConstants.IGNORE_REQUEST, new PlusInputStreamStringConverter(),
+                postParams);
     }
 
 }

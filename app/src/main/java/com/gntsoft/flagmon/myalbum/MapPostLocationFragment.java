@@ -42,6 +42,37 @@ public class MapPostLocationFragment extends FMCommonMapFragment implements
         showMarker();
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_map_post_location,
+                container, false);
+        return rootView;
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        LatLng dragPosition = marker.getPosition();
+        ((PostSetLocationActivity) mActivity).setPhotoLat(dragPosition.latitude);
+        ((PostSetLocationActivity) mActivity).setPhotoLon(dragPosition.longitude);
+
+    }
+
+    @Override
+    protected void addListenerToButton() {
+        // TODO Auto-generated method stub
+
+    }
 
     private void showMarker() {
         String filepath = this.getArguments().getString(FMConstants.KEY_IMAGE_PATH);
@@ -57,7 +88,6 @@ public class MapPostLocationFragment extends FMCommonMapFragment implements
         mGoogleMap.addMarker(new MarkerOptions().position(position)
                 .icon(getMarKerImg(filepath)).anchor(0f, 1.0f).draggable(true));
     }
-
 
     private BitmapDescriptor getMarKerImg(String filePath) {
         //마스킹
@@ -79,40 +109,6 @@ public class MapPostLocationFragment extends FMCommonMapFragment implements
 
         return BitmapDescriptorFactory.fromBitmap(result);
 
-
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map_post_location,
-                container, false);
-        return rootView;
-    }
-
-    @Override
-    protected void addListenerToButton() {
-        // TODO Auto-generated method stub
-
-    }
-
-
-    @Override
-    public void onMarkerDragStart(Marker marker) {
-
-    }
-
-    @Override
-    public void onMarkerDrag(Marker marker) {
-
-    }
-
-    @Override
-    public void onMarkerDragEnd(Marker marker) {
-        LatLng dragPosition = marker.getPosition();
-        ((PostSetLocationActivity) mActivity).setPhotoLat(dragPosition.latitude);
-        ((PostSetLocationActivity) mActivity).setPhotoLon(dragPosition.longitude);
 
     }
 }

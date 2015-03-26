@@ -36,6 +36,25 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
     private ProgressDialog mProgressDialog;
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Twitter Oauth
+        if (requestCode == FMConstants.TWITTER_OAUTH
+                && resultCode == Activity.RESULT_OK) {
+            showProgressDialog("친구 데이터 가져오는중...");
+            getAccessToken(data);
+            return;
+
+        }
+    }
+
+    public void getTwitterUserId() {
+
+        new GetUserIdTask().execute();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friend_in_twitter);
@@ -67,20 +86,6 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
         mProgressDialog.show();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Twitter Oauth
-        if (requestCode == FMConstants.TWITTER_OAUTH
-                && resultCode == Activity.RESULT_OK) {
-            showProgressDialog("친구 데이터 가져오는중...");
-            getAccessToken(data);
-            return;
-
-        }
-    }
-
     private void getAccessToken(Intent data) {
 
         String oauthVerifier = (String) data.getExtras().get(
@@ -106,11 +111,6 @@ public class FindFriendInTwitterActivity extends FMCommonActivity {
             }
         });
 
-    }
-
-    public void getTwitterUserId() {
-
-        new GetUserIdTask().execute();
     }
 
     private void getFriendsData(IDs ids) {

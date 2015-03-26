@@ -38,6 +38,18 @@ public class PhotoDetailFragment extends FMCommonFragment implements
     }
 
     @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+//        switch (from) {
+//            case GET_MAP_DATA:
+//                makeList(datas);
+//                break;
+//        }
+
+    }
+
+    @Override
     protected void addListenerToButton() {
         ImageView mainImage = (ImageView) mActivity.findViewById(R.id.main_img);
         mImageLoader.displayImage(getArguments().getString(FMConstants.KEY_IMAGE_URL, ""), mainImage, mOption);
@@ -53,18 +65,6 @@ public class PhotoDetailFragment extends FMCommonFragment implements
         Intent intent = new Intent(mActivity, ImageViewerActivity.class);
         intent.putExtra(FMConstants.KEY_IMAGE_URL, getArguments().getString(FMConstants.KEY_IMAGE_URL, ""));
         startActivity(intent);
-
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-//        switch (from) {
-//            case GET_MAP_DATA:
-//                makeList(datas);
-//                break;
-//        }
 
     }
 

@@ -88,20 +88,6 @@ public class MapSearchFragment extends FMCommonMapFragment implements
         return rootView;
     }
 
-    @Override
-    protected void addListenerToButton() {
-        // TODO Auto-generated method stub
-
-
-        Button sort = (Button) mActivity.findViewById(R.id.sort);
-        sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSortPopup(v);
-            }
-        });
-    }
-
     public void showSortPopup(View v) {
         PlusClickGuard.doIt(v);
 
@@ -120,6 +106,32 @@ public class MapSearchFragment extends FMCommonMapFragment implements
         ab.show();
     }
 
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_MAP_DATA:
+                handleMapData(new FMMapParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    @Override
+    protected void addListenerToButton() {
+        // TODO Auto-generated method stub
+
+
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopup(v);
+            }
+        });
+    }
+
     private void doSort(int whichButton) {
 
 
@@ -136,26 +148,12 @@ public class MapSearchFragment extends FMCommonMapFragment implements
         }
     }
 
-
     private void sortByRecent() {
         getDataFromServer(FMConstants.SORT_BY_RECENT);
     }
 
     private void sortByPopular() {
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
-    }
-
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_MAP_DATA:
-                handleMapData(new FMMapParser().doIt((String) datas));
-                break;
-        }
-
     }
 
     private void handleMapData(ArrayList<FMModel> datas) {

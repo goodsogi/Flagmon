@@ -81,7 +81,7 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
         writeReply.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                goToCommentActivity(data.getIdx());
+                launchCommentActivity(data.getIdx());
             }
         });
 
@@ -101,6 +101,23 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
         return convertView;
     }
 
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case BURY_TREASURE:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(mContext, model.getResult().equals("success") ? "보물을 묻었습니다" : "보물을 묻지 못했습니다");
+                if (model.getResult().equals("success")) {
+                    //추가 액션??
+                }
+                break;
+
+        }
+
+    }
+
     private void buryTreasure() {
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
@@ -116,14 +133,12 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
 
     }
 
-
-    private void goToCommentActivity(String idx) {
+    private void launchCommentActivity(String idx) {
         Intent intent = new Intent(mContext, CommentActivity.class);
         intent.putExtra(FMConstants.KEY_POST_IDX, idx);
         mContext.startActivity(intent);
 
     }
-
 
     private Bitmap getFrameImg(int imgId) {
         //마스킹
@@ -143,23 +158,6 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
 
         return result;
 
-
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case BURY_TREASURE:
-                ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(mContext, model.getResult().equals("success") ? "보물을 묻었습니다" : "보물을 묻지 못했습니다");
-                if (model.getResult().equals("success")) {
-                    //추가 액션??
-                }
-                break;
-
-        }
 
     }
 

@@ -54,6 +54,162 @@ public class PostSetLocationActivity extends FMCommonActivity implements
     private Double mPhotoLat;
     private Double mPhotoLon;
 
+    public void performLocationSearch(View v) {
+        PlusClickGuard.doIt(v);
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        if (LoginChecker.isLogIn(this)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(this, this, false).execute(SEARCH_LOCATION,
+                FMApiConstants.SEARCH_LOCATION, new PlusInputStreamStringConverter(),
+                postParams);
+
+
+    }
+
+    public void showChooseShareTypeBar(View v) {
+        PlusClickGuard.doIt(v);
+
+        LinearLayout barChooseShareType = (LinearLayout) findViewById(R.id.barChooseShareType);
+        barChooseShareType.setVisibility(View.VISIBLE);
+    }
+
+    public void onBackPressed() {
+        LinearLayout barChooseShareType = (LinearLayout) findViewById(R.id.barChooseShareType);
+        if (barChooseShareType.isShown()) barChooseShareType.setVisibility(View.GONE);
+        else super.onBackPressed();
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case SEND_POST:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                Log.d("flagmon", model.getMsg());
+                PlusLogger.doIt(model.getMsg());
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "포스팅되었습니다" : "포스팅되지 못했습니다");
+                if (model.getResult().equals("success")) {
+                    //추가 처리??
+                }
+                break;
+
+            case SEARCH_LOCATION:
+                makeList(new FMListParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    public void completePost(View v) {
+        PlusClickGuard.doIt(v);
+
+        EditText photoDescriptionView = (EditText) findViewById(R.id.photoDescription);
+        String photoDescription = photoDescriptionView.getText().toString();
+
+        if (photoDescription.equals("")) {
+            PlusToaster.doIt(this, "사진 설명을 입력해주세요.");
+            return;
+        }
+
+        String imgUrl = getIntent().getStringExtra(FMConstants.KEY_IMAGE_PATH);
+        String encodedPhotoDescription = null;
+        try {
+            encodedPhotoDescription = URLEncoder.encode(photoDescription, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+        MultipartEntity entity = new MultipartEntity();
+        try {
+            entity.addPart("key", new StringBody(
+                    getUserAuthKey()));
+
+            if (imgUrl != null && !imgUrl.equals("")) {
+
+                entity.addPart("photo", PlusImageByteConverter.doIt(imgUrl));
+            }
+            entity.addPart("memo", new StringBody(
+                    encodedPhotoDescription));
+            entity.addPart("lat", new StringBody(String.valueOf(
+                    mPhotoLat)));
+            entity.addPart("lon", new StringBody(String.valueOf(
+                    mPhotoLon)));
+            entity.addPart("update", new StringBody(
+                    getPhotoTakenTime(imgUrl)));
+
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+        new PlusHttpClient(this, this, true).execute(SEND_POST,
+                FMApiConstants.SEND_POST, new PlusInputStreamStringConverter(),
+                entity);
+
+    }
+
+    public PhotoLocationModel getPhotoLocation(String filepath) {
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String LATITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+        String LATITUDE_REF = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+        String LONGITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+        String LONGITUDE_REF = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+
+        // your Final lat Long Values
+        Double lat, lon;
+        PhotoLocationModel photoLocation = new PhotoLocationModel();
+        if ((LATITUDE != null)
+                && (LATITUDE_REF != null)
+                && (LONGITUDE != null)
+                && (LONGITUDE_REF != null)) {
+
+            if (LATITUDE_REF.equals("N")) {
+                lat = convertToDegree(LATITUDE);
+            } else {
+                lat = 0 - convertToDegree(LATITUDE);
+            }
+
+            if (LONGITUDE_REF.equals("E")) {
+                lon = convertToDegree(LONGITUDE);
+            } else {
+                lon = 0 - convertToDegree(LONGITUDE);
+            }
+
+
+            photoLocation.setLat(lat);
+            photoLocation.setLon(lon);
+
+
+        } else {
+            //사진에 gps 정보가 없는 경우 임시로 서울을 지정!!
+            photoLocation.setLat(37.561562);
+            photoLocation.setLon(127.010149);
+        }
+
+        return photoLocation;
+    }
+
+    public void setPhotoLat(double latitude) {
+        mPhotoLat = latitude;
+    }
+
+    public void setPhotoLon(double longitude) {
+        mPhotoLon = longitude;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,7 +334,6 @@ public class PostSetLocationActivity extends FMCommonActivity implements
 
     }
 
-
     private void showMap() {
 
 
@@ -193,60 +348,6 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_post_location, fragment)
                 .commit();
-
-    }
-
-    public void performLocationSearch(View v) {
-        PlusClickGuard.doIt(v);
-        //수정!!
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        if (LoginChecker.isLogIn(this)) {
-            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        }
-
-
-        new PlusHttpClient(this, this, false).execute(SEARCH_LOCATION,
-                FMApiConstants.SEARCH_LOCATION, new PlusInputStreamStringConverter(),
-                postParams);
-
-
-    }
-
-
-    public void showChooseShareTypeBar(View v) {
-        PlusClickGuard.doIt(v);
-
-        LinearLayout barChooseShareType = (LinearLayout) findViewById(R.id.barChooseShareType);
-        barChooseShareType.setVisibility(View.VISIBLE);
-    }
-
-
-    public void onBackPressed() {
-        LinearLayout barChooseShareType = (LinearLayout) findViewById(R.id.barChooseShareType);
-        if (barChooseShareType.isShown()) barChooseShareType.setVisibility(View.GONE);
-        else super.onBackPressed();
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case SEND_POST:
-                ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                Log.d("flagmon", model.getMsg());
-                PlusLogger.doIt(model.getMsg());
-                PlusToaster.doIt(this, model.getResult().equals("success") ? "포스팅되었습니다" : "포스팅되지 못했습니다");
-                if (model.getResult().equals("success")) {
-                    //추가 처리??
-                }
-                break;
-
-            case SEARCH_LOCATION:
-                makeList(new FMListParser().doIt((String) datas));
-                break;
-        }
 
     }
 
@@ -271,56 +372,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         //구현!!
     }
 
-
-    public void completePost(View v) {
-        PlusClickGuard.doIt(v);
-
-        EditText photoDescriptionView = (EditText) findViewById(R.id.photoDescription);
-        String photoDescription = photoDescriptionView.getText().toString();
-
-        if (photoDescription.equals("")) {
-            PlusToaster.doIt(this, "사진 설명을 입력해주세요.");
-            return;
-        }
-
-        String imgUrl = getIntent().getStringExtra(FMConstants.KEY_IMAGE_PATH);
-        String encodedPhotoDescription = null;
-        try {
-            encodedPhotoDescription = URLEncoder.encode(photoDescription, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-
-        MultipartEntity entity = new MultipartEntity();
-        try {
-            entity.addPart("key", new StringBody(
-                    getUserAuthKey()));
-
-            if (imgUrl != null && !imgUrl.equals("")) {
-
-                entity.addPart("photo", PlusImageByteConverter.doIt(imgUrl));
-            }
-            entity.addPart("memo", new StringBody(
-                    encodedPhotoDescription));
-            entity.addPart("lat", new StringBody(String.valueOf(
-                    mPhotoLat)));
-            entity.addPart("lon", new StringBody(String.valueOf(
-                    mPhotoLon)));
-            entity.addPart("update", new StringBody(
-                    getPhotoTakenTime(imgUrl)));
-
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-
-        new PlusHttpClient(this, this, true).execute(SEND_POST,
-                FMApiConstants.SEND_POST, new PlusInputStreamStringConverter(),
-                entity);
-
-    }
+    ;
 
     private String getPhotoTakenTime(String imgUrl) {
 
@@ -335,54 +387,6 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         //date가 null인 경우 처리!!
         return date != null ? date : "2014-03-09";
     }
-
-
-    public PhotoLocationModel getPhotoLocation(String filepath) {
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(filepath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String LATITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-        String LATITUDE_REF = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
-        String LONGITUDE = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-        String LONGITUDE_REF = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
-
-        // your Final lat Long Values
-        Double lat, lon;
-        PhotoLocationModel photoLocation = new PhotoLocationModel();
-        if ((LATITUDE != null)
-                && (LATITUDE_REF != null)
-                && (LONGITUDE != null)
-                && (LONGITUDE_REF != null)) {
-
-            if (LATITUDE_REF.equals("N")) {
-                lat = convertToDegree(LATITUDE);
-            } else {
-                lat = 0 - convertToDegree(LATITUDE);
-            }
-
-            if (LONGITUDE_REF.equals("E")) {
-                lon = convertToDegree(LONGITUDE);
-            } else {
-                lon = 0 - convertToDegree(LONGITUDE);
-            }
-
-
-            photoLocation.setLat(lat);
-            photoLocation.setLon(lon);
-
-
-        } else {
-            //사진에 gps 정보가 없는 경우 임시로 서울을 지정!!
-            photoLocation.setLat(37.561562);
-            photoLocation.setLon(127.010149);
-        }
-
-        return photoLocation;
-    }
-
 
     private Double convertToDegree(String stringDMS) {
         Double result = null;
@@ -410,9 +414,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
 
     }
 
-    ;
-
-    public void getPhotoLatLon() {
+    private void getPhotoLatLon() {
         String imgPath = getIntent().getStringExtra(FMConstants.KEY_IMAGE_PATH);
         PhotoLocationModel photoLocation =
                 getPhotoLocation(imgPath);
@@ -420,14 +422,6 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         mPhotoLat = photoLocation.getLat();
         mPhotoLon = photoLocation.getLon();
 
-    }
-
-    public void setPhotoLat(double latitude) {
-        mPhotoLat = latitude;
-    }
-
-    public void setPhotoLon(double longitude) {
-        mPhotoLon = longitude;
     }
 
 

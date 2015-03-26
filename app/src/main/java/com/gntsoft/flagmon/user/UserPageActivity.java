@@ -37,21 +37,6 @@ public class UserPageActivity extends FMCommonActivity implements
     private int mtotalUserPost;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_page);
-        showUserName();
-        showMap();
-
-    }
-
-    private void showUserName() {
-        TextView userName = (TextView) findViewById(R.id.userName);
-        userName.setText(getIntent().getStringExtra(FMConstants.KEY_USER_NAME));
-    }
-
-
-    @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
             return;
@@ -68,7 +53,6 @@ public class UserPageActivity extends FMCommonActivity implements
 
     }
 
-
     public void addFriend(View v) {
 
         PlusClickGuard.doIt(v);
@@ -76,6 +60,44 @@ public class UserPageActivity extends FMCommonActivity implements
         else showAddFriendAlertDialog();
 
 
+    }
+
+    public void toggleMenu(View v) {
+
+        if (v.isSelected()) {
+            v.setSelected(false);
+            showMap();
+        } else {
+            v.setSelected(true);
+            showList();
+        }
+
+    }
+
+    public int getTotalUserPost() {
+
+
+        return mtotalUserPost;
+    }
+
+    public void setTotalUserPost(int totalUserPost) {
+
+
+        mtotalUserPost = totalUserPost;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_page);
+        showUserName();
+        showMap();
+
+    }
+
+    private void showUserName() {
+        TextView userName = (TextView) findViewById(R.id.userName);
+        userName.setText(getIntent().getStringExtra(FMConstants.KEY_USER_NAME));
     }
 
     private void showAddFriendAlertDialog() {
@@ -119,29 +141,17 @@ public class UserPageActivity extends FMCommonActivity implements
                     }
                 }).setPositiveButton("예", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                goToLogin();
+                launchLoginActivity();
             }
         });
         ab.show();
     }
 
-    private void goToLogin() {
+    private void launchLoginActivity() {
 
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-    }
-
-    public void toggleMenu(View v) {
-
-        if (v.isSelected()) {
-            v.setSelected(false);
-            showMap();
-        } else {
-            v.setSelected(true);
-            showList();
-        }
-
     }
 
     private void showList() {
@@ -161,17 +171,5 @@ public class UserPageActivity extends FMCommonActivity implements
                 .replace(R.id.container_user, new UserMapFragment())
                 .commit();
 
-    }
-
-    public int getTotalUserPost() {
-
-
-        return mtotalUserPost;
-    }
-
-    public void setTotalUserPost(int totalUserPost) {
-
-
-        mtotalUserPost = totalUserPost;
     }
 }

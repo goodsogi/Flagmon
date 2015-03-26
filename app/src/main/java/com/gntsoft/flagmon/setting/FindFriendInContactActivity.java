@@ -69,36 +69,6 @@ public class FindFriendInContactActivity extends FMCommonActivity implements
     private ContactListAdapter mContactListAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_friend_in_contact);
-
-        init();
-        makeList();
-
-
-    }
-
-    private void makeList() {
-        // Gets the ListView from the View list of the parent activity
-        mContactsList =
-                (ListView) findViewById(R.id.listContact);
-        // Gets a CursorAdapter
-        mContactListAdapter = new ContactListAdapter(
-                this, null);
-        // Sets the adapter for the ListView
-        mContactsList.setAdapter(mContactListAdapter);
-
-    }
-
-    private void init() {
-// Initializes the loader
-        getLoaderManager().initLoader(0, null, this);
-
-    }
-
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         /*
          * Makes search string into pattern and
@@ -127,22 +97,50 @@ public class FindFriendInContactActivity extends FMCommonActivity implements
 
     }
 
-    private void showFriendCount(Cursor cursor) {
-        TextView contactFriendCount = (TextView) findViewById(R.id.contactFriendCount);
-        contactFriendCount.setText(cursor.getCount() + "명의 친구가 Flagmon에 있습니다");
-    }
-
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         mContactListAdapter.swapCursor(cursor);
         showFriendCount(cursor);
     }
 
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // Delete the reference to the existing Cursor
         mContactListAdapter.swapCursor(null);
 
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_find_friend_in_contact);
+
+        init();
+        makeList();
+
+
+    }
+
+    private void makeList() {
+        // Gets the ListView from the View list of the parent activity
+        mContactsList =
+                (ListView) findViewById(R.id.listContact);
+        // Gets a CursorAdapter
+        mContactListAdapter = new ContactListAdapter(
+                this, null);
+        // Sets the adapter for the ListView
+        mContactsList.setAdapter(mContactListAdapter);
+
+    }
+
+    private void init() {
+// Initializes the loader
+        getLoaderManager().initLoader(0, null, this);
+
+    }
+
+    private void showFriendCount(Cursor cursor) {
+        TextView contactFriendCount = (TextView) findViewById(R.id.contactFriendCount);
+        contactFriendCount.setText(cursor.getCount() + "명의 친구가 Flagmon에 있습니다");
     }
 }

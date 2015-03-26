@@ -28,6 +28,29 @@ public class FMCommonMapFragment extends FMCommonFragment {
 
     }
 
+    @Override
+    public void onResume() {
+        mMapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
+
+    @Override
+    protected void addListenerToButton() {
+
+    }
+
     private void setUpMap(Bundle savedInstanceState) {
 
 
@@ -72,30 +95,6 @@ public class FMCommonMapFragment extends FMCommonFragment {
                 break;
             default:
         }
-
-    }
-
-    @Override
-    public void onResume() {
-        mMapView.onResume();
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mMapView.onLowMemory();
-    }
-
-
-    @Override
-    protected void addListenerToButton() {
 
     }
 }

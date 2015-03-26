@@ -37,22 +37,7 @@ import java.util.regex.Pattern;
 public class LoginActivity extends FMCommonActivity implements PlusOnGetDataListener {
     private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z]+)(?=.*[!@#$%^*+=-]|.*[0-9]+).{8,16}$";
     private static final int LOG_IN = 11;
-    final int DRAWABLE_LEFT = 0;
-    final int DRAWABLE_TOP = 1;
     final int DRAWABLE_RIGHT = 2;
-    final int DRAWABLE_BOTTOM = 3;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        //임시로 로그인처리
-//        saveLoginInfo("a0dcee3f02a21423286469e912d1902a18baec4b427b468cdb176d5f6f668e82");
-//        finish();
-
-        addButtonListener();
-    }
 
     @Override
     public void onSuccess(Integer from, Object datas) {
@@ -72,6 +57,82 @@ public class LoginActivity extends FMCommonActivity implements PlusOnGetDataList
 
     }
 
+    public void launchFindPasswordActivity(View v) {
+        PlusClickGuard.doIt(v);
+
+        Intent intent = new Intent(this, FindPasswordActivity.class);
+        startActivity(intent);
+
+    }
+
+    public void doLogin(View v) {
+        PlusClickGuard.doIt(v);
+
+        EditText userEmailView = (EditText) findViewById(R.id.userEmail);
+        String userEmail = userEmailView.getText().toString();
+
+        if (userEmail.equals("")) {
+            PlusToaster.doIt(this, "이메일을 입력해주세요.");
+            return;
+        }
+
+        if (!PlusStringEmailChecker.doIt(userEmail)) {
+            PlusToaster.doIt(this, "아이디는 이메일 주소 형식입니다.");
+            return;
+        }
+
+        EditText userPasswordView = (EditText) findViewById(R.id.userPassword);
+        String userPassword = userPasswordView.getText().toString();
+
+        if (userPassword.equals("")) {
+            PlusToaster.doIt(this, "비밀번호를 입력해주세요.");
+            return;
+        }
+
+        if (!isPasswordValid(userPassword)) {
+            PlusToaster.doIt(this, "비밀번호는 영문 숫자 조합 8자리 이상입니다.");
+            return;
+
+        }
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("user_email", userEmail));
+        postParams.add(new BasicNameValuePair("user_pw", userPassword));
+
+
+        new PlusHttpClient(this, this, false).execute(LOG_IN,
+                FMApiConstants.LOG_IN, new PlusInputStreamStringConverter(),
+                postParams);
+
+    }
+
+    public void signUp(View v) {
+        PlusClickGuard.doIt(v);
+
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+
+    }
+
+    public void showPolicy(View v) {
+        PlusClickGuard.doIt(v);
+        Intent intent = new Intent(this, PolicyActivity.class);
+        intent.putExtra(FMConstants.KEY_POLICY_TYPE, FMConstants.POLICY_SERVICE);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        //임시로 로그인처리
+//        saveLoginInfo("a0dcee3f02a21423286469e912d1902a18baec4b427b468cdb176d5f6f668e82");
+//        finish();
+
+        addListenerToButton();
+    }
+
     private void saveLoginInfo(String userAuthKey) {
 
         SharedPreferences sharedPreference = getSharedPreferences(
@@ -82,7 +143,7 @@ public class LoginActivity extends FMCommonActivity implements PlusOnGetDataList
         e.commit();
     }
 
-    private void addButtonListener() {
+    private void addListenerToButton() {
         final EditText userEmailView = (EditText) findViewById(R.id.userEmail);
         userEmailView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -132,55 +193,6 @@ public class LoginActivity extends FMCommonActivity implements PlusOnGetDataList
         return false;
     }
 
-    public void goToFindPassword(View v) {
-        PlusClickGuard.doIt(v);
-
-        Intent intent = new Intent(this, FindPasswordActivity.class);
-        startActivity(intent);
-
-    }
-
-    public void doLogin(View v) {
-        PlusClickGuard.doIt(v);
-
-        EditText userEmailView = (EditText) findViewById(R.id.userEmail);
-        String userEmail = userEmailView.getText().toString();
-
-        if (userEmail.equals("")) {
-            PlusToaster.doIt(this, "이메일을 입력해주세요.");
-            return;
-        }
-
-        if (!PlusStringEmailChecker.doIt(userEmail)) {
-            PlusToaster.doIt(this, "아이디는 이메일 주소 형식입니다.");
-            return;
-        }
-
-        EditText userPasswordView = (EditText) findViewById(R.id.userPassword);
-        String userPassword = userPasswordView.getText().toString();
-
-        if (userPassword.equals("")) {
-            PlusToaster.doIt(this, "비밀번호를 입력해주세요.");
-            return;
-        }
-
-        if (!isPasswordValid(userPassword)) {
-            PlusToaster.doIt(this, "비밀번호는 영문 숫자 조합 8자리 이상입니다.");
-            return;
-
-        }
-
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("user_email", userEmail));
-        postParams.add(new BasicNameValuePair("user_pw", userPassword));
-
-
-        new PlusHttpClient(this, this, false).execute(LOG_IN,
-                FMApiConstants.LOG_IN, new PlusInputStreamStringConverter(),
-                postParams);
-
-    }
-
     private boolean isPasswordValid(String userPassword) {
         //8자 ~ 16자 사이 영숫자 혼합 체크
         Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
@@ -189,21 +201,6 @@ public class LoginActivity extends FMCommonActivity implements PlusOnGetDataList
 
         return matcher.matches();
 
-    }
-
-    public void signUp(View v) {
-        PlusClickGuard.doIt(v);
-
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
-
-    }
-
-    public void showPolicy(View v) {
-        PlusClickGuard.doIt(v);
-        Intent intent = new Intent(this, PolicyActivity.class);
-        intent.putExtra(FMConstants.KEY_POLICY_TYPE, FMConstants.POLICY_SERVICE);
-        startActivity(intent);
     }
 
 

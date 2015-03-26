@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:onClick="goToUserPage"
+            android:onClick="launchUserPageActivity"
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -48,7 +48,7 @@
             android:layout_width="54dp"
             android:layout_height="54dp"
             android:background="@drawable/bt_0009"
-            android:onClick="goToUserPage" />
+            android:onClick="launchUserPageActivity" />
 
         <View
             android:layout_width="0px"
@@ -111,7 +111,7 @@
                         android:layout_width="26dp"
                         android:layout_height="26dp"
                         android:layout_marginLeft="30dp"
-                        android:onClick="goToCommentActivity"
+                        android:onClick="launchCommentActivity"
                         android:src="@drawable/p05_box_icon_0001" />
 
                     <TextView
@@ -120,8 +120,7 @@
                         android:layout_height="26dp"
                         android:layout_marginLeft="2dp"
                         android:gravity="center"
-                        android:onClick="goToCommentActivity"
-                        android:text="50"
+                        android:onClick="launchCommentActivity"
                         android:textColor="#ffffff"
                         android:textSize="12sp" />
 
@@ -141,7 +140,6 @@
                         android:clickable="true"
                         android:gravity="center"
                         android:onClick="doPin"
-                        android:text="15"
                         android:textColor="#ffffff"
                         android:textSize="12sp" />
 
@@ -156,7 +154,6 @@
                         android:layout_height="26dp"
                         android:layout_marginRight="30dp"
                         android:gravity="center"
-                        android:text="조회수 2335"
                         android:textColor="#ffffff"
                         android:textSize="12sp" />
 
@@ -194,8 +191,7 @@
                 android:layout_marginRight="12dp"
                 android:layout_marginTop="7dp"
                 android:gravity="center"
-                android:lines="3"
-                android:text="박산다라는 어린 시절 무역업에 종사하는 아버지를 따라 대한민국에서 필리핀으로 이민을 가서 생활한다. 학교 행사에서 만난, 연예계에서 활동 중이던 친구가 필리핀 방송국 ABS-CBN의 스타 서클 퀘스트라고 하는 스타가 되기 위한 서바이벌 쇼의 오디션에 응시해 볼 것을 권하여 산다라는 쇼에 참가하게 된다. 최종 다섯 명이 확정되는 마지막 탈락자 선발전에서 약 50만 통의 휴대전화 문자 득표를 기록하였고, 이는 여성 출연자 사상 최대의 기록이었다. 쇼 전체를 통틀어 적어도 2백만여 통의 문자 득표를 획득했다고 추정된다." />
+                android:lines="3" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -203,7 +199,7 @@
                 android:layout_marginTop="20dp"
                 android:background="#f7f8fa"
                 android:gravity="center"
-                android:text="근거리 다른 사진"
+                android:text="@string/nearby_photos"
                 android:textColor="#627185" />
 
             <GridView

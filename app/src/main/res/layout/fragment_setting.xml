@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="친구관리"
+            android:text="@string/friend_management"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="MON관리"
+            android:text="@string/mon_management"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="회원정보"
+            android:text="@string/user_info"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -106,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="공지사항"
+            android:text="@string/notification"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -134,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:text="알림설정"
+            android:text="@string/alarm_setting"
             android:textSize="16sp" />
     </LinearLayout>
 

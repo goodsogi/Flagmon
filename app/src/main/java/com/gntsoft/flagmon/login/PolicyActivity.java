@@ -23,6 +23,33 @@ public class PolicyActivity extends FMCommonActivity implements
     private static final int GET_POLICY = 0;
 
     @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_POLICY:
+                showContent((String) datas);
+                break;
+        }
+
+    }
+
+    public void showServicePolicy(View v) {
+        PlusClickGuard.doIt(v);
+        getDataFromServer(FMConstants.POLICY_SERVICE);
+    }
+
+    public void showPrivacyPolicy(View v) {
+        PlusClickGuard.doIt(v);
+        getDataFromServer(FMConstants.POLICY_PRIVACY);
+    }
+
+    public void showLocationPolicy(View v) {
+        PlusClickGuard.doIt(v);
+        getDataFromServer(FMConstants.POLICY_LOCATION);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_policy);
@@ -33,7 +60,6 @@ public class PolicyActivity extends FMCommonActivity implements
         getDataFromServer(policyType);
 
     }
-
 
     private void getDataFromServer(int policyType) {
         new PlusHttpClient(this, this, false).execute(GET_POLICY,
@@ -60,35 +86,8 @@ public class PolicyActivity extends FMCommonActivity implements
         return null;
     }
 
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_POLICY:
-                showContent((String) datas);
-                break;
-        }
-
-    }
-
     private void showContent(String datas) {
         TextView content = (TextView) findViewById(R.id.policyContent);
         content.setText(Html.fromHtml(datas));
-    }
-
-    public void showServicePolicy(View v) {
-        PlusClickGuard.doIt(v);
-        getDataFromServer(FMConstants.POLICY_SERVICE);
-    }
-
-    public void showPrivacyPolicy(View v) {
-        PlusClickGuard.doIt(v);
-        getDataFromServer(FMConstants.POLICY_PRIVACY);
-    }
-
-    public void showLocationPolicy(View v) {
-        PlusClickGuard.doIt(v);
-        getDataFromServer(FMConstants.POLICY_LOCATION);
     }
 }

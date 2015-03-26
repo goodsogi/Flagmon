@@ -23,7 +23,7 @@
             android:clickable="true"
             android:gravity="center"
             android:onClick="goBack"
-            android:text="이전"
+            android:text="@string/back"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -37,7 +37,6 @@
             android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="산다라박"
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:textStyle="bold" />

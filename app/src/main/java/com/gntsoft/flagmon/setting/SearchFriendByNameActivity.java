@@ -35,6 +35,32 @@ public class SearchFriendByNameActivity extends FMCommonActivity implements
 
     private static final int SEARCH_fRIENDS_BY_NAME = 0;
 
+    public void doSearch(View v) {
+        EditText searchView = (EditText) findViewById(R.id.searchInput);
+        String keyword = searchView.getText().toString();
+
+        if (keyword.equals("")) {
+            PlusToaster.doIt(this, "검색어를 입력해주세요");
+            return;
+
+        }
+
+        performSearch(keyword);
+
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case SEARCH_fRIENDS_BY_NAME:
+                makeList(new FriendListParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,20 +93,6 @@ public class SearchFriendByNameActivity extends FMCommonActivity implements
 
     }
 
-    public void doSearch(View v) {
-        EditText searchView = (EditText) findViewById(R.id.searchInput);
-        String keyword = searchView.getText().toString();
-
-        if (keyword.equals("")) {
-            PlusToaster.doIt(this, "검색어를 입력해주세요");
-            return;
-
-        }
-
-        performSearch(keyword);
-
-    }
-
     private void performSearch(String keyword) {
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
@@ -91,18 +103,6 @@ public class SearchFriendByNameActivity extends FMCommonActivity implements
         new PlusHttpClient(this, this, false).execute(SEARCH_fRIENDS_BY_NAME,
                 FMApiConstants.SEARCH_FRIENDS_BY_NAME, new PlusInputStreamStringConverter(),
                 postParams);
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case SEARCH_fRIENDS_BY_NAME:
-                makeList(new FriendListParser().doIt((String) datas));
-                break;
-        }
-
     }
 
     private void makeList(ArrayList<FriendModel> model) {

@@ -38,6 +38,12 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
 
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friend_in_facebook);
@@ -142,33 +148,6 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
 
     }
 
-    private void init() {
-
-        String[] PERMISSION_ARRAY_READ = {"user_friends"};
-        final List<String> permissionList = Arrays.asList(PERMISSION_ARRAY_READ);
-
-// start Facebook Login
-        Session.openActiveSession(this, true, new Session.StatusCallback() {
-
-            // callback when session changes state
-            @Override
-            public void call(final Session session, SessionState state, Exception exception) {
-                if (session.isOpened()) {
-
-                    if (session.getPermissions().contains("user_friends")) {
-                        getFriends();
-                    } else {
-                        //public_profile만 디폴트로 permission이 부여되었으므로 친구리스트를 얻기 위해서는 user_friends permission을 별도로 요청해야 함
-                        Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(FindFriendInFacebookActivity.this, permissionList);
-                        session.requestNewReadPermissions(newPermissionsRequest);
-                    }
-
-                }
-            }
-        });
-
-    }
-
 
 //    private void init() {
 //// start Facebook Login
@@ -197,6 +176,33 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
 //
 //    }
 
+    private void init() {
+
+        String[] PERMISSION_ARRAY_READ = {"user_friends"};
+        final List<String> permissionList = Arrays.asList(PERMISSION_ARRAY_READ);
+
+// start Facebook Login
+        Session.openActiveSession(this, true, new Session.StatusCallback() {
+
+            // callback when session changes state
+            @Override
+            public void call(final Session session, SessionState state, Exception exception) {
+                if (session.isOpened()) {
+
+                    if (session.getPermissions().contains("user_friends")) {
+                        getFriends();
+                    } else {
+                        //public_profile만 디폴트로 permission이 부여되었으므로 친구리스트를 얻기 위해서는 user_friends permission을 별도로 요청해야 함
+                        Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(FindFriendInFacebookActivity.this, permissionList);
+                        session.requestNewReadPermissions(newPermissionsRequest);
+                    }
+
+                }
+            }
+        });
+
+    }
+
     private void requestMyAppFacebookFriendsWithAppInstalled(Session session) {
 
         Request friendsRequest = createRequest(session);
@@ -223,7 +229,6 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
         friendsRequest.executeAsync();
     }
 
-
     private Request createRequest(Session session) {
         Request request = Request.newGraphPathRequest(session, "me/friends", null);
 
@@ -239,7 +244,6 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
         return request;
     }
 
-
     private List<GraphUser> getResults(Response response) throws NullPointerException {
         try {
             GraphMultiResult multiResult = response
@@ -250,12 +254,6 @@ public class FindFriendInFacebookActivity extends FMCommonActivity {
             return null;
             //at times the flow enters this catch block. I could not figure out the reason for this.
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
 
 

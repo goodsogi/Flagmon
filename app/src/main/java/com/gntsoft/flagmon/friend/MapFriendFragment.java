@@ -70,23 +70,6 @@ public class MapFriendFragment extends FMCommonMapFragment implements
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
-    public void getDataFromServer(String sortType) {
-
-
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        postParams.add(new BasicNameValuePair("sort", sortType));
-        if (LoginChecker.isLogIn(mActivity)) {
-            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        }
-
-
-        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
-                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
-
     public void showSortPopupFriend(View v) {
         PlusClickGuard.doIt(v);
 
@@ -105,43 +88,30 @@ public class MapFriendFragment extends FMCommonMapFragment implements
         ab.show();
     }
 
-    private void doSortFriend(int whichButton) {
-        switch (whichButton) {
-            case 0:
-                sortByPopular();
-                break;
-
-            case 1:
-                sortByRecent();
-                break;
-            case 2:
-                sortByPin();
-                break;
-
-
-        }
-    }
-
-    private void sortByPin() {
-        getDataFromServer(FMConstants.SORT_BY_PIN);
-    }
-
-
-    private void sortByRecent() {
-        getDataFromServer(FMConstants.SORT_BY_RECENT);
-    }
-
-    private void sortByPopular() {
-        getDataFromServer(FMConstants.SORT_BY_POPULAR);
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_friend,
                 container, false);
         return rootView;
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_MAP_DATA:
+                handleMapData(new FMMapParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    @Override
+    public void onGPSCatched(Location location) {
+        mMyLocationButton.setSelected(true);
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
     }
 
     @Override
@@ -166,21 +136,54 @@ public class MapFriendFragment extends FMCommonMapFragment implements
         });
     }
 
+    private void getDataFromServer(String sortType) {
+
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        postParams.add(new BasicNameValuePair("sort", sortType));
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
+                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    private void doSortFriend(int whichButton) {
+        switch (whichButton) {
+            case 0:
+                sortByPopular();
+                break;
+
+            case 1:
+                sortByRecent();
+                break;
+            case 2:
+                sortByPin();
+                break;
+
+
+        }
+    }
+
+    private void sortByPin() {
+        getDataFromServer(FMConstants.SORT_BY_PIN);
+    }
+
+    private void sortByRecent() {
+        getDataFromServer(FMConstants.SORT_BY_RECENT);
+    }
+
+    private void sortByPopular() {
+        getDataFromServer(FMConstants.SORT_BY_POPULAR);
+    }
+
     private void getCurrentLocation() {
         FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
         locationFinder.doIt();
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_MAP_DATA:
-                handleMapData(new FMMapParser().doIt((String) datas));
-                break;
-        }
-
     }
 
     private void handleMapData(ArrayList<FMModel> datas) {
@@ -230,13 +233,13 @@ public class MapFriendFragment extends FMCommonMapFragment implements
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                goToDetail(marker.getSnippet());
+                launchDetailActivity(marker.getSnippet());
                 return false;
             }
         });
     }
 
-    private void goToDetail(String idx) {
+    private void launchDetailActivity(String idx) {
         Intent intent = new Intent(mActivity, DetailActivity.class);
         intent.putExtra(FMConstants.KEY_POST_IDX, idx);
 
@@ -264,11 +267,5 @@ public class MapFriendFragment extends FMCommonMapFragment implements
         return BitmapDescriptorFactory.fromBitmap(result);
 
 
-    }
-
-    @Override
-    public void onGPSCatched(Location location) {
-        mMyLocationButton.setSelected(true);
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
     }
 }

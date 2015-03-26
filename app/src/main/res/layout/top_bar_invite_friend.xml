@@ -4,7 +4,7 @@
     android:layout_height="48dp"
     android:background="@drawable/navigation_bar_bg"
     android:gravity="center"
-    android:text="친구를 초대하세요."
+    android:text="@string/invite_friend"
     android:textColor="#ffffff"
     android:textSize="24sp"
     android:textStyle="bold" />

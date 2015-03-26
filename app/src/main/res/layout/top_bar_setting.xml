@@ -5,7 +5,7 @@
     android:background="@drawable/navigation_bar_bg"
     android:gravity="center_vertical"
     android:paddingLeft="15dp"
-    android:text="설정"
+    android:text="@string/setting"
     android:textColor="#ffffff"
     android:textSize="18sp"
     android:textStyle="bold" />

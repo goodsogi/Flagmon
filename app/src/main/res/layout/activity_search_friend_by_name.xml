@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="이름으로 검색"
+            android:text="@string/search_by_name"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -53,7 +53,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#00000000"
-            android:hint="검색할 이름을 입력하세요"
+            android:hint="@string/put_in_name_for_search"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:paddingLeft="3dp"

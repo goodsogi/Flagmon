@@ -62,13 +62,6 @@ public class FriendListFragment extends FMCommonFragment implements
     }
 
     @Override
-    protected void addListenerToButton() {
-
-
-    }
-
-
-    @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
             return;
@@ -77,6 +70,12 @@ public class FriendListFragment extends FMCommonFragment implements
                 makeList(new FriendListParser().doIt((String) datas));
                 break;
         }
+
+    }
+
+    @Override
+    protected void addListenerToButton() {
+
 
     }
 

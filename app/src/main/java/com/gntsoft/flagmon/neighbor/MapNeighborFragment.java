@@ -72,6 +72,94 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_map_neighbor,
+                container, false);
+        return rootView;
+    }
+
+    public void showSortPopup(View v) {
+        PlusClickGuard.doIt(v);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("정렬방식을 선택해주세요.");
+        ab.setItems(mapOptionDatas, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                doSort(whichButton);
+
+            }
+        }).setNegativeButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+        ab.show();
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_MAP_DATA:
+                handleMapData(new FMMapParser().doIt((String) datas));
+                break;
+
+            case FIND_TREASURE:
+                showTreasures(new FindTreasureParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    public void getDataFromServer(String sortType) {
+
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        postParams.add(new BasicNameValuePair("sort", sortType));
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
+                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    @Override
+    public void onGPSCatched(Location location) {
+        mMyLocationButton.setSelected(true);
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+    }
+
+    @Override
+    protected void addListenerToButton() {
+        // TODO Auto-generated method stub
+        mMyLocationButton = (Button) mActivity.findViewById(R.id.my_location);
+        mMyLocationButton.setOnClickListener(new PlusOnClickListener() {
+            @Override
+            protected void doIt() {
+                if (!mMyLocationButton.isSelected()) {
+
+                    showAlertDialog();
+
+                }
+            }
+        });
+
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopup(v);
+            }
+        });
+    }
+
     private void checkLogin() {
         if (LoginChecker.isLogIn(mActivity)) showTreasureButton();
 
@@ -117,7 +205,6 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
                 postParams);
 
     }
-
 
     private void handleMapData(ArrayList<FMModel> datas) {
 
@@ -180,7 +267,6 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
         startActivity(intent);
     }
 
-
     private BitmapDescriptor getMarKerImg(Bitmap original, String postType) {
 
         //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
@@ -204,57 +290,6 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
 
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map_neighbor,
-                container, false);
-        return rootView;
-    }
-
-    @Override
-    protected void addListenerToButton() {
-        // TODO Auto-generated method stub
-        mMyLocationButton = (Button) mActivity.findViewById(R.id.my_location);
-        mMyLocationButton.setOnClickListener(new PlusOnClickListener() {
-            @Override
-            protected void doIt() {
-                if (!mMyLocationButton.isSelected()) {
-
-                    showAlertDialog();
-
-                }
-            }
-        });
-
-        Button sort = (Button) mActivity.findViewById(R.id.sort);
-        sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSortPopup(v);
-            }
-        });
-    }
-
-    public void showSortPopup(View v) {
-        PlusClickGuard.doIt(v);
-
-        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
-        ab.setTitle("정렬방식을 선택해주세요.");
-        ab.setItems(mapOptionDatas, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                doSort(whichButton);
-
-            }
-        }).setNegativeButton("닫기",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                });
-        ab.show();
-    }
-
     private void doSort(int whichButton) {
 
 
@@ -271,7 +306,6 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
         }
     }
 
-
     private void sortByRecent() {
         getDataFromServer(FMConstants.SORT_BY_RECENT);
     }
@@ -279,7 +313,6 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
     private void sortByPopular() {
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
-
 
     private void showAlertDialog() {
         AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
@@ -300,22 +333,6 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
     private void getCurrentLocation() {
         FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
         locationFinder.doIt();
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_MAP_DATA:
-                handleMapData(new FMMapParser().doIt((String) datas));
-                break;
-
-            case FIND_TREASURE:
-                showTreasures(new FindTreasureParser().doIt((String) datas));
-                break;
-        }
-
     }
 
     private void showTreasures(ArrayList<TreasureModel> datas) {
@@ -362,29 +379,5 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
                     }
                 });
         ab.show();
-    }
-
-
-    public void getDataFromServer(String sortType) {
-
-
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        postParams.add(new BasicNameValuePair("sort", sortType));
-        if (LoginChecker.isLogIn(mActivity)) {
-            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        }
-
-
-        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
-                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
-
-    @Override
-    public void onGPSCatched(Location location) {
-        mMyLocationButton.setSelected(true);
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
     }
 }

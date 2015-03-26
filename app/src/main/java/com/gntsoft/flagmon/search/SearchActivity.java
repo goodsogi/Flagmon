@@ -23,6 +23,20 @@ public class SearchActivity extends FMCommonActivity {
     private int mMainContentType;
     private String mKeyword;
 
+    public void doSearch(View v) {
+        EditText searchView = (EditText) findViewById(R.id.searchInput);
+        mKeyword = searchView.getText().toString();
+
+        if (mKeyword.equals("")) {
+            PlusToaster.doIt(this, "검색어를 입력해주세요");
+            return;
+
+        }
+
+        showSearchResult(FMConstants.SORT_BY_POPULAR);
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +71,6 @@ public class SearchActivity extends FMCommonActivity {
         }, 100);
     }
 
-
     private void searchMap(String sortType) {
         Bundle bundle = new Bundle();
         bundle.putString(FMConstants.KEY_KEYWORD, mKeyword);
@@ -67,21 +80,6 @@ public class SearchActivity extends FMCommonActivity {
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_search, fragment)
                 .commit();
-
-    }
-
-
-    public void doSearch(View v) {
-        EditText searchView = (EditText) findViewById(R.id.searchInput);
-        mKeyword = searchView.getText().toString();
-
-        if (mKeyword.equals("")) {
-            PlusToaster.doIt(this, "검색어를 입력해주세요");
-            return;
-
-        }
-
-        showSearchResult(FMConstants.SORT_BY_POPULAR);
 
     }
 

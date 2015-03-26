@@ -96,7 +96,7 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
         writeReply.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                goToCommentActivity(data.getIdx());
+                launchCommentActivity(data.getIdx());
             }
         });
 
@@ -116,6 +116,23 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
         return convertView;
     }
 
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case SCRAP_THIS:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(mContext, model.getResult().equals("success") ? "스크했습니다" : "스크랩하지 못했습니다");
+                if (model.getResult().equals("success")) {
+                    //추가 액션??
+                }
+                break;
+
+        }
+
+    }
+
     private void scrapThis() {
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
@@ -131,12 +148,11 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
 
     }
 
-    private void goToCommentActivity(String idx) {
+    private void launchCommentActivity(String idx) {
         Intent intent = new Intent(mContext, CommentActivity.class);
         intent.putExtra(FMConstants.KEY_POST_IDX, idx);
         mContext.startActivity(intent);
     }
-
 
     private Bitmap getFrameImg(int imgId) {
         //마스킹
@@ -156,23 +172,6 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
 
         return result;
 
-
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case SCRAP_THIS:
-                ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(mContext, model.getResult().equals("success") ? "스크했습니다" : "스크랩하지 못했습니다");
-                if (model.getResult().equals("success")) {
-                    //추가 액션??
-                }
-                break;
-
-        }
 
     }
 

@@ -45,7 +45,21 @@ public class FriendManager implements FMTabManager, PlusOnGetDataListener {
         } else checkIfHasFriend();
     }
 
-    private void addButtonListener() {
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null) {
+            inviteFriend(); //나중에 삭제!!
+            return;
+        }
+        switch (from) {
+            case CHECK_IF_HAS_FRIEND:
+                handleIfHasFriend(new FriendListParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    private void addListenerToButton() {
         Button naviMenu = (Button) mActivity.findViewById(R.id.naviMenu);
         naviMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,12 +72,12 @@ public class FriendManager implements FMTabManager, PlusOnGetDataListener {
         chooseFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToFriendListFragment(v);
+                launchFriendListFragment(v);
             }
         });
     }
 
-    private void goToFriendListFragment(View v) {
+    private void launchFriendListFragment(View v) {
         PlusClickGuard.doIt(v);
 
         mActivity.getFragmentManager().beginTransaction()
@@ -95,7 +109,6 @@ public class FriendManager implements FMTabManager, PlusOnGetDataListener {
 
     }
 
-
     private void showFriendTopBar() {
         FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
         topBarContainer.removeAllViews();
@@ -104,7 +117,6 @@ public class FriendManager implements FMTabManager, PlusOnGetDataListener {
         View inviteTopBar = inflater.inflate(R.layout.top_bar_friend, null);
         topBarContainer.addView(inviteTopBar);
     }
-
 
     private void showLogin(int tabName) {
 
@@ -135,25 +147,11 @@ public class FriendManager implements FMTabManager, PlusOnGetDataListener {
                 postParams);
     }
 
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null) {
-            inviteFriend(); //나중에 삭제!!
-            return;
-        }
-        switch (from) {
-            case CHECK_IF_HAS_FRIEND:
-                handleIfHasFriend(new FriendListParser().doIt((String) datas));
-                break;
-        }
-
-    }
-
     private void handleIfHasFriend(ArrayList<FriendModel> friendModels) {
 
         if (friendModels.size() > 0) {
             showFriendTopBar();
-            addButtonListener();
+            addListenerToButton();
             showMapFriend();
         } else {
             inviteFriend();

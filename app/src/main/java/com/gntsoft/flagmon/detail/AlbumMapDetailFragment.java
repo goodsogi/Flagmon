@@ -34,15 +34,42 @@ public class AlbumMapDetailFragment extends FMCommonMapFragment implements
 
     private static final int GET_MAP_DATA = 0;
 
+
     public AlbumMapDetailFragment() {
         // TODO Auto-generated constructor stub
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         getImageFromServer();
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_map_detail,
+                container, false);
+        return rootView;
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_MAP_DATA:
+                makeList(datas);
+                break;
+        }
+
+    }
+
+    @Override
+    protected void addListenerToButton() {
 
     }
 
@@ -70,38 +97,13 @@ public class AlbumMapDetailFragment extends FMCommonMapFragment implements
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map_detail,
-                container, false);
-        return rootView;
-    }
-
-    @Override
-    protected void addListenerToButton() {
-
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_MAP_DATA:
-                makeList(datas);
-                break;
-        }
-
-    }
-
     private void makeList(Object datas) {
 
 
     }
 
 
-    public void getImageFromServer() {
+    private void getImageFromServer() {
         mImageLoader.loadImage(
                 getArguments().getString(FMConstants.KEY_IMAGE_URL),
                 mOption, new ImageLoadingListener() {

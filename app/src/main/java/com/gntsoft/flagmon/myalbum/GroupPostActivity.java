@@ -40,39 +40,6 @@ public class GroupPostActivity extends FMCommonActivity implements
     private GroupPostListAdapter mAdapter;
     private String idxs;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_post);
-        addListenerToView();
-        getDataFromServer();
-    }
-
-    private void addListenerToView() {
-
-        EditText albumNameInput = (EditText) findViewById(R.id.albumNameInput);
-        final Button completePost = (Button) findViewById(R.id.completePost);
-        albumNameInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable edit) {
-                String s = edit.toString();
-                if (s.length() > 0 && !completePost.isEnabled())
-                    completePost.setEnabled(true);
-            }
-        });
-
-    }
-
     public void getDataFromServer() {
 
 //내 포스트 가져오기
@@ -88,25 +55,6 @@ public class GroupPostActivity extends FMCommonActivity implements
                 FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
                 postParams);
     }
-
-    private void makeList(final ArrayList<FMModel> datas) {
-
-        //row 선택하는 기능 구현!!
-        ListView list = (ListView) findViewById(R.id.list_group_post);
-
-        if (list == null) return;
-        mAdapter = new GroupPostListAdapter(this,
-                datas);
-        list.setAdapter(mAdapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            }
-        });
-
-
-    }
-
 
     public void completePost(View v) {
 //구현!!
@@ -144,7 +92,58 @@ public class GroupPostActivity extends FMCommonActivity implements
 
     }
 
-    public String getIdxs() {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_group_post);
+        addListenerToView();
+        getDataFromServer();
+    }
+
+    private void addListenerToView() {
+
+        EditText albumNameInput = (EditText) findViewById(R.id.albumNameInput);
+        final Button completePost = (Button) findViewById(R.id.completePost);
+        albumNameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable edit) {
+                String s = edit.toString();
+                if (s.length() > 0 && !completePost.isEnabled())
+                    completePost.setEnabled(true);
+            }
+        });
+
+    }
+
+    private void makeList(final ArrayList<FMModel> datas) {
+
+        //row 선택하는 기능 구현!!
+        ListView list = (ListView) findViewById(R.id.list_group_post);
+
+        if (list == null) return;
+        mAdapter = new GroupPostListAdapter(this,
+                datas);
+        list.setAdapter(mAdapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            }
+        });
+
+
+    }
+
+    private String getIdxs() {
 
 
         return new Gson().toJson(mAdapter.getSelectedPostIdxs());

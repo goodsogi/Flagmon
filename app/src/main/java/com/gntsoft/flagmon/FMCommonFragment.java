@@ -35,15 +35,6 @@ public abstract class FMCommonFragment extends Fragment {
 
     }
 
-    private void initUIL() {
-        mImageLoader = ImageLoader.getInstance();
-
-        mOption = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(com.pluslibrary.R.drawable.empty_photo)
-                .showImageOnFail(com.pluslibrary.R.drawable.empty_photo).cacheInMemory(true)
-                .cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
-    }
-
     /**
      * 리스너 등록
      */
@@ -53,6 +44,15 @@ public abstract class FMCommonFragment extends Fragment {
         SharedPreferences sharedPreference = mActivity.getSharedPreferences(
                 FMConstants.PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY, "");
+    }
+
+    private void initUIL() {
+        mImageLoader = ImageLoader.getInstance();
+
+        mOption = new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(com.pluslibrary.R.drawable.empty_photo)
+                .showImageOnFail(com.pluslibrary.R.drawable.empty_photo).cacheInMemory(true)
+                .cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
     }
 
 }

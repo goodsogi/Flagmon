@@ -68,17 +68,6 @@ public class SearchFriendListAdapter extends FMCommonAdapter<FriendModel> implem
         return convertView;
     }
 
-    private void addFriend(String userEmail) {
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("user_email", userEmail));
-        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
-
-
-        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(ADD_FRIEND,
-                FMApiConstants.ADD_FRIEND, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
     @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
@@ -93,5 +82,16 @@ public class SearchFriendListAdapter extends FMCommonAdapter<FriendModel> implem
                 break;
         }
 
+    }
+
+    private void addFriend(String userEmail) {
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("user_email", userEmail));
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
+
+
+        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(ADD_FRIEND,
+                FMApiConstants.ADD_FRIEND, new PlusInputStreamStringConverter(),
+                postParams);
     }
 }

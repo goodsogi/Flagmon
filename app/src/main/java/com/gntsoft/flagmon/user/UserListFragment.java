@@ -66,33 +66,12 @@ public class UserListFragment extends FMCommonFragment implements
                 postParams);
     }
 
-
-    private void goToDetail(String idx) {
-        Intent intent = new Intent(mActivity, DetailActivity.class);
-        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
-
-        startActivity(intent);
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user_list,
                 container, false);
         return rootView;
-    }
-
-    @Override
-    protected void addListenerToButton() {
-        Button sort = (Button) mActivity.findViewById(R.id.sort);
-        sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSortPopup(v);
-            }
-        });
-
     }
 
     public void showSortPopup(View v) {
@@ -111,6 +90,44 @@ public class UserListFragment extends FMCommonFragment implements
                     }
                 });
         ab.show();
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_USER_LIST_DATA:
+                makeList(new FMListParser().doIt((String) datas));
+                showTotalUserPost();
+                break;
+        }
+
+    }
+
+    public int getTotalUserPost() {
+        return ((UserPageActivity) mActivity).getTotalUserPost();
+
+
+    }
+
+    @Override
+    protected void addListenerToButton() {
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopup(v);
+            }
+        });
+
+    }
+
+    private void launchDetailActivity(String idx) {
+        Intent intent = new Intent(mActivity, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+
+        startActivity(intent);
     }
 
     private void doSort(int whichButton) {
@@ -146,19 +163,6 @@ public class UserListFragment extends FMCommonFragment implements
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_USER_LIST_DATA:
-                makeList(new FMListParser().doIt((String) datas));
-                showTotalUserPost();
-                break;
-        }
-
-    }
-
     private void showTotalUserPost() {
         TextView totalUserPost = (TextView) mActivity.findViewById(R.id.totalUserPost);
         totalUserPost.setText("친구를 맺으면 " + getTotalUserPost() + "개의 게시물을 함께 나눌 수 있습니다.");
@@ -175,14 +179,8 @@ public class UserListFragment extends FMCommonFragment implements
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToDetail(datas.get(position).getIdx());
+                launchDetailActivity(datas.get(position).getIdx());
             }
         });
-    }
-
-    public int getTotalUserPost() {
-        return ((UserPageActivity) mActivity).getTotalUserPost();
-
-
     }
 }

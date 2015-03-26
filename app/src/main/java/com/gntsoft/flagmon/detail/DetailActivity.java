@@ -58,6 +58,112 @@ public class DetailActivity extends FMCommonActivity implements
     private String mUserName;
 
     @Override
+    public void onSuccess(Integer from, Object datas) {
+
+        if (datas == null) return;
+        switch (from) {
+            case GET_DETAIL:
+                handleData(new PostDetailParser().doIt((String) datas));
+                break;
+            case PERFORM_PIN:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "스크랩되었습니다" : "스크랩되지 못했습니다");
+                if (model.getResult().equals("success")) {
+                    //추가 액션??
+                }
+                break;
+            case REPORT_POST:
+                ServerResultModel model2 = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(this, model2.getResult().equals("success") ? "해당 글을 신고했습니다" : "해당 글을 신고지 못했습니다");
+                if (model2.getResult().equals("success")) {
+                    //추가 액션??
+                }
+                break;
+            case GET_PHOTOS_NEARBY:
+                makeGridView(new FMListParser().doIt((String) datas));
+                break;
+        }
+    }
+
+    public void showMenuPopup(View v) {
+
+        PlusClickGuard.doIt(v);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("선택해주세요.");
+        ab.setItems(menuItems, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                doMenu(whichButton);
+
+            }
+        }).setNegativeButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+        ab.show();
+
+    }
+
+    public void launchCommentActivity(View v) {
+        PlusClickGuard.doIt(v);
+        Intent intent = new Intent(this, CommentActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, getIntent().getStringExtra(FMConstants.KEY_POST_IDX));
+        startActivity(intent);
+
+    }
+
+    public void launchUserPageActivity(View v) {
+        PlusClickGuard.doIt(v);
+        Intent intent = new Intent(this, UserPageActivity.class);
+        intent.putExtra(FMConstants.KEY_USER_EMAIL, mUserEmail);
+        intent.putExtra(FMConstants.KEY_USER_NAME, mUserName);
+
+        startActivity(intent);
+
+    }
+
+    public void doPin(View v) {
+
+        PlusClickGuard.doIt(v);
+
+        if (LoginChecker.isLogIn(this)) performPin();
+        else showLoginAlertDialog();
+
+
+    }
+
+
+    public void changeMapPhoto(View v) {
+        PlusClickGuard.doIt(v);
+        if (!v.isSelected()) {
+            v.setSelected(true);
+            showMap();
+        } else {
+            v.setSelected(false);
+            showMainPhoto();
+        }
+
+    }
+
+    @Override
+    public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
+// We take the last son in the scrollview
+        View view = (View) scrollView
+                .getChildAt(scrollView.getChildCount() - 1);
+        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView
+                .getScrollY()));
+
+        // if diff is zero, then the bottom has been reached
+        if (diff == 0) {
+            // ScrollView 맨밑에 도달하면 리스트 아이템 추가!!
+//            addItem();
+//            PlusListHeightCalculator.setGridViewHeightBasedOnChildren(
+//                    mActivity, mList, 2f, 229);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
@@ -67,7 +173,7 @@ public class DetailActivity extends FMCommonActivity implements
 
     }
 
-    public void getDataFromServer() {
+    private void getDataFromServer() {
 
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
@@ -100,18 +206,6 @@ public class DetailActivity extends FMCommonActivity implements
     }
 
 
-    public void changeMapPhoto(View v) {
-        PlusClickGuard.doIt(v);
-        if (!v.isSelected()) {
-            v.setSelected(true);
-            showMap();
-        } else {
-            v.setSelected(false);
-            showMainPhoto();
-        }
-
-    }
-
     private void showMainPhoto() {
         //posttype에 따라 PhotoDetailFragment와 AlbumPhotoDetailFragment를 선택!!
 
@@ -138,33 +232,6 @@ public class DetailActivity extends FMCommonActivity implements
 
     }
 
-    public void goToCommentActivity(View v) {
-        PlusClickGuard.doIt(v);
-        Intent intent = new Intent(this, CommentActivity.class);
-        intent.putExtra(FMConstants.KEY_POST_IDX, getIntent().getStringExtra(FMConstants.KEY_POST_IDX));
-        startActivity(intent);
-
-    }
-
-    public void goToUserPage(View v) {
-        PlusClickGuard.doIt(v);
-        Intent intent = new Intent(this, UserPageActivity.class);
-        intent.putExtra(FMConstants.KEY_USER_EMAIL, mUserEmail);
-        intent.putExtra(FMConstants.KEY_USER_NAME, mUserName);
-
-        startActivity(intent);
-
-    }
-
-    public void doPin(View v) {
-
-        PlusClickGuard.doIt(v);
-
-        if (LoginChecker.isLogIn(this)) performPin();
-        else showLoginAlertDialog();
-
-
-    }
 
     private void performPin() {
         //수정!!
@@ -190,32 +257,13 @@ public class DetailActivity extends FMCommonActivity implements
                     }
                 }).setPositiveButton("예", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                goToLogin();
+                launchLoginActivity();
             }
         });
         ab.show();
 
     }
 
-    public void showMenuPopup(View v) {
-
-        PlusClickGuard.doIt(v);
-
-        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-        ab.setTitle("선택해주세요.");
-        ab.setItems(menuItems, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                doMenu(whichButton);
-
-            }
-        }).setNegativeButton("닫기",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                });
-        ab.show();
-
-    }
 
     private void doMenu(int whichButton) {
         switch (whichButton) {
@@ -248,41 +296,13 @@ public class DetailActivity extends FMCommonActivity implements
                 postParams);
     }
 
-    private void goToLogin() {
+    private void launchLoginActivity() {
 
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-
-        if (datas == null) return;
-        switch (from) {
-            case GET_DETAIL:
-                handleData(new PostDetailParser().doIt((String) datas));
-                break;
-            case PERFORM_PIN:
-                ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this, model.getResult().equals("success") ? "스크랩되었습니다" : "스크랩되지 못했습니다");
-                if (model.getResult().equals("success")) {
-                    //추가 액션??
-                }
-                break;
-            case REPORT_POST:
-                ServerResultModel model2 = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this, model2.getResult().equals("success") ? "해당 글을 신고했습니다" : "해당 글을 신고지 못했습니다");
-                if (model2.getResult().equals("success")) {
-                    //추가 액션??
-                }
-                break;
-            case GET_PHOTOS_NEARBY:
-                makeGridView(new FMListParser().doIt((String) datas));
-                break;
-        }
-    }
 
     private void makeGridView(final ArrayList<FMModel> fmModels) {
         GridView gridview = (GridView) findViewById(R.id.gridview);
@@ -291,7 +311,7 @@ public class DetailActivity extends FMCommonActivity implements
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToDetail(fmModels.get(position).getIdx());
+                launchDetailActivity(fmModels.get(position).getIdx());
             }
         });
 
@@ -307,7 +327,7 @@ public class DetailActivity extends FMCommonActivity implements
 
     }
 
-    private void goToDetail(String idx) {
+    private void launchDetailActivity(String idx) {
         finish();
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(FMConstants.KEY_POST_IDX, idx);
@@ -384,20 +404,5 @@ public class DetailActivity extends FMCommonActivity implements
 
     }
 
-    @Override
-    public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
-// We take the last son in the scrollview
-        View view = (View) scrollView
-                .getChildAt(scrollView.getChildCount() - 1);
-        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView
-                .getScrollY()));
 
-        // if diff is zero, then the bottom has been reached
-        if (diff == 0) {
-            // ScrollView 맨밑에 도달하면 리스트 아이템 추가!!
-//            addItem();
-//            PlusListHeightCalculator.setGridViewHeightBasedOnChildren(
-//                    mActivity, mList, 2f, 229);
-        }
-    }
 }

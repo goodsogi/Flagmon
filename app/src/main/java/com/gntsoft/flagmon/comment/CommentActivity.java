@@ -38,73 +38,11 @@ public class CommentActivity extends FMCommonActivity implements
     private static final int GET_COMMENTS = 0;
     private static final int SEND_COMMENT = 1;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment);
-
-        getDataFromServer();
-    }
-
-
-    public void getDataFromServer() {
-
-
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-
-        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        postParams.add(new BasicNameValuePair("photo_idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
-        //가장 마지막으로 조회한 idx. 만일 첫 조회인 경우는 공란??
-        //postParams.add(new BasicNameValuePair("idx", "")));
-
-
-        new PlusHttpClient(this, this, false).execute(GET_COMMENTS,
-                FMApiConstants.GET_COMMENTS, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
-
     public void sendComment(View v) {
         PlusClickGuard.doIt(v);
         if (LoginChecker.isLogIn(this)) sendCommentToServer();
-        else goToLogin(v);
+        else launchLoginActivity(v);
     }
-
-    private void sendCommentToServer() {
-        String userEmail = getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL);
-        String userPassword = getIntent().getStringExtra(FMConstants.KEY_USER_PASSWORD);
-        String userName = getIntent().getStringExtra(FMConstants.KEY_USER_NAME);
-
-
-        EditText commentInputView = (EditText) findViewById(R.id.commentInput);
-        String commentInput = commentInputView.getText().toString();
-
-        if (commentInput.equals("")) {
-            PlusToaster.doIt(this, "댓글을 입력해주세요");
-            return;
-        }
-
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        postParams.add(new BasicNameValuePair("memo", commentInput));
-        postParams.add(new BasicNameValuePair("photo_idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
-
-
-        new PlusHttpClient(this, this, false).execute(SEND_COMMENT,
-                FMApiConstants.SEND_COMMENT, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
-
-    private void goToLogin(View v) {
-
-        PlusClickGuard.doIt(v);
-
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-
-    }
-
 
     @Override
     public void onSuccess(Integer from, Object datas) {
@@ -125,6 +63,67 @@ public class CommentActivity extends FMCommonActivity implements
         }
 
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_comment);
+
+        getDataFromServer();
+    }
+
+    private void getDataFromServer() {
+
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+
+        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        postParams.add(new BasicNameValuePair("photo_idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
+        //가장 마지막으로 조회한 idx. 만일 첫 조회인 경우는 공란??
+        //postParams.add(new BasicNameValuePair("idx", "")));
+
+
+        new PlusHttpClient(this, this, false).execute(GET_COMMENTS,
+                FMApiConstants.GET_COMMENTS, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+
+    private void sendCommentToServer() {
+        String userEmail = getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL);
+        String userPassword = getIntent().getStringExtra(FMConstants.KEY_USER_PASSWORD);
+        String userName = getIntent().getStringExtra(FMConstants.KEY_USER_NAME);
+
+
+        EditText commentInputView = (EditText) findViewById(R.id.commentInput);
+        String commentInput = commentInputView.getText().toString();
+
+        if (commentInput.equals("")) {
+            PlusToaster.doIt(this, getString(R.string.enter_comment));
+            return;
+        }
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        postParams.add(new BasicNameValuePair("memo", commentInput));
+        postParams.add(new BasicNameValuePair("photo_idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
+
+
+        new PlusHttpClient(this, this, false).execute(SEND_COMMENT,
+                FMApiConstants.SEND_COMMENT, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+
+    private void launchLoginActivity(View v) {
+
+        PlusClickGuard.doIt(v);
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+
+    }
+
 
     private void makeList(final ArrayList<FMModel> datas) {
 

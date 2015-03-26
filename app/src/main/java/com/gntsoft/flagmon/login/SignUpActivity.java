@@ -35,16 +35,62 @@ public class SignUpActivity extends FMCommonActivity implements PlusOnGetDataLis
     private static final int CHECK_EMAIL = 11;
     final int DRAWABLE_RIGHT = 2;
 
+    public void checkEmail(View v) {
+        PlusClickGuard.doIt(v);
+
+        EditText userEmailView = (EditText) findViewById(R.id.userEmail);
+        String userEmail = userEmailView.getText().toString();
+
+        if (userEmail.equals("")) {
+            PlusToaster.doIt(this, "이메일을 입력해주세요.");
+            return;
+        }
+
+        checkIfEmailAvailable(userEmail);
+
+
+    }
+
+    public void showPolicy(View v) {
+        PlusClickGuard.doIt(v);
+        Intent intent = new Intent(this, PolicyActivity.class);
+        intent.putExtra(FMConstants.KEY_POLICY_TYPE, FMConstants.POLICY_SERVICE);
+        startActivity(intent);
+    }
+
+    public void logIn(View v) {
+        PlusClickGuard.doIt(v);
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null) return;
+        switch (from) {
+
+            case CHECK_EMAIL:
+
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "이메일을 사용할 수 있습니다" :
+                        model.getMsg().equals("not email") ? "이메일이 유효하지 않습니다" : "이미 사용중인 이메일입니다");
+                if (model.getResult().equals("success")) checkPasswordAndName();
+                break;
+
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        addButtonListener();
+        addListenerToButton();
 
     }
 
-    private void addButtonListener() {
+    private void addListenerToButton() {
         final EditText userEmailView = (EditText) findViewById(R.id.userEmail);
         userEmailView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -112,24 +158,7 @@ public class SignUpActivity extends FMCommonActivity implements PlusOnGetDataLis
         return false;
     }
 
-
-    public void checkEmail(View v) {
-        PlusClickGuard.doIt(v);
-
-        EditText userEmailView = (EditText) findViewById(R.id.userEmail);
-        String userEmail = userEmailView.getText().toString();
-
-        if (userEmail.equals("")) {
-            PlusToaster.doIt(this, "이메일을 입력해주세요.");
-            return;
-        }
-
-        checkIsEmailAvailable(userEmail);
-
-
-    }
-
-    private void checkIsEmailAvailable(String userEmail) {
+    private void checkIfEmailAvailable(String userEmail) {
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("user_email", userEmail));
 
@@ -145,35 +174,6 @@ public class SignUpActivity extends FMCommonActivity implements PlusOnGetDataLis
         Matcher matcher = pattern.matcher(userPassword);
 
         return matcher.matches();
-
-    }
-
-    public void showPolicy(View v) {
-        PlusClickGuard.doIt(v);
-        Intent intent = new Intent(this, PolicyActivity.class);
-        intent.putExtra(FMConstants.KEY_POLICY_TYPE, FMConstants.POLICY_SERVICE);
-        startActivity(intent);
-    }
-
-    public void logIn(View v) {
-        PlusClickGuard.doIt(v);
-        //!!구현 
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null) return;
-        switch (from) {
-
-            case CHECK_EMAIL:
-
-                ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this, model.getResult().equals("success") ? "이메일을 사용할 수 있습니다" :
-                        model.getMsg().equals("not email") ? "이메일이 유효하지 않습니다" : "이미 사용중인 이메일입니다");
-                if (model.getResult().equals("success")) checkPasswordAndName();
-                break;
-
-        }
 
     }
 
@@ -203,11 +203,11 @@ public class SignUpActivity extends FMCommonActivity implements PlusOnGetDataLis
             return;
         }
 
-        goToSecondSignUpActivity(userEmail, userPassword, userName);
+        launchSecondSignUpActivity(userEmail, userPassword, userName);
 
     }
 
-    private void goToSecondSignUpActivity(String userEmail, String userPassword, String userName) {
+    private void launchSecondSignUpActivity(String userEmail, String userPassword, String userName) {
         finish();
         Intent intent = new Intent(this, SecondSignUpActivity.class);
         intent.putExtra(FMConstants.KEY_USER_EMAIL, userEmail);

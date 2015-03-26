@@ -49,49 +49,12 @@ public class ListSearchFragment extends FMCommonFragment implements
         getDataFromServer(getArguments().getString(FMConstants.KEY_SORT_TYPE));
     }
 
-    public void getDataFromServer(String sortType) {
-//srchPost에 검색어 넣나?? 수정!!??
-
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        postParams.add(new BasicNameValuePair("sort", sortType));
-        postParams.add(new BasicNameValuePair("srchPost", getArguments().getString(FMConstants.KEY_KEYWORD)));
-        if (LoginChecker.isLogIn(mActivity)) {
-            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        }
-
-
-        new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
-                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
-    private void goToDetail(String idx) {
-        Intent intent = new Intent(mActivity, DetailActivity.class);
-        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
-
-        startActivity(intent);
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list_search,
                 container, false);
         return rootView;
-    }
-
-    @Override
-    protected void addListenerToButton() {
-        Button sort = (Button) mActivity.findViewById(R.id.sort);
-        sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSortPopup(v);
-            }
-        });
-
     }
 
     public void showSortPopup(View v) {
@@ -112,6 +75,54 @@ public class ListSearchFragment extends FMCommonFragment implements
         ab.show();
     }
 
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_LIST_DATA:
+                makeList(new FMListParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    @Override
+    protected void addListenerToButton() {
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopup(v);
+            }
+        });
+
+    }
+
+    private void getDataFromServer(String sortType) {
+//srchPost에 검색어 넣나?? 수정!!??
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        postParams.add(new BasicNameValuePair("sort", sortType));
+        postParams.add(new BasicNameValuePair("srchPost", getArguments().getString(FMConstants.KEY_KEYWORD)));
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_LIST_DATA,
+                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    private void launchDetailActivity(String idx) {
+        Intent intent = new Intent(mActivity, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, idx);
+
+        startActivity(intent);
+    }
+
     private void doSort(int whichButton) {
 
 
@@ -128,26 +139,12 @@ public class ListSearchFragment extends FMCommonFragment implements
         }
     }
 
-
     private void sortByRecent() {
         getDataFromServer(FMConstants.SORT_BY_RECENT);
     }
 
     private void sortByPopular() {
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
-    }
-
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_LIST_DATA:
-                makeList(new FMListParser().doIt((String) datas));
-                break;
-        }
-
     }
 
     private void makeList(final ArrayList<FMModel> datas) {
@@ -166,7 +163,7 @@ public class ListSearchFragment extends FMCommonFragment implements
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                goToDetail(datas.get(position).getIdx());
+                launchDetailActivity(datas.get(position).getIdx());
             }
         });
     }

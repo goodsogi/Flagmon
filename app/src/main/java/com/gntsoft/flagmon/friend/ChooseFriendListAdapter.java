@@ -16,9 +16,9 @@ import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
+import com.gntsoft.flagmon.server.FriendModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
-import com.gntsoft.flagmon.server.FriendModel;
 import com.gntsoft.flagmon.user.UserPageActivity;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
@@ -67,7 +67,7 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
         img.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                goToUserPage(data.getUserEmail(), data.getName());
+                launchUserPageActivity(data.getUserEmail(), data.getName());
             }
         });
         name.setText(data.getName());
@@ -92,7 +92,33 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
         return convertView;
     }
 
-    private void goToUserPage(String userEmail, String userName) {
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case DELETE_FRIEND:
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusToaster.doIt(mContext, model.getResult().equals("success") ? "친구를 삭제했습니다" : "친구를 삭제하지 못했습니다");
+                if (model.getResult().equals("success")) {
+                    //추가 액션??
+                }
+                break;
+
+            case SELECT_FRIEND:
+                ServerResultModel model2 = new ServerResultParser().doIt((String) datas);
+                if (model2.getResult().equals("success")) {
+                    //추가 액션??
+                    //친구를 상단으로 이동
+                    //리스트 갱신
+                    ((FriendListFragment) mFragment).getDataFromServer();
+                }
+                break;
+        }
+
+    }
+
+    private void launchUserPageActivity(String userEmail, String userName) {
         Intent intent = new Intent(mContext, UserPageActivity.class);
         intent.putExtra(FMConstants.KEY_USER_EMAIL, userEmail);
         intent.putExtra(FMConstants.KEY_USER_NAME, userName);
@@ -144,32 +170,6 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
         new PlusHttpClient((android.app.Activity) mContext, this, false).execute(SELECT_FRIEND,
                 FMApiConstants.SELECT_FRIEND, new PlusInputStreamStringConverter(),
                 postParams);
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case DELETE_FRIEND:
-                ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(mContext, model.getResult().equals("success") ? "친구를 삭제했습니다" : "친구를 삭제하지 못했습니다");
-                if (model.getResult().equals("success")) {
-                    //추가 액션??
-                }
-                break;
-
-            case SELECT_FRIEND:
-                ServerResultModel model2 = new ServerResultParser().doIt((String) datas);
-                if (model2.getResult().equals("success")) {
-                    //추가 액션??
-                    //친구를 상단으로 이동
-                    //리스트 갱신
-                    ((FriendListFragment) mFragment).getDataFromServer();
-                }
-                break;
-        }
-
     }
 
 }

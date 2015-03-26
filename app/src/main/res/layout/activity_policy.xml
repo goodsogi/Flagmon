@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="서비스 이용약관"
+            android:text="@string/service_policy"
             android:textColor="#ffffff"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -46,7 +46,7 @@
             android:layout_height="31dp"
             android:background="#73706d"
             android:onClick="showServicePolicy"
-            android:text="서비스\n이용약관"
+            android:text="@string/tab_service_policy"
             android:textColor="#ffffff"
             android:textSize="10sp" />
 
@@ -61,7 +61,7 @@
             android:layout_height="31dp"
             android:background="#73706d"
             android:onClick="showPrivacyPolicy"
-            android:text="개인정보\n취급방침"
+            android:text="@string/tab_privacy_policy"
             android:textColor="#ffffff"
             android:textSize="10sp" />
 
@@ -76,7 +76,7 @@
             android:layout_height="31dp"
             android:background="#73706d"
             android:onClick="showLocationPolicy"
-            android:text="위치기반\n서비스 이용약관"
+            android:text="@string/tab_location_policy"
             android:textColor="#ffffff"
             android:textSize="10sp" />
 

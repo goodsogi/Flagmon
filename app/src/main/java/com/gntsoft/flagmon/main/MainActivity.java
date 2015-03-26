@@ -31,29 +31,6 @@ public class MainActivity extends FMCommonActivity {
     private FMTabManager mSelectedTabManager;
     private boolean mIsFirstRun;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mIsFirstRun = true;
-        setLoginFalse();
-        createTabManagers();
-        Button neighbor = (Button) findViewById(R.id.tab_neighbor);
-        changeTab(neighbor);
-
-
-    }
-
-    private void setLoginFalse() {
-        SharedPreferences sharedPreference = getSharedPreferences(
-                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor e = sharedPreference.edit();
-        e.putBoolean(FMConstants.KEY_IS_LOGIN, false);
-        e.commit();
-
-    }
-
-
     public void onResume() {
         super.onResume();
         if (mSelectedTabManager != null && !mIsFirstRun) {
@@ -61,14 +38,6 @@ public class MainActivity extends FMCommonActivity {
         }
         mIsFirstRun = false;
     }
-
-    private void createTabManagers() {
-        mNeighborManager = new NeighborManager(this);
-        mFriendManager = new FriendManager(this);
-        mMyAlbumManager = new MyAlbumManager(this);
-        mSettingManager = new SettingManager(this);
-    }
-
 
     public void changeTab(View v) {
         if (mPressedTabId == v.getId()) return;
@@ -114,7 +83,6 @@ public class MainActivity extends FMCommonActivity {
 
     }
 
-
     public void logIn(View v) {
         PlusClickGuard.doIt(v);
 
@@ -122,12 +90,40 @@ public class MainActivity extends FMCommonActivity {
         startActivity(intent);
     }
 
-
     public void signUp(View v) {
         PlusClickGuard.doIt(v);
 
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        mIsFirstRun = true;
+        setLoginFalse();
+        createTabManagers();
+        Button neighbor = (Button) findViewById(R.id.tab_neighbor);
+        changeTab(neighbor);
+
+
+    }
+
+    private void setLoginFalse() {
+        SharedPreferences sharedPreference = getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = sharedPreference.edit();
+        e.putBoolean(FMConstants.KEY_IS_LOGIN, false);
+        e.commit();
+
+    }
+
+    private void createTabManagers() {
+        mNeighborManager = new NeighborManager(this);
+        mFriendManager = new FriendManager(this);
+        mMyAlbumManager = new MyAlbumManager(this);
+        mSettingManager = new SettingManager(this);
     }
 
 

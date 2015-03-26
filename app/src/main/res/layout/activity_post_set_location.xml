@@ -23,7 +23,7 @@
             android:clickable="true"
             android:gravity="center"
             android:onClick="goBack"
-            android:text="이전"
+            android:text="@string/back"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -40,7 +40,7 @@
             android:background="#00000000"
             android:enabled="false"
             android:onClick="completePost"
-            android:text="완료"
+            android:text="@string/complete"
             android:textColor="@drawable/complete_color_selector"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -75,7 +75,7 @@
             android:layout_below="@+id/barShare"
             android:background="#ffffff"
             android:gravity="left"
-            android:hint="사진설명"
+            android:hint="@string/photo_description"
             android:maxLength="140"
             android:padding="10dp"
             android:textSize="14sp" />
@@ -117,7 +117,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:hint="좌표정보가 틀린가요?"
+                    android:hint="@string/incorrect_location"
                     android:textSize="14sp" />
 
                 <Button
@@ -135,7 +135,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="사진을 드래그 하여 정확한 위치를 선택해 주세요"
+                android:text="@string/drag_photo_for_correct_location"
                 android:textSize="12sp" />
 
             <ListView
@@ -186,7 +186,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="18dp"
                     android:layout_weight="1"
-                    android:text="전체 공유"
+                    android:text="@string/all_share"
                     android:textColor="#526386"
                     android:textSize="20sp"
 
@@ -225,7 +225,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="18dp"
                     android:layout_weight="1"
-                    android:text="친구 공유"
+                    android:text="@string/friend_share"
                     android:textColor="#526386"
                     android:textSize="20sp"
 
@@ -264,7 +264,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="18dp"
                     android:layout_weight="1"
-                    android:text="비공개"
+                    android:text="@string/no_share"
                     android:textColor="#526386"
                     android:textSize="20sp"
 

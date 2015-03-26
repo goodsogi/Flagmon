@@ -18,7 +18,7 @@
         android:layout_height="40dp"
         android:drawableLeft="@drawable/p12_bg_icon0001"
         android:drawableRight="@drawable/p12_bg_icon0003"
-        android:hint="이메일"
+        android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:privateImeOptions="defaultInputmode=english;"
         android:textColor="#ffffff"
@@ -31,7 +31,7 @@
         android:layout_marginTop="20dp"
         android:drawableLeft="@drawable/p12_bg_icon0002"
         android:drawableRight="@drawable/p12_bg_icon0004"
-        android:hint="비밀번호"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:privateImeOptions="defaultInputmode=english;"
         android:textColor="#ffffff"
@@ -42,8 +42,8 @@
         android:layout_height="40dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:onClick="goToFindPassword"
-        android:text="비밀번호가 기억나지 않으세요?"
+        android:onClick="launchFindPasswordActivity"
+        android:text="@string/forgot_password"
         android:textColor="#ffffff" />
 
     <Button

@@ -23,7 +23,7 @@
             android:clickable="true"
             android:gravity="center"
             android:onClick="goBack"
-            android:text="이전"
+            android:text="@string/back"
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -40,7 +40,7 @@
             android:background="#00000000"
             android:enabled="false"
             android:onClick="completePost"
-            android:text="완료"
+            android:text="@string/complete"
             android:textColor="@drawable/complete_color_selector"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
-            android:text="앨범명: "
+            android:text="@string/album_name"
             android:textColor="#6c757a"
             android:textSize="20sp" />
 
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:background="#00000000"
-            android:hint="앨범명을 입력해주세요"
+            android:hint="@string/put_in_album_name"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold" />

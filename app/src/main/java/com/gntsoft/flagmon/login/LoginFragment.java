@@ -26,16 +26,6 @@ public class LoginFragment extends FMCommonFragment {
         showInviteTopBar();
     }
 
-    private void showInviteTopBar() {
-        FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
-        topBarContainer.removeAllViews();
-
-        LayoutInflater inflater = LayoutInflater.from(mActivity);
-        View inviteTopBar = inflater.inflate(R.layout.top_bar_invite, null);
-        topBarContainer.addView(inviteTopBar);
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,6 +34,21 @@ public class LoginFragment extends FMCommonFragment {
         int tabName = this.getArguments().getInt(FMConstants.KEY_TAB_NAME);
         setBackgound(rootView, tabName);
         return rootView;
+    }
+
+    @Override
+    protected void addListenerToButton() {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void showInviteTopBar() {
+        FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
+        topBarContainer.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
+        View inviteTopBar = inflater.inflate(R.layout.top_bar_invite, null);
+        topBarContainer.addView(inviteTopBar);
     }
 
     private void setBackgound(View rootView, int tabName) {
@@ -66,12 +71,6 @@ public class LoginFragment extends FMCommonFragment {
 
         }
         return R.drawable.p09_bg;
-    }
-
-    @Override
-    protected void addListenerToButton() {
-        // TODO Auto-generated method stub
-
     }
 
 

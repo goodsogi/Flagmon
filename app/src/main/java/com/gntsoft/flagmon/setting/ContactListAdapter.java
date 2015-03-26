@@ -100,20 +100,6 @@ public class ContactListAdapter extends CursorAdapter implements
         });
     }
 
-    private void sendFriendRequest() {
-        //수정!!
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
-            postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
-        }
-
-
-        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(SEND_FRIEND_REQUEST,
-                FMApiConstants.SEND_FRIEND_REQUEST, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
     @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
@@ -128,6 +114,20 @@ public class ContactListAdapter extends CursorAdapter implements
                 break;
         }
 
+    }
+
+    private void sendFriendRequest() {
+        //수정!!
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
+            postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient((android.app.Activity) mContext, this, false).execute(SEND_FRIEND_REQUEST,
+                FMApiConstants.SEND_FRIEND_REQUEST, new PlusInputStreamStringConverter(),
+                postParams);
     }
 
 }

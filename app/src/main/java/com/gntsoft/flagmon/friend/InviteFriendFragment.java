@@ -29,15 +29,6 @@ public class InviteFriendFragment extends FMCommonFragment {
         showInviteFriendTopBar();
     }
 
-    private void showInviteFriendTopBar() {
-        FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
-        topBarContainer.removeAllViews();
-
-        LayoutInflater inflater = LayoutInflater.from(mActivity);
-        View inviteTopBar = inflater.inflate(R.layout.top_bar_invite_friend, null);
-        topBarContainer.addView(inviteTopBar);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,13 +43,22 @@ public class InviteFriendFragment extends FMCommonFragment {
         findFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToFindFriend(v);
+                launchFindFriendActivity(v);
             }
         });
 
     }
 
-    private void goToFindFriend(View v) {
+    private void showInviteFriendTopBar() {
+        FrameLayout topBarContainer = (FrameLayout) mActivity.findViewById(R.id.container_top_bar);
+        topBarContainer.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
+        View inviteTopBar = inflater.inflate(R.layout.top_bar_invite_friend, null);
+        topBarContainer.addView(inviteTopBar);
+    }
+
+    private void launchFindFriendActivity(View v) {
         PlusClickGuard.doIt(v);
 
         Intent intent = new Intent(mActivity, FindFriendActivity.class);

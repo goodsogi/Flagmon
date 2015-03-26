@@ -88,37 +88,54 @@ public class UserMapFragment extends FMCommonMapFragment implements
                 postParams);
     }
 
-
-    private BitmapDescriptor getMarKerImg(Bitmap original, String postType) {
-
-        //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
-        //마스킹
-        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.thumbnail_1_0002);//0: 포스팅, 1: 앨범
-        Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
-        Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
-        Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas mCanvas = new Canvas(result);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
-        mCanvas.drawBitmap(scaledOriginal, 0, 0, null);
-        mCanvas.drawBitmap(mask, 0, 0, paint);
-        mCanvas.drawBitmap(frame, 0, 0, null);
-        paint.setXfermode(null);
-
-
-        return BitmapDescriptorFactory.fromBitmap(result);
-
-
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user_map,
                 container, false);
         return rootView;
+    }
+
+    public void showSortPopup(View v) {
+        PlusClickGuard.doIt(v);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("정렬방식을 선택해주세요.");
+        ab.setItems(mapOptionDatas, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                doSort(whichButton);
+
+            }
+        }).setNegativeButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+        ab.show();
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_USER_MAP_DATA:
+                handleMapData(new FMMapParser().doIt((String) datas));
+                getTotalUserPost();
+                break;
+            case GET_TOTAL_REPLY_PIN:
+                //파서등 수정!!
+                showTotalUserPost(new FMMapParser().doIt((String) datas));
+                ((UserPageActivity) mActivity).setTotalUserPost(10);
+                break;
+        }
+
+    }
+
+    @Override
+    public void onGPSCatched(Location location) {
+        mMyLocationButton.setSelected(true);
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
     }
 
     @Override
@@ -143,27 +160,32 @@ public class UserMapFragment extends FMCommonMapFragment implements
         });
     }
 
+    private BitmapDescriptor getMarKerImg(Bitmap original, String postType) {
+
+        //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
+        //마스킹
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
+        Bitmap frame = BitmapFactory.decodeResource(getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.thumbnail_1_0002);//0: 포스팅, 1: 앨범
+        Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
+        Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
+        Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas mCanvas = new Canvas(result);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        mCanvas.drawBitmap(scaledOriginal, 0, 0, null);
+        mCanvas.drawBitmap(mask, 0, 0, paint);
+        mCanvas.drawBitmap(frame, 0, 0, null);
+        paint.setXfermode(null);
+
+
+        return BitmapDescriptorFactory.fromBitmap(result);
+
+
+    }
+
     private void getCurrentLocation() {
         FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
         locationFinder.doIt();
-    }
-
-    public void showSortPopup(View v) {
-        PlusClickGuard.doIt(v);
-
-        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
-        ab.setTitle("정렬방식을 선택해주세요.");
-        ab.setItems(mapOptionDatas, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                doSort(whichButton);
-
-            }
-        }).setNegativeButton("닫기",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                });
-        ab.show();
     }
 
     private void doSort(int whichButton) {
@@ -182,32 +204,12 @@ public class UserMapFragment extends FMCommonMapFragment implements
         }
     }
 
-
     private void sortByRecent() {
         getDataFromServer(FMConstants.SORT_BY_RECENT);
     }
 
     private void sortByPopular() {
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
-    }
-
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_USER_MAP_DATA:
-                handleMapData(new FMMapParser().doIt((String) datas));
-                getTotalUserPost();
-                break;
-            case GET_TOTAL_REPLY_PIN:
-                //파서등 수정!!
-                showTotalUserPost(new FMMapParser().doIt((String) datas));
-                ((UserPageActivity) mActivity).setTotalUserPost(10);
-                break;
-        }
-
     }
 
     private void showTotalUserPost(ArrayList<FMModel> fmModels) {
@@ -296,12 +298,6 @@ public class UserMapFragment extends FMCommonMapFragment implements
         intent.putExtra(FMConstants.KEY_POST_IDX, idx);
 
         startActivity(intent);
-    }
-
-    @Override
-    public void onGPSCatched(Location location) {
-        mMyLocationButton.setSelected(true);
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
     }
 
 

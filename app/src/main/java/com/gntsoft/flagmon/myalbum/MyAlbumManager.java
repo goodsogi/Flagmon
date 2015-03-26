@@ -44,12 +44,29 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
     public void chooseFragment() {
         if (!LoginChecker.isLogIn(mActivity))
             showLogin(FMConstants.TAB_MYALBUM);
-        else checkIfhasPost();
+        else checkIfHasPost();
 
 
     }
 
-    private void addButtonListener() {
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null) return;
+        switch (from) {
+            case GET_LIST_DATA:
+                handleHasPost(new FMListParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    protected String getUserAuthKey() {
+        SharedPreferences sharedPreference = mActivity.getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY, "");
+    }
+
+    private void addListenerToButton() {
         Button naviMenu = (Button) mActivity.findViewById(R.id.naviMenu);
         naviMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +79,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
         doPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToPost(v);
+                launchPostChoosePhotoActivity(v);
             }
         });
 
@@ -70,7 +87,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
         groupPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToGroupPost(v);
+                launchGroupPostActivity(v);
             }
         });
     }
@@ -120,7 +137,6 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
         topBarContainer.addView(myAlbumTopBar);
     }
 
-
     private void showSharePhotoFragment() {
         mActivity.getFragmentManager().beginTransaction()
                 .replace(R.id.container_main, new SharePhotoFragment())
@@ -139,7 +155,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
 
     }
 
-    private void goToPost(View v) {
+    private void launchPostChoosePhotoActivity(View v) {
         PlusClickGuard.doIt(v);
 
         Intent intent = new Intent(mActivity, PostChoosePhotoActivity.class);
@@ -147,7 +163,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
 
     }
 
-    private void goToGroupPost(View v) {
+    private void launchGroupPostActivity(View v) {
         PlusClickGuard.doIt(v);
 
         Intent intent = new Intent(mActivity, GroupPostActivity.class);
@@ -155,7 +171,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
 
     }
 
-    private boolean checkIfhasPost() {
+    private boolean checkIfHasPost() {
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
@@ -171,23 +187,6 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
         return false;
     }
 
-    protected String getUserAuthKey() {
-        SharedPreferences sharedPreference = mActivity.getSharedPreferences(
-                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreference.getString(FMConstants.KEY_USER_AUTH_KEY, "");
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null) return;
-        switch (from) {
-            case GET_LIST_DATA:
-                handleHasPost(new FMListParser().doIt((String) datas));
-                break;
-        }
-
-    }
-
     private void handleHasPost(ArrayList<FMModel> fmModels) {
         if (fmModels != null && fmModels.size() > 0) {
             showMapMyAlbumFragment();
@@ -198,7 +197,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
 
     private void showMapMyAlbumFragment() {
         showMyAlbumTopBar();
-        addButtonListener();
+        addListenerToButton();
         showMapMyAlbum();
     }
 

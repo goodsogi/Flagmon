@@ -64,22 +64,6 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
-    public void getDataFromServer(String sortType) {
-
-
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
-        postParams.add(new BasicNameValuePair("sort", sortType));
-        if (LoginChecker.isLogIn(mActivity)) {
-            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        }
-
-
-        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
-                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
     public void showSortPopupFriend(View v) {
         PlusClickGuard.doIt(v);
 
@@ -96,6 +80,56 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
                     }
                 });
         ab.show();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_map_friend,
+                container, false);
+        return rootView;
+    }
+
+    @Override
+    public void onSuccess(Integer from, Object datas) {
+        if (datas == null)
+            return;
+        switch (from) {
+            case GET_MAP_DATA:
+                handleMapData(new FMMapParser().doIt((String) datas));
+                break;
+        }
+
+    }
+
+    @Override
+    protected void addListenerToButton() {
+        // TODO Auto-generated method stub
+
+        Button sort = (Button) mActivity.findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortPopupFriend(v);
+            }
+        });
+
+    }
+
+    private void getDataFromServer(String sortType) {
+
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
+        postParams.add(new BasicNameValuePair("sort", sortType));
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
+                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
+                postParams);
     }
 
     private void doSortFriend(int whichButton) {
@@ -119,48 +153,12 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
         getDataFromServer(FMConstants.SORT_BY_PIN);
     }
 
-
     private void sortByRecent() {
         getDataFromServer(FMConstants.SORT_BY_RECENT);
     }
 
     private void sortByPopular() {
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map_friend,
-                container, false);
-        return rootView;
-    }
-
-    @Override
-    protected void addListenerToButton() {
-        // TODO Auto-generated method stub
-
-        Button sort = (Button) mActivity.findViewById(R.id.sort);
-        sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSortPopupFriend(v);
-            }
-        });
-
-    }
-
-    @Override
-    public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
-            return;
-        switch (from) {
-            case GET_MAP_DATA:
-                handleMapData(new FMMapParser().doIt((String) datas));
-                break;
-        }
-
     }
 
     private void handleMapData(ArrayList<FMModel> datas) {
@@ -210,13 +208,13 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                goToDetail(marker.getSnippet());
+                launchDetailActivity(marker.getSnippet());
                 return false;
             }
         });
     }
 
-    private void goToDetail(String idx) {
+    private void launchDetailActivity(String idx) {
         Intent intent = new Intent(mActivity, DetailActivity.class);
         intent.putExtra(FMConstants.KEY_POST_IDX, idx);
 
