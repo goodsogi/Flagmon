@@ -34,7 +34,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -43,6 +45,7 @@ import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusLogger;
 import com.pluslibrary.utils.PlusOnClickListener;
 
 import org.apache.http.NameValuePair;
@@ -58,6 +61,7 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
     String[] mapOptionDatas = {"인기순", "최근 등록순"};
 
     private Button mMyLocationButton;
+    private boolean mIsMapDrawn;
 
     public MapNeighborFragment() {
         // TODO Auto-generated constructor stub
@@ -69,7 +73,8 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
 
 
         checkLogin();
-        getDataFromServer(FMConstants.SORT_BY_POPULAR);
+
+        addListenerToMap();
     }
 
     @Override
@@ -104,7 +109,9 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
             return;
         switch (from) {
             case GET_MAP_DATA:
+                clearMap();
                 handleMapData(new FMMapParser().doIt((String) datas));
+                setIsMapDrawnTrue();
                 break;
 
             case FIND_TREASURE:
@@ -114,11 +121,51 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
 
     }
 
+    public void getTreausureDataFromServer() {
+        LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+
+        double left = bounds.southwest.longitude;
+        double top = bounds.northeast.latitude;
+        double right = bounds.northeast.longitude;
+        double bottom = bounds.southwest.latitude;
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        postParams.add(new BasicNameValuePair("latUL", String.valueOf(bounds.northeast.latitude)));
+        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(bounds.southwest.longitude)));
+        postParams.add(new BasicNameValuePair("latLR", String.valueOf(bounds.southwest.latitude)));
+        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(bounds.northeast.longitude)));
+
+
+        new PlusHttpClient(mActivity, this, false).execute(FIND_TREASURE,
+                FMApiConstants.FIND_TREASURE, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    private void clearMap() {
+        mGoogleMap.clear();
+    }
+
+    private void setIsMapDrawnTrue() {
+        mIsMapDrawn = true;
+    }
+
     public void getDataFromServer(String sortType) {
+        LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+
+        double left = bounds.southwest.longitude;
+        double top = bounds.northeast.latitude;
+        double right = bounds.northeast.longitude;
+        double bottom = bounds.southwest.latitude;
+
 
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        postParams.add(new BasicNameValuePair("latUL", String.valueOf(bounds.northeast.latitude)));
+        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(bounds.southwest.longitude)));
+        postParams.add(new BasicNameValuePair("latLR", String.valueOf(bounds.southwest.latitude)));
+        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(bounds.northeast.longitude)));
         postParams.add(new BasicNameValuePair("sort", sortType));
         if (LoginChecker.isLogIn(mActivity)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
@@ -160,6 +207,58 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
         });
     }
 
+    private void addListenerToMap() {
+        mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                getDataFromServer(FMConstants.SORT_BY_POPULAR);
+            }
+        });
+
+
+
+        mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition position) {
+                LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+
+
+                if(mIsMapDrawn) {
+                    mIsMapDrawn = false;
+                    getNewDataFromServer(bounds);
+                }
+            }
+        });
+    }
+
+    private void getNewDataFromServer(LatLngBounds bounds) {
+        PlusLogger.doIt("bounds: " + bounds.northeast.latitude + " " + bounds.southwest.longitude + " " +
+                bounds.southwest.latitude + " " + bounds.northeast.longitude);
+        double left = bounds.southwest.longitude;
+        double top = bounds.northeast.latitude;
+        double right = bounds.northeast.longitude;
+        double bottom = bounds.southwest.latitude;
+
+        //동서남북이 헷갈림
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        postParams.add(new BasicNameValuePair("latUL", String.valueOf(bounds.northeast.latitude)));
+        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(bounds.southwest.longitude)));
+        postParams.add(new BasicNameValuePair("latLR", String.valueOf(bounds.southwest.latitude)));
+        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(bounds.northeast.longitude)));
+        postParams.add(new BasicNameValuePair("sort", "0"));
+
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
+                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
     private void checkLogin() {
         if (LoginChecker.isLogIn(mActivity)) showTreasureButton();
 
@@ -171,42 +270,36 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
         treasureButton.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                showTreasureAlertDialog();
+                showTreasureDialog();
             }
         });
     }
 
-    private void showTreasureAlertDialog() {
-        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
-        ab.setTitle("현재 지도 범위 내 보물상자를 검색합니다." +
-                " 검색시 mon 1개가 차감됩니다");
-        ab.setNegativeButton("취소",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                }).setPositiveButton("검색", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                findTreasure();
-            }
-        });
-        ab.show();
+    private void showTreasureDialog() {
+        PopupFindTreasure popup = new PopupFindTreasure(mActivity, this, R.layout.popup_find_treasure);
+        popup.show();
+
+
+//        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
+//        ab.setTitle("현재 지도 범위 내 보물상자를 검색합니다." +
+//                " 검색시 mon 1개가 차감됩니다");
+//        ab.setNegativeButton("취소",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int whichButton) {
+//                        dialog.dismiss();
+//                    }
+//                }).setPositiveButton("검색", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int whichButton) {
+//                findTreasure();
+//            }
+//        });
+//        ab.show();
     }
 
-    private void findTreasure() {
-        //수정!!
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
 
-
-        new PlusHttpClient(mActivity, this, false).execute(FIND_TREASURE,
-                FMApiConstants.FIND_TREASURE, new PlusInputStreamStringConverter(),
-                postParams);
-
-    }
 
     private void handleMapData(ArrayList<FMModel> datas) {
+        PlusLogger.doIt("data size: " + datas.size());
 
         mGoogleMap.clear();
 
@@ -247,6 +340,7 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
     }
 
     private void showMarkers(Bitmap bitmap, FMModel mapDataModel) {
+        PlusLogger.doIt("marker lat: " + mapDataModel.getLat() + " lon: " + mapDataModel.getLon());
         LatLng latLng = new LatLng(Double.parseDouble(mapDataModel.getLat()), Double.parseDouble(mapDataModel.getLon()));
         mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet(mapDataModel.getIdx())
                 .icon(getMarKerImg(bitmap, mapDataModel.getPostType())).anchor(0f, 1.0f));
@@ -272,7 +366,7 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
         //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
         //마스킹
         Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.thumbnail_1_0002);//0: 포스팅, 1: 앨범
+        Bitmap frame = BitmapFactory.decodeResource(getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.marker_album_frame);//0: 포스팅, 1: 앨범
         Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
@@ -336,7 +430,10 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
     }
 
     private void showTreasures(ArrayList<TreasureModel> datas) {
-        String message = "500개의 보물상자와 100개의 mon이 검색되었습니다.";
+
+
+
+        String message = datas.size() + "개의 보물상자가 검색되었습니다.";
         showTreasureResultAlertDialog(message);
 
         //보물상자 버튼 아이콘은 gone시키고 검색된 보물상자 아이콘 표시
@@ -369,15 +466,8 @@ public class MapNeighborFragment extends FMCommonMapFragment implements
     }
 
     private void showTreasureResultAlertDialog(String message) {
-        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
-        ab.setTitle("검색결과");
-        ab.setMessage(message);
-        ab.setNeutralButton("확인",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                });
-        ab.show();
+        PopupFindTreasureResult popup = new PopupFindTreasureResult(mActivity, this, R.layout.popup_find_treasure_result);
+        popup.setMessage(message);
+        popup.show();
     }
 }

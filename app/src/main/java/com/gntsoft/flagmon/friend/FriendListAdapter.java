@@ -104,7 +104,7 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
         scrapThis.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                scrapThis();
+                scrapThis(data.getIdx());
             }
         });
 
@@ -133,13 +133,10 @@ public class FriendListAdapter extends FMCommonAdapter<FMModel> implements
 
     }
 
-    private void scrapThis() {
-        //수정!!
+    private void scrapThis(String idx) {
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
-        if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
-            postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
-        }
+        postParams.add(new BasicNameValuePair("key", ((FMCommonActivity)mContext).getUserAuthKey()));
+        postParams.add(new BasicNameValuePair("photo_idx", idx));
 
 
         new PlusHttpClient((android.app.Activity) mContext, this, false).execute(SCRAP_THIS,

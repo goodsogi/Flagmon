@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
+import com.pluslibrary.utils.PlusLogger;
 import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
@@ -45,7 +46,7 @@ public class GroupPostActivity extends FMCommonActivity implements
 //내 포스트 가져오기
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
         if (LoginChecker.isLogIn(this)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
         }
@@ -57,12 +58,18 @@ public class GroupPostActivity extends FMCommonActivity implements
     }
 
     public void completePost(View v) {
-//구현!!
-        PlusToaster.doIt(this, "준비중...");
 
-        //수정!!
+        EditText albumNameInput = (EditText) findViewById(R.id.albumNameInput);
+        String albumName = albumNameInput.getText().toString();
+
+        if(albumName.equals("")) {
+            PlusToaster.doIt(this, "앨범 제목을 입력해주세요");
+            return;
+        }
+
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("idxs", getIdxs()));
+        postParams.add(new BasicNameValuePair("albumname", albumName));
+        postParams.add(new BasicNameValuePair("photolist_idx", getIdxs()));
         if (LoginChecker.isLogIn(this)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
         }
@@ -84,6 +91,7 @@ public class GroupPostActivity extends FMCommonActivity implements
 
             case MAKE_ALBUM:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                PlusLogger.doIt(model.getMsg());
                 PlusToaster.doIt(this, model.getResult().equals("success") ? "앨범 만들었습니다" : "앨범을 만들지 못했습니다");
                 if (model.getResult().equals("success")) {
                     //추가 액션??
@@ -145,7 +153,17 @@ public class GroupPostActivity extends FMCommonActivity implements
 
     private String getIdxs() {
 
+        ArrayList<String> idxs = mAdapter.getSelectedPostIdxs();
+        StringBuilder builder = new StringBuilder();
+        for (int i=0; i<idxs.size();i++) {
+            builder.append(idxs.get(i));
+            if(i != idxs.size() -1) builder.append(",");
+        }
 
-        return new Gson().toJson(mAdapter.getSelectedPostIdxs());
+        return builder.toString();
+
+
+
+        //return new Gson().toJson(mAdapter.getSelectedPostIdxs());
     }
 }

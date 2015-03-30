@@ -28,7 +28,9 @@ import com.gntsoft.flagmon.utils.LoginChecker;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -37,6 +39,7 @@ import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusLogger;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -51,7 +54,7 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
         PlusOnGetDataListener {
     private static final int GET_MAP_DATA = 0;
     String[] mapFriendOptionDatas = {"인기순", "최근 등록순", "퍼간 날짜"};
-
+    private boolean mIsMapDrawn;
 
     public MapMyAlbumFragment() {
         // TODO Auto-generated constructor stub
@@ -61,8 +64,60 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getDataFromServer(FMConstants.SORT_BY_POPULAR);
+        addListenerToMap();
     }
+    private void addListenerToMap() {
+        mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                getDataFromServer(FMConstants.SORT_BY_POPULAR);
+            }
+        });
+
+
+
+        mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition position) {
+                LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+
+
+                if(mIsMapDrawn) {
+                    mIsMapDrawn = false;
+                    getNewDataFromServer(bounds);
+                }
+            }
+        });
+    }
+
+    private void getNewDataFromServer(LatLngBounds bounds) {
+        PlusLogger.doIt("bounds: " + bounds.northeast.latitude + " " + bounds.southwest.longitude + " " +
+                bounds.southwest.latitude + " " + bounds.northeast.longitude);
+        double left = bounds.southwest.longitude;
+        double top = bounds.northeast.latitude;
+        double right = bounds.northeast.longitude;
+        double bottom = bounds.southwest.latitude;
+
+        //동서남북이 헷갈림
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
+        postParams.add(new BasicNameValuePair("latUL", String.valueOf(bounds.northeast.latitude)));
+        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(bounds.southwest.longitude)));
+        postParams.add(new BasicNameValuePair("latLR", String.valueOf(bounds.southwest.latitude)));
+        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(bounds.northeast.longitude)));
+        postParams.add(new BasicNameValuePair("sort", "0"));
+
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
+                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
 
     public void showSortPopupFriend(View v) {
         PlusClickGuard.doIt(v);
@@ -96,10 +151,20 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
             return;
         switch (from) {
             case GET_MAP_DATA:
+                clearMap();
                 handleMapData(new FMMapParser().doIt((String) datas));
+                setIsMapDrawnTrue();
                 break;
         }
 
+    }
+
+    private void clearMap() {
+        mGoogleMap.clear();
+    }
+
+    private void setIsMapDrawnTrue() {
+        mIsMapDrawn = true;
     }
 
     @Override
@@ -118,9 +183,20 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
 
     private void getDataFromServer(String sortType) {
 
+        LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+
+        double left = bounds.southwest.longitude;
+        double top = bounds.northeast.latitude;
+        double right = bounds.northeast.longitude;
+        double bottom = bounds.southwest.latitude;
+
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
+        postParams.add(new BasicNameValuePair("latUL", String.valueOf(bounds.northeast.latitude)));
+        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(bounds.southwest.longitude)));
+        postParams.add(new BasicNameValuePair("latLR", String.valueOf(bounds.southwest.latitude)));
+        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(bounds.northeast.longitude)));
         postParams.add(new BasicNameValuePair("sort", sortType));
         if (LoginChecker.isLogIn(mActivity)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));

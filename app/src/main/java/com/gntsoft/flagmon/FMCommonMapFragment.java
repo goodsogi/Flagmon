@@ -85,6 +85,7 @@ public class FMCommonMapFragment extends FMCommonFragment {
                             return false;
                         }
                     });
+
                 }
                 break;
             case ConnectionResult.SERVICE_MISSING:

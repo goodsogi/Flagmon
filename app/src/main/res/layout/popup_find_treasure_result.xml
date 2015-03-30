@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="331dp"
+              android:layout_height="177dp"
+              android:orientation="vertical" android:background="#50000000">
+
+    <TextView
+        android:id="@+id/messageView"
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="#ffffff"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="21dp"
+        android:orientation="horizontal" android:gravity="center_horizontal">
+
+
+        <Button
+            android:id="@+id/confirm"
+            android:layout_width="112dp"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:text="확인"
+            android:textSize="16sp"
+            android:textColor="#485263"/>
+    </LinearLayout>
+
+</LinearLayout>

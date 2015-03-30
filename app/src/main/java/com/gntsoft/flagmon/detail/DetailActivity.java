@@ -238,7 +238,7 @@ public class DetailActivity extends FMCommonActivity implements
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 
         postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        postParams.add(new BasicNameValuePair("idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
+        postParams.add(new BasicNameValuePair("photo_idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
 
 
         new PlusHttpClient(this, this, false).execute(PERFORM_PIN,

@@ -14,7 +14,7 @@ public class FMApiConstants {
     public static final String GET_DETAIL = API_MAIN + "postview.php";
     public static final String GET_COMMENTS = API_MAIN + "commentlist.php";
     public static final String SEND_COMMENT = API_MAIN + "comment_ok.php";
-    public static final String PERFORM_PIN = API_MAIN + "";
+    public static final String PERFORM_PIN = API_MAIN + "pinup.php";
     public static final String GET_PHOTOS_NEARBY = API_MAIN + "postlist.php";
     public static final String GET_TOTAL_REPLY_PIN = API_MAIN + "";
     public static final String ADD_FRIEND = API_MAIN + "friend_request.php";
@@ -31,13 +31,13 @@ public class FMApiConstants {
     public static final String DELETE_FRIEND = API_MAIN + "friend_deletefriend.php";
     public static final String SELECT_FRIEND = API_MAIN + "deletefriend.php";
     public static final String CHECK_IF_HAS_FRIEND = API_MAIN + "friend_list.php";
-    public static final String SCRAP_THIS = API_MAIN + "";
+    public static final String SCRAP_THIS = API_MAIN + "pinup.php";
     public static final String GET_USER_LIST_DATA = API_MAIN + "postlistuser.php";
     public static final String GET_USER_MAP_DATA = API_MAIN + "maplistuser.php";
     public static final String SEARCH_LOCATION = API_MAIN + "";
-    public static final String BURY_TREASURE = API_MAIN + "";
-    public static final String MAKE_ALBUM = API_MAIN + "";
-    public static final String FIND_TREASURE = " http://www.www.flagaround.com/site/searchtreasure.php"; //url 수정이 필요할 수 있음 !!(/json/이 없음)
+    public static final String BURY_TREASURE = API_MAIN + "set_treasure.php";
+    public static final String MAKE_ALBUM = API_MAIN + "album_create.php";
+    public static final String FIND_TREASURE =  API_MAIN +"searchtreasure.php";
     public static final String GET_POLICY_SERVICE = "http://flagaround.com/site/web/agreement.html";
     public static final String GET_POLICY_LOCATION = "http://flagaround.com/site/web/agreement.html";
     public static final String GET_POLICY_PRIVACY = "http://flagaround.com/site/web/agreement.html";

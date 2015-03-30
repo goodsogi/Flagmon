@@ -102,7 +102,7 @@ public class MainActivity extends FMCommonActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mIsFirstRun = true;
-        setLoginFalse();
+        //setLoginFalse();
         createTabManagers();
         Button neighbor = (Button) findViewById(R.id.tab_neighbor);
         changeTab(neighbor);
@@ -110,14 +110,14 @@ public class MainActivity extends FMCommonActivity {
 
     }
 
-    private void setLoginFalse() {
-        SharedPreferences sharedPreference = getSharedPreferences(
-                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor e = sharedPreference.edit();
-        e.putBoolean(FMConstants.KEY_IS_LOGIN, false);
-        e.commit();
-
-    }
+//    private void setLoginFalse() {
+//        SharedPreferences sharedPreference = getSharedPreferences(
+//                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor e = sharedPreference.edit();
+//        e.putBoolean(FMConstants.KEY_IS_LOGIN, false);
+//        e.commit();
+//
+//    }
 
     private void createTabManagers() {
         mNeighborManager = new NeighborManager(this);
