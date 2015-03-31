@@ -89,7 +89,7 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
         buryTreasure.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                buryTreasure();
+                buryTreasure(data.getIdx());
             }
         });
 
@@ -118,10 +118,11 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> implements
 
     }
 
-    private void buryTreasure() {
+    private void buryTreasure(String idx) {
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        //postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        postParams.add(new BasicNameValuePair("photo_idx", idx));
         if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
             postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
         }

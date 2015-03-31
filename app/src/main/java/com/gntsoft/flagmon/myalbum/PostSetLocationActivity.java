@@ -53,6 +53,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
     private static final int SEARCH_LOCATION = 1;
     private Double mPhotoLat;
     private Double mPhotoLon;
+    private String shareType;
 
     public void performLocationSearch(View v) {
         PlusClickGuard.doIt(v);
@@ -131,6 +132,9 @@ public class PostSetLocationActivity extends FMCommonActivity implements
             entity.addPart("key", new StringBody(
                     getUserAuthKey()));
 
+            entity.addPart("list_menu", new StringBody(
+                    getShareType()));
+
             if (imgUrl != null && !imgUrl.equals("")) {
 
                 entity.addPart("photo", PlusImageByteConverter.doIt(imgUrl));
@@ -208,6 +212,16 @@ public class PostSetLocationActivity extends FMCommonActivity implements
 
     public void setPhotoLon(double longitude) {
         mPhotoLon = longitude;
+    }
+
+    public String getShareType() {
+        CheckBox checkboxShareAll = (CheckBox) findViewById(R.id.checkboxShareAll);
+        CheckBox checkboxShareFriend = (CheckBox) findViewById(R.id.checkboxShareFriend);
+        CheckBox checkboxPrivate = (CheckBox) findViewById(R.id.checkboxPrivate);
+        if (checkboxShareAll.isChecked()) return FMConstants.DATA_TAB_NEIGHBOR;
+        if (checkboxShareFriend.isChecked()) return FMConstants.DATA_TAB_FRIEND;
+        if (checkboxPrivate.isChecked()) return FMConstants.DATA_TAB_MYALBUM;
+        return FMConstants.DATA_TAB_NEIGHBOR;
     }
 
     @Override

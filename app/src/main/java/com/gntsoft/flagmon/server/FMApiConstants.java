@@ -25,7 +25,7 @@ public class FMApiConstants {
     public static final String CANCEL_REQUEST = API_MAIN + "friend_cancelrequest.php";
     public static final String ACCEPT_REQUEST = API_MAIN + "friend_acceptrequest.php";
     public static final String IGNORE_REQUEST = API_MAIN + "rejectrequest.php";
-    public static final String SEND_FRIEND_REQUEST = API_MAIN + "";
+    public static final String SEND_FRIEND_REQUEST = API_MAIN + "friend_request.php";
     public static final String SEARCH_FRIENDS_BY_NAME = API_MAIN + "searchfriendname.php";
     public static final String GET_FRIEND_LIST = API_MAIN + "friend_list.php";
     public static final String DELETE_FRIEND = API_MAIN + "friend_deletefriend.php";

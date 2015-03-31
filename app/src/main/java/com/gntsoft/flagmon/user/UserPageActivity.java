@@ -121,6 +121,7 @@ public class UserPageActivity extends FMCommonActivity implements
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         //postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        postParams.add(new BasicNameValuePair("user_email", getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL)));
         if (LoginChecker.isLogIn(this)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
         }

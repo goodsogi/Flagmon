@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonAdapter;
-import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FriendModel;
@@ -48,7 +47,7 @@ public class FindFriendListAdapter extends FMCommonAdapter<FriendModel> implemen
                     parent, false);
         }
 
-        FriendModel data = mDatas.get(position);
+        final FriendModel data = mDatas.get(position);
         TextView name = PlusViewHolder.get(convertView, R.id.name);
 
 
@@ -62,7 +61,7 @@ public class FindFriendListAdapter extends FMCommonAdapter<FriendModel> implemen
         sendFriendRequest.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                sendFriendRequest();
+                sendFriendRequest(data.getUserEmail());
             }
         });
 
@@ -86,15 +85,15 @@ public class FindFriendListAdapter extends FMCommonAdapter<FriendModel> implemen
 
     }
 
-    private void sendFriendRequest() {
+    private void sendFriendRequest(String email) {
         //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        postParams.add(new BasicNameValuePair("user_email", email));
         if (LoginChecker.isLogIn((android.app.Activity) mContext)) {
             postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
         }
 
-
+//친구신청추가 api와 동일??
         new PlusHttpClient((android.app.Activity) mContext, this, false).execute(SEND_FRIEND_REQUEST,
                 FMApiConstants.SEND_FRIEND_REQUEST, new PlusInputStreamStringConverter(),
                 postParams);

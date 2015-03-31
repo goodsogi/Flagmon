@@ -111,7 +111,7 @@ public class FindFriendActivity extends FMCommonActivity implements
         ListView list = (ListView)
                 findViewById(R.id.list_sent_friend_request);
 
-        if (list == null) return;
+        if (list == null || datas == null) return;
         list.setAdapter(new GotFriendRequestListAdapter(this,
                 datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -125,7 +125,7 @@ public class FindFriendActivity extends FMCommonActivity implements
     private void makeGotFriendRequestList(final ArrayList<FriendModel> datas) {
         ListView list = (ListView) findViewById(R.id.list_got_friend_request);
 
-        if (list == null) return;
+        if (list == null || datas == null) return;
         list.setAdapter(new SentFriendRequestListAdapter(this,
                 datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

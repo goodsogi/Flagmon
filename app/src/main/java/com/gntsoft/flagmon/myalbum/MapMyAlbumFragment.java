@@ -66,58 +66,6 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
 
         addListenerToMap();
     }
-    private void addListenerToMap() {
-        mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                getDataFromServer(FMConstants.SORT_BY_POPULAR);
-            }
-        });
-
-
-
-        mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition position) {
-                LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
-
-
-                if(mIsMapDrawn) {
-                    mIsMapDrawn = false;
-                    getNewDataFromServer(bounds);
-                }
-            }
-        });
-    }
-
-    private void getNewDataFromServer(LatLngBounds bounds) {
-        PlusLogger.doIt("bounds: " + bounds.northeast.latitude + " " + bounds.southwest.longitude + " " +
-                bounds.southwest.latitude + " " + bounds.northeast.longitude);
-        double left = bounds.southwest.longitude;
-        double top = bounds.northeast.latitude;
-        double right = bounds.northeast.longitude;
-        double bottom = bounds.southwest.latitude;
-
-        //동서남북이 헷갈림
-
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
-        postParams.add(new BasicNameValuePair("latUL", String.valueOf(bounds.northeast.latitude)));
-        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(bounds.southwest.longitude)));
-        postParams.add(new BasicNameValuePair("latLR", String.valueOf(bounds.southwest.latitude)));
-        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(bounds.northeast.longitude)));
-        postParams.add(new BasicNameValuePair("sort", "0"));
-
-        if (LoginChecker.isLogIn(mActivity)) {
-            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        }
-
-
-        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
-                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
-                postParams);
-    }
-
 
     public void showSortPopupFriend(View v) {
         PlusClickGuard.doIt(v);
@@ -159,14 +107,6 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
 
     }
 
-    private void clearMap() {
-        mGoogleMap.clear();
-    }
-
-    private void setIsMapDrawnTrue() {
-        mIsMapDrawn = true;
-    }
-
     @Override
     protected void addListenerToButton() {
         // TODO Auto-generated method stub
@@ -179,6 +119,65 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
             }
         });
 
+    }
+
+    private void addListenerToMap() {
+        mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                getDataFromServer(FMConstants.SORT_BY_POPULAR);
+            }
+        });
+
+
+        mGoogleMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition position) {
+                LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+
+
+                if (mIsMapDrawn) {
+                    mIsMapDrawn = false;
+                    getNewDataFromServer(bounds);
+                }
+            }
+        });
+    }
+
+    private void getNewDataFromServer(LatLngBounds bounds) {
+        PlusLogger.doIt("bounds: " + bounds.northeast.latitude + " " + bounds.southwest.longitude + " " +
+                bounds.southwest.latitude + " " + bounds.northeast.longitude);
+        double left = bounds.southwest.longitude;
+        double top = bounds.northeast.latitude;
+        double right = bounds.northeast.longitude;
+        double bottom = bounds.southwest.latitude;
+
+        //동서남북이 헷갈림
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
+        postParams.add(new BasicNameValuePair("latUL", String.valueOf(bounds.northeast.latitude)));
+        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(bounds.southwest.longitude)));
+        postParams.add(new BasicNameValuePair("latLR", String.valueOf(bounds.southwest.latitude)));
+        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(bounds.northeast.longitude)));
+        postParams.add(new BasicNameValuePair("sort", "0"));
+
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_MAP_DATA,
+                FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    private void clearMap() {
+        mGoogleMap.clear();
+    }
+
+    private void setIsMapDrawnTrue() {
+        mIsMapDrawn = true;
     }
 
     private void getDataFromServer(String sortType) {
@@ -302,7 +301,7 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
         //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
         //마스킹
         Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.thumbnail_1_0002);//0: 포스팅, 1: 앨범
+        Bitmap frame = BitmapFactory.decodeResource(getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.marker_album_frame);//0: 포스팅, 1: 앨범
         Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);

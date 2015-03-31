@@ -24,6 +24,8 @@ import com.pluslibrary.utils.PlusToaster;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,10 +95,16 @@ public class SearchFriendByNameActivity extends FMCommonActivity implements
 
     }
 
-    private void performSearch(String keyword) {
+    private void performSearch(String name) {
+        String encodedName = null;
+        try {
 
+            encodedName = URLEncoder.encode(name, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("name", keyword));
+        postParams.add(new BasicNameValuePair("name", encodedName));
         postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
 
 
