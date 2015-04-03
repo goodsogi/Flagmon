@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonMapFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
@@ -88,7 +89,7 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map_friend,
+        View rootView = inflater.inflate(R.layout.fragment_map_myalbum,
                 container, false);
         return rootView;
     }
@@ -152,6 +153,12 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
         double right = bounds.northeast.longitude;
         double bottom = bounds.southwest.latitude;
 
+        ((FMCommonActivity) mActivity).setLatUL(bounds.northeast.latitude);
+        ((FMCommonActivity) mActivity).setLonUL(bounds.southwest.longitude);
+        ((FMCommonActivity) mActivity).setLatLR(bounds.southwest.latitude);
+        ((FMCommonActivity) mActivity).setLonLR(bounds.northeast.longitude);
+
+
         //동서남북이 헷갈림
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
@@ -188,6 +195,11 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
         double top = bounds.northeast.latitude;
         double right = bounds.northeast.longitude;
         double bottom = bounds.southwest.latitude;
+
+        ((FMCommonActivity) mActivity).setLatUL(bounds.northeast.latitude);
+        ((FMCommonActivity) mActivity).setLonUL(bounds.southwest.longitude);
+        ((FMCommonActivity) mActivity).setLatLR(bounds.southwest.latitude);
+        ((FMCommonActivity) mActivity).setLonLR(bounds.northeast.longitude);
 
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
@@ -278,7 +290,7 @@ public class MapMyAlbumFragment extends FMCommonMapFragment implements
     private void showMarkers(Bitmap bitmap, FMModel mapDataModel) {
         LatLng latLng = new LatLng(Double.parseDouble(mapDataModel.getLat()), Double.parseDouble(mapDataModel.getLon()));
         mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet(mapDataModel.getIdx())
-                .icon(getMarKerImg(bitmap, mapDataModel.getPostType())).anchor(0f, 1.0f));
+                .icon(getMarKerImg(bitmap, mapDataModel.getPostType())).anchor(mapDataModel.getPostType().equals("0") ? 0f : 0.14f, mapDataModel.getPostType().equals("0") ? 1.0f : 0.92f));
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {

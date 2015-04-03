@@ -43,7 +43,7 @@ public class UserPageActivity extends FMCommonActivity implements
         switch (from) {
             case ADD_FRIEND:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this, model.getResult().equals("success") ? "친구 추가되었습니다" : "친구 추가되지 못했습니다");
+                PlusToaster.doIt(this, model.getResult().equals("success") ? "친구 신청되었습니다" : "친구 신청되지 못했습니다");
                 if (model.getResult().equals("success")) {
                     //추가 액션??
                 }
@@ -56,7 +56,7 @@ public class UserPageActivity extends FMCommonActivity implements
     public void addFriend(View v) {
 
         PlusClickGuard.doIt(v);
-        if (LoginChecker.isLogIn(this)) showLoginAlertDialog();
+        if (!LoginChecker.isLogIn(this)) showLoginAlertDialog();
         else showAddFriendAlertDialog();
 
 
@@ -117,10 +117,7 @@ public class UserPageActivity extends FMCommonActivity implements
     }
 
     private void requestAddFriend() {
-        //특정 사용자 아이디등 처리!!
-        //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        //postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
         postParams.add(new BasicNameValuePair("user_email", getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL)));
         if (LoginChecker.isLogIn(this)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
@@ -134,7 +131,7 @@ public class UserPageActivity extends FMCommonActivity implements
 
     private void showLoginAlertDialog() {
         AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-        ab.setTitle("친구 신청은 로그인후 가능합니다. 로그인 하시겠습니까?");
+        ab.setMessage("친구 신청은 로그인후 가능합니다. 로그인 하시겠습니까?");
         ab.setNegativeButton("아니오",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -159,7 +156,7 @@ public class UserPageActivity extends FMCommonActivity implements
 
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.container_user, new UserListFragment())
+                .replace(R.id.container_user, new ListUserFragment())
                 .commit();
 
 
@@ -169,7 +166,7 @@ public class UserPageActivity extends FMCommonActivity implements
 
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.container_user, new UserMapFragment())
+                .replace(R.id.container_user, new MapUserFragment())
                 .commit();
 
     }

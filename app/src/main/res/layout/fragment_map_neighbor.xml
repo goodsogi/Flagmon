@@ -25,4 +25,5 @@
         android:background="@drawable/treasure"
         android:visibility="gone" />
 
+
 </RelativeLayout>

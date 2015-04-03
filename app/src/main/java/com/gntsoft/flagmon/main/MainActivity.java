@@ -1,14 +1,13 @@
 package com.gntsoft.flagmon.main;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.gntsoft.flagmon.FMCommonActivity;
-import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.FMTabManager;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.friend.FriendManager;
@@ -98,6 +97,20 @@ public class MainActivity extends FMCommonActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        showExitDialog();
+    }
+
+//    private void setLoginFalse() {
+//        SharedPreferences sharedPreference = getSharedPreferences(
+//                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor e = sharedPreference.edit();
+//        e.putBoolean(FMConstants.KEY_IS_LOGIN, false);
+//        e.commit();
+//
+//    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -110,20 +123,27 @@ public class MainActivity extends FMCommonActivity {
 
     }
 
-//    private void setLoginFalse() {
-//        SharedPreferences sharedPreference = getSharedPreferences(
-//                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
-//        SharedPreferences.Editor e = sharedPreference.edit();
-//        e.putBoolean(FMConstants.KEY_IS_LOGIN, false);
-//        e.commit();
-//
-//    }
-
     private void createTabManagers() {
         mNeighborManager = new NeighborManager(this);
         mFriendManager = new FriendManager(this);
         mMyAlbumManager = new MyAlbumManager(this);
         mSettingManager = new SettingManager(this);
+    }
+
+    private void showExitDialog() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle(getString(R.string.wanna_exit));
+        ab.setNegativeButton(getString(R.string.no),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                }).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                finish();
+            }
+        });
+        ab.show();
     }
 
 

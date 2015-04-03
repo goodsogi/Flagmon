@@ -56,4 +56,7 @@
     <string name="invite_friend">친구를 초대하세요.</string>
     <string name="setting">설정</string>
     <string name="share_photo">사진을 공유하세요</string>
+    <string name="wanna_exit">앱을 종료하시겠습니까?</string>
+    <string name="no">아니오</string>
+    <string name="yes">예</string>
 </resources>

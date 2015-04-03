@@ -67,8 +67,8 @@ public class DetailActivity extends FMCommonActivity implements
                 break;
             case PERFORM_PIN:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this, model.getResult().equals("success") ? "스크랩되었습니다" : "스크랩되지 못했습니다");
-                if (model.getResult().equals("success")) {
+                PlusToaster.doIt(this, model.getResult().contains("succes") ? "스크랩되었습니다" : "스크랩되지 못했습니다");
+                if (model.getResult().contains("succes")) {
                     //추가 액션??
                 }
                 break;

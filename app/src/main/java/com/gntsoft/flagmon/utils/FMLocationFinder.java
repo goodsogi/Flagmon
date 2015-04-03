@@ -113,7 +113,7 @@ public class FMLocationFinder implements android.location.LocationListener {
         // 네트워크 제공자가 제공하는 위치. GPS를 사용하면 변경 필요!!
         mIsGpsCatched = false;
         mLocationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 1000, 10, this);
+                LocationManager.GPS_PROVIDER, 0, 0, this);
 
 //        new Handler().postDelayed(new Runnable() {
 //            @Override

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonMapFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
@@ -30,6 +31,7 @@ import com.gntsoft.flagmon.utils.FMPhotoResizer;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -117,8 +119,13 @@ public class MapFriendFragment extends FMCommonMapFragment implements
 
     @Override
     public void onGPSCatched(Location location) {
-        mMyLocationButton.setSelected(true);
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+        Button myLocationButton = (Button) mActivity.findViewById(R.id.my_location);
+        myLocationButton.setSelected(true);
+
+        MapView mapView = (MapView) mActivity.findViewById(R.id.mapview);
+        GoogleMap googleMap = mapView.getMap();
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+
     }
 
     @Override
@@ -137,10 +144,26 @@ public class MapFriendFragment extends FMCommonMapFragment implements
             @Override
             protected void doIt() {
                 if (!mMyLocationButton.isSelected()) {
-                    getCurrentLocation();
+                    showAlertDialog();
                 }
             }
         });
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("GPS 기능을 활성화 하시겠습니까?");
+        ab.setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                }).setPositiveButton("예", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                getCurrentLocation();
+            }
+        });
+        ab.show();
     }
 
     private void addListenerToMap() {
@@ -173,6 +196,12 @@ public class MapFriendFragment extends FMCommonMapFragment implements
         double top = bounds.northeast.latitude;
         double right = bounds.northeast.longitude;
         double bottom = bounds.southwest.latitude;
+
+        ((FMCommonActivity) mActivity).setLatUL(bounds.northeast.latitude);
+        ((FMCommonActivity) mActivity).setLonUL(bounds.southwest.longitude);
+        ((FMCommonActivity) mActivity).setLatLR(bounds.southwest.latitude);
+        ((FMCommonActivity) mActivity).setLonLR(bounds.northeast.longitude);
+
 
         //동서남북이 헷갈림
 
@@ -209,6 +238,11 @@ public class MapFriendFragment extends FMCommonMapFragment implements
         double top = bounds.northeast.latitude;
         double right = bounds.northeast.longitude;
         double bottom = bounds.southwest.latitude;
+
+        ((FMCommonActivity) mActivity).setLatUL(bounds.northeast.latitude);
+        ((FMCommonActivity) mActivity).setLonUL(bounds.southwest.longitude);
+        ((FMCommonActivity) mActivity).setLatLR(bounds.southwest.latitude);
+        ((FMCommonActivity) mActivity).setLonLR(bounds.northeast.longitude);
 
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
@@ -304,7 +338,7 @@ public class MapFriendFragment extends FMCommonMapFragment implements
     private void showMarkers(Bitmap bitmap, FMModel mapDataModel) {
         LatLng latLng = new LatLng(Double.parseDouble(mapDataModel.getLat()), Double.parseDouble(mapDataModel.getLon()));
         mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet(mapDataModel.getIdx())
-                .icon(getMarKerImg(bitmap, mapDataModel.getPostType())).anchor(0f, 1.0f));
+                .icon(getMarKerImg(bitmap, mapDataModel.getPostType())).anchor(mapDataModel.getPostType().equals("0") ? 0f : 0.14f, mapDataModel.getPostType().equals("0") ? 1.0f : 0.92f));
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
@@ -25,6 +26,7 @@ import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusLogger;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -32,14 +34,14 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserListFragment extends FMCommonFragment implements
+public class ListUserFragment extends FMCommonFragment implements
         PlusOnGetDataListener {
 
     private static final int GET_USER_LIST_DATA = 0;
     String[] listOptionDatas = {"인기순", "최근 등록순", "거리순"};
     private int totalUserPost;
 
-    public UserListFragment() {
+    public ListUserFragment() {
         // TODO Auto-generated constructor stub
     }
 
@@ -51,11 +53,20 @@ public class UserListFragment extends FMCommonFragment implements
     }
 
     public void getDataFromServer(String sortType) {
+        double latUL = ((FMCommonActivity) mActivity).getLatUL();
+        double lonUL = ((FMCommonActivity) mActivity).getLonUL();
+        double latLR = ((FMCommonActivity) mActivity).getLatLR();
+        double lonLR = ((FMCommonActivity) mActivity).getLonLR();
+        PlusLogger.doIt("user_email: " + mActivity.getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL) + " sort: " + sortType + " key: " + getUserAuthKey());
 
 //특정 사용자 이메일등 처리!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("user_email", mActivity.getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL)));
         postParams.add(new BasicNameValuePair("sort", sortType));
+        postParams.add(new BasicNameValuePair("latUL", String.valueOf(latUL)));
+        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(lonUL)));
+        postParams.add(new BasicNameValuePair("latLR", String.valueOf(latLR)));
+        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(lonLR)));
         if (LoginChecker.isLogIn(mActivity)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
         }

@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
@@ -51,11 +52,18 @@ public class ListMyAlbumFragment extends FMCommonFragment implements
     }
 
     public void getDataFromServer(String sortType) {
-
+        double latUL = ((FMCommonActivity) mActivity).getLatUL();
+        double lonUL = ((FMCommonActivity) mActivity).getLonUL();
+        double latLR = ((FMCommonActivity) mActivity).getLatLR();
+        double lonLR = ((FMCommonActivity) mActivity).getLonLR();
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_MYALBUM));
         postParams.add(new BasicNameValuePair("sort", sortType));
+        postParams.add(new BasicNameValuePair("latUL", String.valueOf(latUL)));
+        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(lonUL)));
+        postParams.add(new BasicNameValuePair("latLR", String.valueOf(latLR)));
+        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(lonLR)));
         if (LoginChecker.isLogIn(mActivity)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
         }

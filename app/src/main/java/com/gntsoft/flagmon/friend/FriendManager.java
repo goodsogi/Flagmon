@@ -149,7 +149,7 @@ public class FriendManager implements FMTabManager, PlusOnGetDataListener {
 
     private void handleIfHasFriend(ArrayList<FriendModel> friendModels) {
 
-        if (friendModels.size() > 0) {
+        if (friendModels != null && friendModels.size() > 0) {
             showFriendTopBar();
             addListenerToButton();
             showMapFriend();
