@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#eff1f3"
+              android:orientation="vertical">
+
+    <Button
+        android:id="@+id/item10"
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="35dp"
+        android:background="@drawable/item10_selector"
+        />
+
+    <Button
+        android:id="@+id/item50"
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/item50_selector"
+        />
+
+    <Button
+        android:id="@+id/item100"
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/item100_selector"
+        />
+
+    <Button
+        android:id="@+id/item500"
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/item500_selector"
+        />
+
+
+</LinearLayout>

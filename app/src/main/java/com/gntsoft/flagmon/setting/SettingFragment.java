@@ -91,6 +91,8 @@ public class SettingFragment extends FMCommonFragment {
     private void manageMon(View v) {
 //구현!!
         PlusToaster.doIt(mActivity, "준비중...");
+
+
     }
 
     private void showUserInfo(View v) {

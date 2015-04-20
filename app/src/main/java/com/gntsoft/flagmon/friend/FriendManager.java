@@ -81,7 +81,7 @@ public class FriendManager implements FMTabManager, PlusOnGetDataListener {
         PlusClickGuard.doIt(v);
 
         mActivity.getFragmentManager().beginTransaction()
-                .replace(R.id.container_main, new FriendListFragment())
+                .replace(R.id.container_main, new ChooseFriendListFragment())
                 .commit();
     }
 
@@ -97,13 +97,13 @@ public class FriendManager implements FMTabManager, PlusOnGetDataListener {
 
     private void showMapFriend() {
         mActivity.getFragmentManager().beginTransaction()
-                .replace(R.id.container_main, new MapFriendFragment())
+                .replace(R.id.container_main, new MapFragment())
                 .commit();
     }
 
     private void showListFriend() {
         mActivity.getFragmentManager().beginTransaction()
-                .replace(R.id.container_main, new ListFriendFragment())
+                .replace(R.id.container_main, new ListFragment())
                 .commit();
 
 

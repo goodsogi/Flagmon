@@ -21,7 +21,7 @@ import com.gntsoft.flagmon.server.FMModel;
 import com.gntsoft.flagmon.server.PostDetailParser;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
-import com.gntsoft.flagmon.user.UserPageActivity;
+import com.gntsoft.flagmon.user.UserActivity;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.gntsoft.flagmon.utils.ScrollViewExt;
 import com.gntsoft.flagmon.utils.ScrollViewListener;
@@ -115,7 +115,7 @@ public class DetailActivity extends FMCommonActivity implements
 
     public void launchUserPageActivity(View v) {
         PlusClickGuard.doIt(v);
-        Intent intent = new Intent(this, UserPageActivity.class);
+        Intent intent = new Intent(this, UserActivity.class);
         intent.putExtra(FMConstants.KEY_USER_EMAIL, mUserEmail);
         intent.putExtra(FMConstants.KEY_USER_NAME, mUserName);
 
@@ -211,7 +211,7 @@ public class DetailActivity extends FMCommonActivity implements
 
         Bundle bundle = new Bundle();
         bundle.putString(FMConstants.KEY_IMAGE_URL, mImageUrl);
-        PhotoDetailFragment fragment = new PhotoDetailFragment();
+        PhotoFragment fragment = new PhotoFragment();
         fragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_detail, fragment)
@@ -224,7 +224,7 @@ public class DetailActivity extends FMCommonActivity implements
         bundle.putString(FMConstants.KEY_IMAGE_URL, mImageUrl);
         bundle.putString(FMConstants.KEY_PHOTO_LAT, mPhotoLat);
         bundle.putString(FMConstants.KEY_PHOTO_LON, mPhotoLon);
-        MapDetailFragment fragment = new MapDetailFragment();
+        MapFragment fragment = new MapFragment();
         fragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_detail, fragment)
@@ -306,7 +306,7 @@ public class DetailActivity extends FMCommonActivity implements
 
     private void makeGridView(final ArrayList<FMModel> fmModels) {
         GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new DetailGridviewAdapter(this, fmModels));
+        gridview.setAdapter(new GridviewAdapter(this, fmModels));
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

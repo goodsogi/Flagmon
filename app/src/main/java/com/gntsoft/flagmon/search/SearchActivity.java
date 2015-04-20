@@ -14,6 +14,9 @@ import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.pluslibrary.utils.PlusToaster;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * Created by johnny on 15. 3. 2.
  */
@@ -25,13 +28,21 @@ public class SearchActivity extends FMCommonActivity {
 
     public void doSearch(View v) {
         EditText searchView = (EditText) findViewById(R.id.searchInput);
-        mKeyword = searchView.getText().toString();
+        String keyword = searchView.getText().toString();
 
-        if (mKeyword.equals("")) {
+        if (keyword.equals("")) {
             PlusToaster.doIt(this, "검색어를 입력해주세요");
             return;
 
         }
+
+
+        try {
+            mKeyword = URLEncoder.encode(keyword, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
 
         showSearchResult(FMConstants.SORT_BY_POPULAR);
 
@@ -75,7 +86,7 @@ public class SearchActivity extends FMCommonActivity {
         Bundle bundle = new Bundle();
         bundle.putString(FMConstants.KEY_KEYWORD, mKeyword);
         bundle.putString(FMConstants.KEY_SORT_TYPE, sortType);
-        MapSearchFragment fragment = new MapSearchFragment();
+        MapFragment fragment = new MapFragment();
         fragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_search, fragment)
@@ -92,7 +103,7 @@ public class SearchActivity extends FMCommonActivity {
         Bundle bundle = new Bundle();
         bundle.putString(FMConstants.KEY_KEYWORD, mKeyword);
         bundle.putString(FMConstants.KEY_SORT_TYPE, sortType);
-        ListSearchFragment fragment = new ListSearchFragment();
+        ListFragment fragment = new ListFragment();
         fragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
                 .replace(R.id.container_search, fragment)

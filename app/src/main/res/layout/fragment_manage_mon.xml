@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/showMonInfo"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/manage_mon_backgroundcolor_selector"
+            android:gravity="center"
+            android:text="잔액정보"
+            android:textColor="@drawable/manage_mon_textcolor_selector"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            />
+
+        <Button
+            android:id="@+id/buyItem"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/manage_mon_backgroundcolor_selector"
+            android:gravity="center"
+            android:text="결재하기"
+            android:textColor="@drawable/manage_mon_textcolor_selector"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            />
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/containerManageMon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

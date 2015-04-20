@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_width="27.5dp"
             android:layout_height="27.5dp"
             android:background="@drawable/back_btn"
-            android:onClick="goBack" />
+            android:onClick="goBack"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -26,12 +26,12 @@
             android:text="@string/back"
             android:textColor="#ffffff"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <View
             android:layout_width="0px"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/completePost"
@@ -43,7 +43,7 @@
             android:text="@string/complete"
             android:textColor="@drawable/complete_color_selector"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
@@ -60,11 +60,12 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/barShareBtn"
                 android:layout_width="60dp"
                 android:layout_height="32dp"
                 android:layout_marginRight="2dp"
                 android:background="@drawable/p32_bt_0001"
-                android:onClick="showChooseShareTypeBar" />
+                android:onClick="showChooseShareTypeBar"/>
 
         </LinearLayout>
 
@@ -78,14 +79,14 @@
             android:hint="@string/photo_description"
             android:maxLength="140"
             android:padding="10dp"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <View
             android:id="@+id/line1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/photoDescription"
-            android:background="#d1d1d1" />
+            android:background="#d1d1d1"/>
 
         <LinearLayout
             android:id="@+id/barPhotoLocation"
@@ -107,7 +108,7 @@
                     android:layout_marginLeft="13dp"
                     android:layout_marginRight="13dp"
                     android:layout_marginTop="12dp"
-                    android:background="@drawable/p32_icon_0005" />
+                    android:background="@drawable/p32_icon_0005"/>
 
                 <EditText
                     android:id="@+id/locationSearchInput"
@@ -118,7 +119,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:hint="@string/incorrect_location"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <Button
                     android:id="@+id/locationSearchButton"
@@ -128,7 +129,7 @@
                     android:layout_marginTop="9dp"
                     android:background="@drawable/location_search_button_selector"
                     android:enabled="false"
-                    android:onClick="performLocationSearch" />
+                    android:onClick="performLocationSearch"/>
             </LinearLayout>
 
             <TextView
@@ -136,7 +137,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/drag_photo_for_correct_location"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <ListView
                 android:id="@+id/listSearchLocation"
@@ -151,13 +152,13 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/barPhotoLocation"
-            android:background="#797975" />
+            android:background="#797975"/>
 
         <FrameLayout
             android:id="@+id/container_post_location"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/line2" />
+            android:layout_below="@+id/line2"/>
 
         <LinearLayout
             android:id="@+id/barChooseShareType"
@@ -179,7 +180,7 @@
                     android:layout_width="35dp"
                     android:layout_height="27dp"
                     android:layout_marginLeft="21dp"
-                    android:background="@drawable/p32_icon_0001" />
+                    android:background="@drawable/p32_icon_0001"/>
 
                 <TextView
                     android:layout_width="0px"
@@ -197,13 +198,13 @@
                     android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_marginRight="23dp"
-                    android:button="@drawable/location_checkbox_selector" />
+                    android:button="@drawable/location_checkbox_selector"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="#afbbcd" />
+                android:background="#afbbcd"/>
 
             <LinearLayout
                 android:id="@+id/barCheckboxShareFriend"
@@ -218,7 +219,7 @@
                     android:layout_width="35dp"
                     android:layout_height="27dp"
                     android:layout_marginLeft="21dp"
-                    android:background="@drawable/p32_icon_0003" />
+                    android:background="@drawable/p32_icon_0003"/>
 
                 <TextView
                     android:layout_width="0px"
@@ -236,13 +237,13 @@
                     android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_marginRight="23dp"
-                    android:button="@drawable/location_checkbox_selector" />
+                    android:button="@drawable/location_checkbox_selector"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="#afbbcd" />
+                android:background="#afbbcd"/>
 
             <LinearLayout
                 android:id="@+id/barCheckboxPrivate"
@@ -257,7 +258,7 @@
                     android:layout_width="35dp"
                     android:layout_height="27dp"
                     android:layout_marginLeft="21dp"
-                    android:background="@drawable/p32_icon_0002" />
+                    android:background="@drawable/p32_icon_0002"/>
 
                 <TextView
                     android:layout_width="0px"
@@ -275,13 +276,13 @@
                     android:layout_width="34dp"
                     android:layout_height="34dp"
                     android:layout_marginRight="23dp"
-                    android:button="@drawable/location_checkbox_selector" />
+                    android:button="@drawable/location_checkbox_selector"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#50000000" />
+                android:background="#50000000"/>
         </LinearLayout>
 
 

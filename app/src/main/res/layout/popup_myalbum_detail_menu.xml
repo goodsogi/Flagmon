@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:background="#50000000"/>
+
+    <RadioGroup
+        android:id="@+id/shareTypeGroup"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:background="#e3eaec"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/allShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/menu_checkbox_selector"
+            android:drawableLeft="@drawable/p32_icon_0001"/>
+
+        <RadioButton
+            android:id="@+id/friendShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:button="@drawable/menu_checkbox_selector"
+            android:drawableLeft="@drawable/p32_icon_0003"/>
+
+        <RadioButton
+            android:id="@+id/privateShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:button="@drawable/menu_checkbox_selector"
+            android:drawableLeft="@drawable/p32_icon_0002"/>
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#b6c1d1"/>
+
+    <TextView
+        android:id="@+id/edit"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:background="#e3eaec"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="21dp"
+        android:text="@string/edit"
+        android:textColor="#3b4d75"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#b6c1d1"/>
+
+    <TextView
+        android:id="@+id/delete"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:background="#e3eaec"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="21dp"
+        android:text="@string/delete"
+        android:textColor="#3b4d75"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#b6c1d1"/>
+
+
+</LinearLayout>

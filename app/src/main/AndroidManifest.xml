@@ -1,139 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gntsoft.flagmon">
+<manifest
+    package="com.gntsoft.flagmon"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <permission
         android:name="com.gntsoft.flagmon.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!--연락처-->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <!-- GCM 관련 퍼미션 -->
+    <permission
+        android:name=".permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name=".permission.C2D_MESSAGE"/>
+    <!-- GCM 받기 -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <!-- GCM을 받으려면 구글 계정 필요 -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <!-- 메시지 받을 때 wake up 하기 위해 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <!-- PUSH 알림 수신시 진동 -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
 
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true" />
+        android:required="true"/>
     <application
         android:name="com.pluslibrary.UilApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/noTheme">
+        android:theme="@style/noTheme"
+        tools:replace="android:label">
 
-        <uses-library android:name="com.google.android.maps" />
+        <uses-library android:name="com.google.android.maps"/>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBd7hapTJxjSKUlFiUn4I4XYsdjuQE5Ecs" />
+            android:value="AIzaSyBd7hapTJxjSKUlFiUn4I4XYsdjuQE5Ecs"/>
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
         <!--페이스북-->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/app_id" />
+            android:value="@string/app_id"/>
 
-        <activity android:name="com.facebook.LoginActivity" />
+        <!-- GCM 리시버 -->
+        <receiver
+            android:name=".GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+
+                <category android:name="com.gntsoft.blacktime"/>
+                <!-- 주의!! 프로젝트 패키지와 동일하게!! -->
+            </intent-filter>
+        </receiver>
+        <!-- GCM 리시버에서 돌리는 서비스 -->
+        <service android:name=".gcm.GcmIntentService"/>
+        <!-- 서비스명 변경하면 안됨 -->
+
+        <activity android:name="com.facebook.LoginActivity"/>
         <activity
             android:name=".main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/noTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".login.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
+
+        <activity
+            android:name=".gcm.GcmTreasurePopupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dialog"/>
 
         <activity
             android:name=".login.FindPasswordActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".login.SignUpActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".login.PolicyActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".login.SecondSignUpActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".detail.DetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".detail.ImageViewerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".comment.CommentActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
 
         <activity
-            android:name=".user.UserPageActivity"
+            android:name=".user.UserActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".search.SearchActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
 
         <activity
             android:name=".setting.FindFriendActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
-
+            android:theme="@style/noTheme"/>
+        <activity
+            android:name=".myalbum.DetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/noTheme"/>
+        <activity
+            android:name=".myalbum.BuryTreasureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/noTheme"/>
 
         <activity
             android:name=".myalbum.PostChoosePhotoActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".myalbum.PostSetLocationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
 
         <activity
             android:name=".myalbum.GroupPostActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
 
         <activity
             android:name=".setting.FindFriendInContactActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
 
         <activity
             android:name=".setting.FindFriendInFacebookActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".setting.FindFriendInTwitterActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".setting.SearchFriendByNameActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
         <activity
             android:name=".setting.WebviewLoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/noTheme" />
+            android:theme="@style/noTheme"/>
 
 
     </application>

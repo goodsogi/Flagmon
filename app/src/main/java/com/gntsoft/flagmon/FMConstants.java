@@ -4,6 +4,10 @@ package com.gntsoft.flagmon;
  * Created by johnny on 15. 2. 26.
  */
 public class FMConstants {
+    public static final String KEY_GCM_MSG = "pushMessage";
+    public static final String KEY_GCM_VIBRATION_ENABLED = "pushVibrationEnabled";
+    public static final String KEY_GCM_SOUND_ENABLED = "pushSoundEnabled";
+    public static final String KEY_PUSH_ENABLE = "pushEnabled";
     public static final String KEY_USER_EMAIL = "userEmail";
     public static final String KEY_USER_PASSWORD = "userPassword";
     public static final String KEY_USER_NAME = "userName";

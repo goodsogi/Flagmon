@@ -62,14 +62,14 @@ public class NeighborManager implements FMTabManager {
     private void showMap() {
         mContentType = FMConstants.CONTENT_MAP;
         mActivity.getFragmentManager().beginTransaction()
-                .replace(R.id.container_main, new MapNeighborFragment())
+                .replace(R.id.container_main, new MapFragment())
                 .commit();
     }
 
     private void showList() {
         mContentType = FMConstants.CONTENT_LIST;
         mActivity.getFragmentManager().beginTransaction()
-                .replace(R.id.container_main, new ListNeighborFragment())
+                .replace(R.id.container_main, new ListFragment())
                 .commit();
 
 

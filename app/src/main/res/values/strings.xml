@@ -59,4 +59,12 @@
     <string name="wanna_exit">앱을 종료하시겠습니까?</string>
     <string name="no">아니오</string>
     <string name="yes">예</string>
+    <string name="edit">수정</string>
+    <string name="delete">삭제</string>
+    <string name="bury_treasure">보물상자 묻기</string>
+    <string name="mon_count">보유 mon</string>
+    <string name="count_unit">개</string>
+    <string name="get_right">퍼가기 권한</string>
+    <string name="monCount">MON수량</string>
+    <string name="boxCount">상자갯수</string>
 </resources>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="282dp"
+                android:layout_height="282dp"
+    >
+
+    <ImageView
+        android:id="@+id/popupBackground"
+        android:layout_width="match_parent"
+        android:layout_height="241dp"
+
+        android:src="@drawable/p38_popup01"/>
+
+
+    <TextView
+        android:id="@+id/pushMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="170dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="보물 상자를 발견했습니다.\n확인하시겠습니까?"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
+
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="141dp"
+        android:layout_height="41dp"
+        android:layout_below="@+id/popupBackground"
+        android:background="@drawable/p38_popup01_yes"
+        android:onClick="confirm"
+        android:text="예"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+
+    <Button
+        android:id="@+id/close"
+
+        android:layout_width="141dp"
+        android:layout_height="41dp"
+        android:layout_alignTop="@+id/confirm"
+        android:layout_toRightOf="@+id/confirm"
+        android:background="@drawable/p38_popup01_no"
+        android:onClick="close"
+        android:text="닫기"
+        android:textColor="#394b77"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
+
+
+</RelativeLayout>

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.gcm.FMGcmRegister;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
@@ -37,6 +38,7 @@ import java.util.regex.Pattern;
 public class LoginActivity extends FMCommonActivity implements PlusOnGetDataListener {
     private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z]+)(?=.*[!@#$%^*+=-]|.*[0-9]+).{8,16}$";
     private static final int LOG_IN = 11;
+    private static final int REGISTER_DEVICE = 12;
     final int DRAWABLE_RIGHT = 2;
 
     @Override
@@ -50,8 +52,14 @@ public class LoginActivity extends FMCommonActivity implements PlusOnGetDataList
                 PlusToaster.doIt(this, model.getResult().equals("success") ? "로그인되었습니다" : "로그인되지 못했습니다");
                 if (model.getResult().equals("success")) {
                     saveLoginInfo(model.getMsg());
+                    //푸시 아이디 서버에 저장
+                    savePushIdToServer();
+
                     finish();
                 }
+                break;
+            case REGISTER_DEVICE:
+                Log.d("flagmon", "push registeration result: " + (String) datas);
                 break;
         }
 
@@ -130,8 +138,34 @@ public class LoginActivity extends FMCommonActivity implements PlusOnGetDataList
 //        saveLoginInfo("a0dcee3f02a21423286469e912d1902a18baec4b427b468cdb176d5f6f668e82");
 //        finish();
 
+        registerGcmId();
+
         addListenerToButton();
     }
+
+    private void savePushIdToServer() {
+        EditText userEmailView = (EditText) findViewById(R.id.userEmail);
+        String userEmail = userEmailView.getText().toString();
+
+        FMGcmRegister register = new FMGcmRegister(this);
+        String regId = register.getRegistrationId();
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("user_email", userEmail));
+        postParams.add(new BasicNameValuePair("device_id", regId));
+
+
+        new PlusHttpClient(this, this, false).execute(REGISTER_DEVICE,
+                FMApiConstants.REGISTER_DEVICE, new PlusInputStreamStringConverter(),
+                postParams);
+
+    }
+
+    private void registerGcmId() {
+        FMGcmRegister register = new FMGcmRegister(this);
+        register.doIt();
+    }
+
 
     private void saveLoginInfo(String userAuthKey) {
 

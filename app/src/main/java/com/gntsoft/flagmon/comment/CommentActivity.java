@@ -130,7 +130,7 @@ public class CommentActivity extends FMCommonActivity implements
         ListView list = (ListView) findViewById(R.id.list_reply);
 
         if (list == null || datas == null) return;
-        list.setAdapter(new CommentListAdapter(this,
+        list.setAdapter(new ListAdapter(this,
                 datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

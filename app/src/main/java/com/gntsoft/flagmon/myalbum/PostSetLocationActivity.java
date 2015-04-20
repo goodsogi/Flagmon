@@ -239,6 +239,9 @@ public class PostSetLocationActivity extends FMCommonActivity implements
 
         final Button completePost = (Button) findViewById(R.id.completePost);
 
+        final Button barShareBtn = (Button) findViewById(R.id.barShareBtn);
+
+
         final CheckBox checkboxShareAll = (CheckBox) findViewById(R.id.checkboxShareAll);
         final CheckBox checkboxShareFriend = (CheckBox) findViewById(R.id.checkboxShareFriend);
         final CheckBox checkboxPrivate = (CheckBox) findViewById(R.id.checkboxPrivate);
@@ -247,6 +250,9 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         final LinearLayout barCheckboxShareAll = (LinearLayout) findViewById(R.id.barCheckboxShareAll);
         final LinearLayout barCheckboxShareFriend = (LinearLayout) findViewById(R.id.barCheckboxShareFriend);
         final LinearLayout barCheckboxPrivate = (LinearLayout) findViewById(R.id.barCheckboxPrivate);
+
+        final LinearLayout barChooseShareType = (LinearLayout) findViewById(R.id.barChooseShareType);
+
 
         barCheckboxShareAll.setOnClickListener(new PlusOnClickListener() {
             @Override
@@ -315,9 +321,11 @@ public class PostSetLocationActivity extends FMCommonActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    barShareBtn.setBackgroundResource(R.drawable.p32_bt_0001);
                     if (checkboxShareFriend.isChecked()) checkboxShareFriend.setChecked(false);
                     if (checkboxPrivate.isChecked()) checkboxPrivate.setChecked(false);
                     if (!completePost.isEnabled()) completePost.setEnabled(true);
+                    barChooseShareType.setVisibility(View.GONE);
 
                 }
             }
@@ -327,9 +335,11 @@ public class PostSetLocationActivity extends FMCommonActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    barShareBtn.setBackgroundResource(R.drawable.p32_bt_0003);
                     if (checkboxShareAll.isChecked()) checkboxShareAll.setChecked(false);
                     if (checkboxPrivate.isChecked()) checkboxPrivate.setChecked(false);
                     if (!completePost.isEnabled()) completePost.setEnabled(true);
+                    barChooseShareType.setVisibility(View.GONE);
                 }
             }
         });
@@ -338,12 +348,16 @@ public class PostSetLocationActivity extends FMCommonActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    barShareBtn.setBackgroundResource(R.drawable.p32_bt_0002);
                     if (checkboxShareAll.isChecked()) checkboxShareAll.setChecked(false);
                     if (checkboxShareFriend.isChecked()) checkboxShareFriend.setChecked(false);
                     if (!completePost.isEnabled()) completePost.setEnabled(true);
+                    barChooseShareType.setVisibility(View.GONE);
                 }
             }
         });
+
+        checkboxShareAll.setChecked(true);
 
 
     }

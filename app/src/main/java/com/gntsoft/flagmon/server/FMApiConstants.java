@@ -5,6 +5,9 @@ package com.gntsoft.flagmon.server;
  */
 public class FMApiConstants {
     private static final String API_MAIN = "http://flagaround.com/site/json/";
+    public static final String GET_MON_INFO = API_MAIN + "get_myinfo.php";
+    public static final String EDIT_POST = API_MAIN + "posting_edit_ok.php";
+    public static final String DELETE_POST = API_MAIN + "posting_del_ok.php";
     public static final String SIGN_UP = API_MAIN + "signup_ok.php";
     public static final String CHECK_EMAIL = API_MAIN + "email_chk.php";
     public static final String LOG_IN = API_MAIN + "login_ok.php";
@@ -18,7 +21,6 @@ public class FMApiConstants {
     public static final String GET_PHOTOS_NEARBY = API_MAIN + "postlist.php";
     public static final String GET_TOTAL_REPLY_PIN = API_MAIN + "";
     public static final String ADD_FRIEND = API_MAIN + "friend_request.php";
-    public static final String REQUEST_PASSWORD = API_MAIN + "http://flagaround.com/site/web/passwordrenew.php";
     public static final String REPORT_POST = API_MAIN + "";
     public static final String GET_SENT_FRIEND_REQUEST = API_MAIN + "friend_requestsent.php";
     public static final String GET_GOT_FRIEND_REQUEST = API_MAIN + " friend_requestreceived.php";
@@ -37,7 +39,9 @@ public class FMApiConstants {
     public static final String SEARCH_LOCATION = API_MAIN + "";
     public static final String BURY_TREASURE = API_MAIN + "set_treasure.php";
     public static final String MAKE_ALBUM = API_MAIN + "album_create.php";
-    public static final String FIND_TREASURE =  API_MAIN +"searchtreasure.php";
+    public static final String FIND_TREASURE = API_MAIN + "searchtreasure.php";
+    public static final String REGISTER_DEVICE = "http://www.www.flagaround.com/site/push/register_device.php";
+    public static final String REQUEST_PASSWORD = "http://flagaround.com/site/web/passwordrenew.php";
     public static final String GET_POLICY_SERVICE = "http://flagaround.com/site/web/agreement.html";
     public static final String GET_POLICY_LOCATION = "http://flagaround.com/site/web/agreement.html";
     public static final String GET_POLICY_PRIVACY = "http://flagaround.com/site/web/agreement.html";

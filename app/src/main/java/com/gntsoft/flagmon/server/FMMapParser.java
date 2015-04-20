@@ -18,8 +18,8 @@ public class FMMapParser {
             JSONArray jsonArray = new JSONArray(rawData);
             for (int i = 0; i < jsonArray.length(); i++) {
                 FMModel data = new FMModel();
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                JSONObject subJsonObject = (JSONObject) jsonObject.opt("maplist");
+                JSONObject subJsonObject = (JSONObject) jsonArray.get(i);
+                //JSONObject subJsonObject = (JSONObject) jsonObject.opt("maplist");
 
                 data.setIdx(subJsonObject.optString("idx"));
                 data.setUserId(subJsonObject.optString("uid"));

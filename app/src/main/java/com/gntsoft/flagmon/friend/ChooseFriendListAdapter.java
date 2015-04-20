@@ -19,7 +19,7 @@ import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FriendModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
-import com.gntsoft.flagmon.user.UserPageActivity;
+import com.gntsoft.flagmon.user.UserActivity;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -111,7 +111,7 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
                     //추가 액션??
                     //친구를 상단으로 이동
                     //리스트 갱신
-                    ((FriendListFragment) mFragment).getDataFromServer();
+                    ((ChooseFriendListFragment) mFragment).getDataFromServer();
                 }
                 break;
         }
@@ -119,7 +119,7 @@ public class ChooseFriendListAdapter extends FMCommonAdapter<FriendModel> implem
     }
 
     private void launchUserPageActivity(String userEmail, String userName) {
-        Intent intent = new Intent(mContext, UserPageActivity.class);
+        Intent intent = new Intent(mContext, UserActivity.class);
         intent.putExtra(FMConstants.KEY_USER_EMAIL, userEmail);
         intent.putExtra(FMConstants.KEY_USER_NAME, userName);
         mContext.startActivity(intent);

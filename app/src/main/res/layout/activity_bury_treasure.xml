@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@drawable/navigation_bar_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="27.5dp"
+            android:layout_height="27.5dp"
+            android:background="@drawable/back_btn"
+            android:onClick="goBack"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="goBack"
+            android:text="@string/bury_treasure"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/completeBuryTreasure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:enabled="false"
+            android:onClick="completeBuryTreasure"
+            android:text="@string/complete"
+            android:textColor="@drawable/complete_color_selector"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#e4ebed"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/p37_mon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="17dp"
+            android:text="@string/mon_count"
+            android:textColor="#394b74"/>
+
+        <TextView
+            android:id="@+id/monCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50"
+            android:textColor="#000000"
+            android:textSize="22sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="17dp"
+            android:text="@string/count_unit"
+            android:textColor="#394b74"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/barShare"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:background="#eff1f3"
+                android:gravity="center_vertical|right"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="67dp"
+                    android:text="@string/get_right"
+                    android:textColor="#394b74"
+                    android:textSize="17sp"/>
+
+                <Button
+                    android:id="@+id/barShareBtn"
+                    android:layout_width="60dp"
+                    android:layout_height="32dp"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/p32_bt_0001"
+                    android:onClick="showChooseShareTypeBar"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c3c3c3"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="54dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="38dp"
+                    android:text="@string/monCount"
+                    android:textColor="#394b74"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/boxCount"
+                    android:textColor="#394b74"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    />
+
+            </LinearLayout>
+
+            <!--넘버 wheel 위젯 삽입-->
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_gravity="center_horizontal"
+                          android:paddingLeft="12dp"
+                          android:paddingRight="12dp"
+                          android:paddingTop="20dp">
+
+                <kankan.wheel.widget.WheelView
+                    android:id="@+id/monCountWheel"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"/>
+
+                <kankan.wheel.widget.WheelView
+                    android:id="@+id/boxCountWeel"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="1"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="82dp"
+                android:background="@drawable/minus_mon_button_selector"
+                android:onClick="minusOneMon"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/barChooseShareType"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/barCheckboxShareAll"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="#e3eaec"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="27dp"
+                    android:layout_marginLeft="21dp"
+                    android:background="@drawable/p32_icon_0001"/>
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_weight="1"
+                    android:text="@string/all_share"
+                    android:textColor="#526386"
+                    android:textSize="20sp"
+
+                    />
+
+                <CheckBox
+                    android:id="@+id/checkboxShareAll"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginRight="23dp"
+                    android:button="@drawable/location_checkbox_selector"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#afbbcd"/>
+
+            <LinearLayout
+                android:id="@+id/barCheckboxShareFriend"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="#e3eaec"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="27dp"
+                    android:layout_marginLeft="21dp"
+                    android:background="@drawable/p32_icon_0003"/>
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_weight="1"
+                    android:text="@string/friend_share"
+                    android:textColor="#526386"
+                    android:textSize="20sp"
+
+                    />
+
+                <CheckBox
+                    android:id="@+id/checkboxShareFriend"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginRight="23dp"
+                    android:button="@drawable/location_checkbox_selector"/>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#50000000"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

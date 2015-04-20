@@ -30,4 +30,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile files('libs/twitter4j-core-3.0.5.jar')
     compile project(':plusLibrary')
+    compile project(':wheel')
 }

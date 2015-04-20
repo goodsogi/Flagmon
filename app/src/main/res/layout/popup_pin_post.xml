@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="250dp"
+                android:layout_height="301dp"
+    >
+
+    <ImageView
+        android:id="@+id/popupBackground"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+
+        android:src="@drawable/p38_popup02"/>
+
+    <TextView
+        android:id="@+id/mon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="69dp"
+        android:layout_marginTop="118dp"
+        android:text="몬"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/monFoundCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/mon"
+        android:layout_marginLeft="9dp"
+        android:layout_toRightOf="@+id/mon"
+        android:text="1"
+        android:textColor="#0167ff"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/mon"
+        android:layout_toRightOf="@+id/monFoundCount"
+        android:text="개 발견"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/pushMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mon"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="핀을 꽂고 보물을\n획득하시겠습니까?"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
+
+
+    <Button
+        android:id="@+id/pinPost"
+        android:layout_width="125dp"
+        android:layout_height="41dp"
+        android:layout_below="@+id/popupBackground"
+        android:background="@drawable/p38_popup02_yes"
+        android:onClick="confirm"
+        android:paddingLeft="10dp"
+        android:text="핀꽂기"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+
+    <Button
+        android:id="@+id/cancel"
+
+        android:layout_width="125dp"
+        android:layout_height="41dp"
+        android:layout_alignTop="@+id/pinPost"
+        android:layout_toRightOf="@+id/pinPost"
+        android:background="@drawable/p38_popup02_no"
+        android:onClick="cancel"
+        android:text="취소"
+        android:textColor="#394b77"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        />
+
+
+</RelativeLayout>

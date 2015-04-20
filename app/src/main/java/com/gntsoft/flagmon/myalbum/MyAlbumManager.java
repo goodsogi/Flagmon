@@ -105,7 +105,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
     private void showMapMyAlbum() {
         hideGroupPostButton();
         mActivity.getFragmentManager().beginTransaction()
-                .replace(R.id.container_main, new MapMyAlbumFragment())
+                .replace(R.id.container_main, new MapFragment())
                 .commit();
     }
 
@@ -117,7 +117,7 @@ public class MyAlbumManager implements FMTabManager, PlusOnGetDataListener {
     private void showListMyAlbum() {
         showGroupPostButton();
         mActivity.getFragmentManager().beginTransaction()
-                .replace(R.id.container_main, new ListMyAlbumFragment())
+                .replace(R.id.container_main, new ListFragment())
                 .commit();
 
 

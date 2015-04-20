@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="manageMonTabSelected">#eff1f3</color>
+    <color name="manageMonTabNotSelected">#b4b8bb</color>
+
+
+</resources>

@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/FlagMon5.iml" filepath="$PROJECT_DIR$/FlagMon5.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/plusLibrary/plusLibrary.iml" filepath="$PROJECT_DIR$/plusLibrary/plusLibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheel/wheel.iml" filepath="$PROJECT_DIR$/wheel/wheel.iml" />
     </modules>
   </component>
 </project>
