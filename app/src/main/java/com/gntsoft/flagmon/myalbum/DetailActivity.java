@@ -390,7 +390,7 @@ public class DetailActivity extends FMCommonActivity implements
         //TextView userName = (TextView) findViewById(R.id.userName);
         TextView content = (TextView) findViewById(R.id.content);
         TextView date = (TextView) findViewById(R.id.date);
-        TextView reply = (TextView) findViewById(R.id.reply);
+        TextView reply = (TextView) findViewById(R.id.replyAlarm);
         TextView pin = (TextView) findViewById(R.id.pin);
         TextView distance = (TextView) findViewById(R.id.distance);
         TextView viewCount = (TextView) findViewById(R.id.viewCount);

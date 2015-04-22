@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent" android:background="#ffffff">
+<RelativeLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" >
+  <ImageView
+      android:id="@+id/userPic"
+      android:layout_width="118dp"
+      android:layout_height="118dp"
+      android:layout_margin="8dp"
+      android:background="@drawable/p41_picturebox"
+      />
+    <TextView
+        android:id="@+id/accountText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="계정"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@id/userPic"
+        android:layout_alignTop="@id/userPic"
+        android:layout_marginTop="3dp"
+        android:textColor="#999999"
+        />
+    <EditText
+        android:id="@+id/userEmail"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/userPic"
+        android:layout_below="@id/accountText"
+        android:layout_marginRight="10dp"
+        android:drawableRight="@drawable/p41_x"
+        android:inputType="textEmailAddress"
+        android:privateImeOptions="defaultInputmode=english;"
+        android:textColor="#999999"
+         />
+
+    <TextView
+        android:id="@+id/authText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="핸드폰 인증"  android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@id/userPic"
+        android:layout_below="@id/userEmail"
+        android:layout_marginTop="3dp"
+        android:textColor="#999999"
+        />
+    
+    <Button
+        android:layout_width="65dp"
+        android:layout_height="26dp" android:background="@drawable/auth_btn_selector" android:layout_below="@id/userEmail" android:layout_alignParentRight="true" android:layout_marginRight="10dp"/>
+    <EditText
+        android:id="@+id/phoneNo"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/userPic"
+        android:layout_below="@id/authText"
+        android:layout_marginRight="10dp"
+        android:drawableRight="@drawable/p41_x"
+        android:inputType="number"
+        android:textColor="#999999"
+        />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:background="#eff1f3"
+        android:id="@+id/line1"
+        android:layout_below="@id/userPic"
+        android:layout_marginTop="8dp" />
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" android:text="박선우"
+        android:layout_below="@id/line1"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:drawableRight="@drawable/p41_clickbtn"
+        android:clickable="true"
+        android:textColor="#999999"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#eff1f3"
+        android:id="@+id/subline1"
+        android:layout_below="@id/userName"
+         />
+    <TextView
+        android:id="@+id/userStatus"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" android:text="상태메시지"
+        android:layout_below="@id/subline1"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:drawableRight="@drawable/p41_clickbtn"
+        android:clickable="true"
+        android:textColor="#999999"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:background="#eff1f3"
+        android:id="@+id/line2"
+        android:layout_below="@id/userStatus"
+         />
+
+    <TextView
+        android:id="@+id/sex"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" android:text="남"
+        android:layout_below="@id/line2"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:drawableRight="@drawable/p41_clickbtn"
+        android:clickable="true"
+        android:textColor="#999999"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#eff1f3"
+        android:id="@+id/subline2"
+        android:layout_below="@id/sex"
+        />
+
+    <TextView
+        android:id="@+id/age"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" android:text="37세"
+        android:layout_below="@id/subline2"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:drawableRight="@drawable/p41_clickbtn"
+        android:clickable="true"
+        android:textColor="#999999"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:background="#eff1f3"
+        android:id="@+id/line3"
+        android:layout_below="@id/age"
+         />
+
+    <TextView
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" android:text="로그아웃"
+        android:layout_below="@id/line3"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:clickable="true"
+        android:textColor="#999999"
+        />
+
+    <TextView
+        android:id="@+id/logoutHelp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" android:text="swiss220@naver.com 계정을 로그아웃합니다"
+        android:layout_below="@id/logout"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:clickable="true"
+        android:textColor="#999999"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#eff1f3"
+        android:layout_below="@id/logoutHelp"
+       />
+
+
+</RelativeLayout>
+    </ScrollView>

@@ -11,6 +11,13 @@ public class FMModel {
     private String userName;
     private String postType;
     private String albumName;
+    private String albumTotalPost;
+    private String albumCurrentPosition;
+    private String albumPreviousPostId;
+    private String albumNextPostId;
+
+
+
     private String memo;
     private String imgUrl;
     private String lat;
@@ -150,5 +157,37 @@ public class FMModel {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public String getAlbumTotalPost() {
+        return albumTotalPost;
+    }
+
+    public void setAlbumTotalPost(String albumTotalPost) {
+        this.albumTotalPost = albumTotalPost;
+    }
+
+    public String getAlbumCurrentPosition() {
+        return albumCurrentPosition;
+    }
+
+    public void setAlbumCurrentPosition(String albumCurrentPosition) {
+        this.albumCurrentPosition = albumCurrentPosition;
+    }
+
+    public String getAlbumPreviousPostId() {
+        return albumPreviousPostId;
+    }
+
+    public void setAlbumPreviousPostId(String albumPreviousPostId) {
+        this.albumPreviousPostId = albumPreviousPostId;
+    }
+
+    public String getAlbumNextPostId() {
+        return albumNextPostId;
+    }
+
+    public void setAlbumNextPostId(String albumNextPostId) {
+        this.albumNextPostId = albumNextPostId;
     }
 }

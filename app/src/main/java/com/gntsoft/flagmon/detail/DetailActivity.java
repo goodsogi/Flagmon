@@ -4,10 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
@@ -15,6 +18,7 @@ import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.comment.CommentActivity;
 import com.gntsoft.flagmon.login.LoginActivity;
+import com.gntsoft.flagmon.main.MainActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMListParser;
 import com.gntsoft.flagmon.server.FMModel;
@@ -56,6 +60,8 @@ public class DetailActivity extends FMCommonActivity implements
     private String mPhotoLon;
     private String mUserEmail;
     private String mUserName;
+    private String mPreviousPostId;
+    private String mNextPostId;
 
     @Override
     public void onSuccess(Integer from, Object datas) {
@@ -168,18 +174,18 @@ public class DetailActivity extends FMCommonActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         initScrollView();
-        getDataFromServer();
+        getDataFromServer(getIntent().getStringExtra(FMConstants.KEY_POST_IDX));
 
 
     }
 
-    private void getDataFromServer() {
+    private void getDataFromServer(String idx) {
 
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 
         postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        postParams.add(new BasicNameValuePair("idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
+        postParams.add(new BasicNameValuePair("idx", idx));
 
 
         new PlusHttpClient(this, this, false).execute(GET_DETAIL,
@@ -305,6 +311,7 @@ public class DetailActivity extends FMCommonActivity implements
 
 
     private void makeGridView(final ArrayList<FMModel> fmModels) {
+        if(fmModels == null) return;
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new GridviewAdapter(this, fmModels));
 
@@ -338,13 +345,95 @@ public class DetailActivity extends FMCommonActivity implements
 
     private void handleData(ArrayList<FMModel> fmModels) {
 
-        showContent(fmModels);
+        FMModel model = fmModels.get(0);
 
-        getPhotosNearBy(fmModels.get(0).getLat(), fmModels.get(0).getLon());
+        showContent(model);
+
+
+
+        getPhotosNearBy(model.getLat(), model.getLon());
 
         showMainPhoto();
 
         checkLogin();
+
+
+        if(model.getPostType().equals("1")) {
+            mPreviousPostId = model.getAlbumPreviousPostId();
+            mNextPostId = model.getAlbumNextPostId();
+            showAlbumTitle(model);
+            enableSwipe();
+        }
+
+
+    }
+
+    private void enableSwipe() {
+        FrameLayout containerDetail = (FrameLayout) findViewById(R.id.container_detail);
+        containerDetail.setOnTouchListener(new View.OnTouchListener() {
+            public static final float MIN_DISTANCE = 150;
+            public float x1;
+            public float x2;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        x1 = event.getX();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        x2 = event.getX();
+                        float deltaX = x2 - x1;
+
+                        if (Math.abs(deltaX) > MIN_DISTANCE)
+                        {
+                            // Left to Right swipe action
+                            if (x2 > x1)
+                            {
+                            getPreviousAlbumPost();
+                            }
+
+                            // Right to left swipe action
+                            else
+                            {
+                                getNextAlbumPost();
+                            }
+
+                        }
+                        else
+                        {
+                            // consider as something else - a screen tap for example
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    private void getNextAlbumPost() {
+        getDataFromServer(mNextPostId);
+    }
+
+    private void getPreviousAlbumPost() {
+        getDataFromServer(mPreviousPostId);
+    }
+
+    private void showAlbumTitle(FMModel model) {
+        LinearLayout containerAlbumTitle = (LinearLayout) findViewById(R.id.containerAlbumTitle);
+        containerAlbumTitle.setVisibility(View.VISIBLE);
+
+
+        TextView albumName = (TextView) findViewById(R.id.albumName);
+        albumName.setText(model.getAlbumName());
+
+        TextView currentPage = (TextView) findViewById(R.id.currentPage);
+        currentPage.setText(model.getAlbumCurrentPosition());
+
+        TextView totalPage = (TextView) findViewById(R.id.totalPage);
+        totalPage.setText(model.getAlbumTotalPost());
+
 
 
     }
@@ -354,19 +443,25 @@ public class DetailActivity extends FMCommonActivity implements
         Double photoLat = Double.parseDouble(lat);
         Double photoLon = Double.parseDouble(lon);
 
-        String latUL = String.valueOf(photoLat + 1);
-        String lonUL = String.valueOf(photoLon - 1);
-        String latLR = String.valueOf(photoLat - 1);
-        String lonLR = String.valueOf(photoLon + 1);
+//        String latUL = String.valueOf(photoLat + 1);
+//        String lonUL = String.valueOf(photoLon - 1);
+//        String latLR = String.valueOf(photoLat - 1);
+//        String lonLR = String.valueOf(photoLon + 1);
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 
         postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        postParams.add(new BasicNameValuePair("idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
-        postParams.add(new BasicNameValuePair("latUL", latUL));
-        postParams.add(new BasicNameValuePair("lonUL", lonUL));
-        postParams.add(new BasicNameValuePair("latLR", latLR));
-        postParams.add(new BasicNameValuePair("lonLR", lonLR));
+        //postParams.add(new BasicNameValuePair("idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
+        postParams.add(new BasicNameValuePair("list_menu", MainActivity.activeTab));
+        postParams.add(new BasicNameValuePair("lat", lat));
+        postParams.add(new BasicNameValuePair("lon", lon));
+
+
+
+//        postParams.add(new BasicNameValuePair("latUL", latUL));
+//        postParams.add(new BasicNameValuePair("lonUL", lonUL));
+//        postParams.add(new BasicNameValuePair("latLR", latLR));
+//        postParams.add(new BasicNameValuePair("lonLR", lonLR));
 
 
         new PlusHttpClient(this, this, false).execute(GET_PHOTOS_NEARBY,
@@ -376,12 +471,12 @@ public class DetailActivity extends FMCommonActivity implements
 
     }
 
-    private void showContent(ArrayList<FMModel> fmModels) {
-        FMModel data = fmModels.get(0);
+    private void showContent(FMModel data) {
+
         TextView userName = (TextView) findViewById(R.id.userName);
         TextView content = (TextView) findViewById(R.id.content);
         TextView date = (TextView) findViewById(R.id.date);
-        TextView reply = (TextView) findViewById(R.id.reply);
+        TextView reply = (TextView) findViewById(R.id.replyAlarm);
         TextView pin = (TextView) findViewById(R.id.pin);
         TextView distance = (TextView) findViewById(R.id.distance);
         TextView viewCount = (TextView) findViewById(R.id.viewCount);

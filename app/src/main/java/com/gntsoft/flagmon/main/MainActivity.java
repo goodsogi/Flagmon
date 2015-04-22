@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.gntsoft.flagmon.FMCommonActivity;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.FMTabManager;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.friend.FriendManager;
@@ -15,6 +16,7 @@ import com.gntsoft.flagmon.login.LoginActivity;
 import com.gntsoft.flagmon.login.SignUpActivity;
 import com.gntsoft.flagmon.myalbum.MyAlbumManager;
 import com.gntsoft.flagmon.neighbor.NeighborManager;
+import com.gntsoft.flagmon.setting.OnKeyBackPressedListener;
 import com.gntsoft.flagmon.setting.SettingManager;
 import com.pluslibrary.utils.PlusClickGuard;
 
@@ -29,6 +31,9 @@ public class MainActivity extends FMCommonActivity {
     private SettingManager mSettingManager;
     private FMTabManager mSelectedTabManager;
     private boolean mIsFirstRun;
+    private OnKeyBackPressedListener mOnKeyBackPressedListener;
+
+    public static String activeTab= FMConstants.DATA_TAB_NEIGHBOR;
 
     public void onResume() {
         super.onResume();
@@ -54,16 +59,19 @@ public class MainActivity extends FMCommonActivity {
 
         switch (v.getId()) {
             case R.id.tab_neighbor:
+                activeTab = FMConstants.DATA_TAB_NEIGHBOR;
                 neighbor.setSelected(true);
                 mNeighborManager.chooseFragment();
                 mSelectedTabManager = mNeighborManager;
                 break;
             case R.id.tab_friend:
+                activeTab = FMConstants.DATA_TAB_FRIEND;
                 friend.setSelected(true);
                 mFriendManager.chooseFragment();
                 mSelectedTabManager = mFriendManager;
                 break;
             case R.id.tab_myalbum:
+                activeTab = FMConstants.DATA_TAB_MYALBUM;
                 myalbum.setSelected(true);
                 mMyAlbumManager.chooseFragment();
                 mSelectedTabManager = mMyAlbumManager;
@@ -82,6 +90,10 @@ public class MainActivity extends FMCommonActivity {
 
     }
 
+    public void setOnKeyBackPressedListener(OnKeyBackPressedListener listener) {
+        mOnKeyBackPressedListener = listener;
+    }
+
     public void logIn(View v) {
         PlusClickGuard.doIt(v);
 
@@ -98,7 +110,8 @@ public class MainActivity extends FMCommonActivity {
 
     @Override
     public void onBackPressed() {
-        showExitDialog();
+        if(mOnKeyBackPressedListener != null) mOnKeyBackPressedListener.onBack();
+        else showExitDialog();
     }
 
 //    private void setLoginFalse() {

@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.neighbor.ListFragment;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusToaster;
 
@@ -89,25 +90,29 @@ public class SettingFragment extends FMCommonFragment {
     }
 
     private void manageMon(View v) {
-//구현!!
-        PlusToaster.doIt(mActivity, "준비중...");
 
 
+        mActivity.getFragmentManager().beginTransaction()
+                .replace(R.id.container_main, new ManageMonFragment())
+                .commit();
     }
 
     private void showUserInfo(View v) {
-//구현!!
-        PlusToaster.doIt(mActivity, "준비중...");
+
+        mActivity.getFragmentManager().beginTransaction()
+                .replace(R.id.container_main, new UserProfileFragment())
+                .commit();
     }
 
     private void showNoti(View v) {
-//구현!!
-        PlusToaster.doIt(mActivity, "준비중...");
+        Intent intent = new Intent(mActivity, NotiActivity.class);
+        startActivity(intent);
+
     }
 
     private void setAlarm(View v) {
-//구현!!
-        PlusToaster.doIt(mActivity, "준비중...");
+        Intent intent = new Intent(mActivity, AlarmSettingActivity.class);
+        startActivity(intent);
     }
 
 

@@ -21,6 +21,8 @@ import com.gntsoft.flagmon.detail.DetailActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMListParser;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.UserModel;
+import com.gntsoft.flagmon.server.UserParser;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
@@ -110,17 +112,14 @@ public class ListFragment extends FMCommonFragment implements
         switch (from) {
             case GET_USER_LIST_DATA:
                 makeList(new FMListParser().doIt((String) datas));
-                showTotalUserPost();
+                showTotalUserPost(new UserParser().doIt((String) datas));
                 break;
         }
 
     }
 
-    public int getTotalUserPost() {
-        return ((UserActivity) mActivity).getTotalUserPost();
 
 
-    }
 
     @Override
     protected void addListenerToButton() {
@@ -174,9 +173,9 @@ public class ListFragment extends FMCommonFragment implements
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
-    private void showTotalUserPost() {
+    private void showTotalUserPost(UserModel userModel) {
         TextView totalUserPost = (TextView) mActivity.findViewById(R.id.totalUserPost);
-        totalUserPost.setText("친구를 맺으면 " + getTotalUserPost() + "개의 게시물을 함께 나눌 수 있습니다.");
+        totalUserPost.setText("친구를 맺으면 " + userModel.getUserTotalPost() + "개의 게시물을 함께 나눌 수 있습니다.");
     }
 
     private void makeList(final ArrayList<FMModel> datas) {

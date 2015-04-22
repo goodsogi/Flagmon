@@ -1,11 +1,14 @@
 package com.gntsoft.flagmon.myalbum;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
@@ -38,6 +41,9 @@ public class BuryTreasureActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
 
     private final int BURY_TREASURE = 33;
+    private final int GET_USER_MON = 133;
+    private int mUserMonInt;
+    private int mTotalMon;
 
     public void showChooseShareTypeBar(View v) {
         PlusClickGuard.doIt(v);
@@ -64,9 +70,16 @@ public class BuryTreasureActivity extends FMCommonActivity implements
                     //추가 액션??
                 }
                 break;
-
+            case GET_USER_MON:
+                mUserMonInt = 50;
+                showUserMon();
         }
 
+    }
+
+    private void showUserMon() {
+        TextView userMon = (TextView) findViewById(R.id.userMon);
+        userMon.setText(String.valueOf(mUserMonInt));
     }
 
     public String getShareType() {
@@ -79,9 +92,14 @@ public class BuryTreasureActivity extends FMCommonActivity implements
 
     public void completeBuryTreasure(View v) {
 
+        if(mTotalMon > mUserMonInt) {
+            showOverMonAlertdialog();
+                    return;
+
+        }
+
         String idx = getIntent().getStringExtra(FMConstants.KEY_POST_IDX);
 
-        //수정!!
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         //postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
         postParams.add(new BasicNameValuePair("photo_idx", idx));
@@ -89,13 +107,25 @@ public class BuryTreasureActivity extends FMCommonActivity implements
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
         }
         postParams.add(new BasicNameValuePair("list_menu", getShareType()));
-        postParams.add(new BasicNameValuePair("coin", getMonCount()));
+        postParams.add(new BasicNameValuePair("coin", String.valueOf(mTotalMon)));
 
 
         new PlusHttpClient(this, this, false).execute(BURY_TREASURE,
                 FMApiConstants.BURY_TREASURE, new PlusInputStreamStringConverter(),
                 postParams);
 
+    }
+
+    private void showOverMonAlertdialog() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("보유한 mon 개수를 초과했습니다. 다시 선택해주세요");
+        ab.setNeutralButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+        ab.show();
     }
 
     @Override
@@ -106,6 +136,24 @@ public class BuryTreasureActivity extends FMCommonActivity implements
         initNumberWheel();
 
         initShareType();
+
+        //주석해제!!
+        //getUserMonOnServer();
+    }
+
+    private void getUserMonOnServer() {
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+
+        if (LoginChecker.isLogIn(this)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+
+        new PlusHttpClient(this, this, false).execute(GET_USER_MON,
+                FMApiConstants.GET_USER_MON, new PlusInputStreamStringConverter(),
+                postParams);
+
     }
 
     private void initShareType() {
@@ -170,11 +218,11 @@ public class BuryTreasureActivity extends FMCommonActivity implements
 
     private void initNumberWheel() {
         final WheelView monCountWheel = (WheelView) findViewById(R.id.monCountWheel);
-        monCountWheel.setViewAdapter(new NumericWheelAdapter(this, 0, 23));
+        monCountWheel.setViewAdapter(new NumericWheelAdapter(this, 1, 23));
         monCountWheel.setCyclic(true);
 
         final WheelView boxCountWeel = (WheelView) findViewById(R.id.boxCountWeel);
-        boxCountWeel.setViewAdapter(new NumericWheelAdapter(this, 0, 23));
+        boxCountWeel.setViewAdapter(new NumericWheelAdapter(this, 1, 23));
         boxCountWeel.setCyclic(true);
 
         monCountWheel.setCurrentItem(1);
@@ -188,6 +236,9 @@ public class BuryTreasureActivity extends FMCommonActivity implements
             @Override
             public void onScrollingFinished(WheelView wheel) {
                 //처리!!
+                mTotalMon = monCountWheel.getCurrentItem() * boxCountWeel.getCurrentItem();
+                setMinusMon();
+
             }
         };
 
@@ -197,11 +248,12 @@ public class BuryTreasureActivity extends FMCommonActivity implements
 
     }
 
-    private String getMonCount() {
-
-        final WheelView monCountWheel = (WheelView) findViewById(R.id.monCountWheel);
-        return String.valueOf(monCountWheel.getCurrentItem());
+    private void setMinusMon() {
+        TextView minusMon = (TextView) findViewById(R.id.minusMon);
+        minusMon.setText("몬 " + mTotalMon+"개 차감");
     }
+
+
 
 
 }

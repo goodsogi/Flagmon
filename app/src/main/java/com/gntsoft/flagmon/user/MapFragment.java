@@ -26,6 +26,9 @@ import com.gntsoft.flagmon.detail.DetailActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMMapParser;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.UserMapParser;
+import com.gntsoft.flagmon.server.UserModel;
+import com.gntsoft.flagmon.server.UserParser;
 import com.gntsoft.flagmon.utils.FMLocationFinder;
 import com.gntsoft.flagmon.utils.FMLocationListener;
 import com.gntsoft.flagmon.utils.FMPhotoResizer;
@@ -141,7 +144,8 @@ public class MapFragment extends FMCommonMapFragment implements
         switch (from) {
             case GET_USER_MAP_DATA:
                 clearMap();
-                handleMapData(new FMMapParser().doIt((String) datas));
+                //showFlagPin(new UserParser().doIt((String) datas));
+                handleMapData(new UserMapParser().doIt((String) datas));
                 setIsMapDrawnTrue();
                 getTotalUserPost();
                 break;
@@ -151,6 +155,16 @@ public class MapFragment extends FMCommonMapFragment implements
                 ((UserActivity) mActivity).setTotalUserPost(10);
                 break;
         }
+
+    }
+
+    private void showFlagPin(UserModel userModel) {
+        TextView postCount = (TextView) mActivity.findViewById(R.id.postCount);
+        postCount.setText(userModel.getUserTotalPost());
+
+        TextView pinCount = (TextView) mActivity.findViewById(R.id.pinCount);
+        pinCount.setText(userModel.getUserTotalScrap());
+
 
     }
 
@@ -327,7 +341,7 @@ public class MapFragment extends FMCommonMapFragment implements
 
     private void showTotalUserPost(ArrayList<FMModel> fmModels) {
 //수정!!
-        TextView reply = (TextView) mActivity.findViewById(R.id.reply);
+        TextView reply = (TextView) mActivity.findViewById(R.id.replyAlarm);
         TextView pin = (TextView) mActivity.findViewById(R.id.pin);
         reply.setText(fmModels.get(0).getScrapCount());
         pin.setText(fmModels.get(0).getScrapCount());

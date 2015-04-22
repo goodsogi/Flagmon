@@ -4,6 +4,10 @@ package com.gntsoft.flagmon;
  * Created by johnny on 15. 2. 26.
  */
 public class FMConstants {
+    public static final String KEY_VIBRATION_MODE = "vibrationMode";
+    public static final String KEY_REPLY_ALARM = "replyAlarm";
+    public static final String KEY_TREASURE_ALARM = "treasureAlarm";
+    public static final String KEY_FLAG_ALARM = "flagAlarm";
     public static final String KEY_GCM_MSG = "pushMessage";
     public static final String KEY_GCM_VIBRATION_ENABLED = "pushVibrationEnabled";
     public static final String KEY_GCM_SOUND_ENABLED = "pushSoundEnabled";

@@ -115,7 +115,7 @@
                         android:src="@drawable/p05_box_icon_0001"/>
 
                     <TextView
-                        android:id="@+id/reply"
+                        android:id="@+id/replyAlarm"
                         android:layout_width="wrap_content"
                         android:layout_height="26dp"
                         android:layout_marginLeft="2dp"

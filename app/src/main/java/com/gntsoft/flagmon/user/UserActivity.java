@@ -74,17 +74,17 @@ public class UserActivity extends FMCommonActivity implements
 
     }
 
-    public int getTotalUserPost() {
-
-
-        return mtotalUserPost;
-    }
-
-    public void setTotalUserPost(int totalUserPost) {
-
-
-        mtotalUserPost = totalUserPost;
-    }
+//    public int getTotalUserPost() {
+//
+//
+//        return mtotalUserPost;
+//    }
+//
+//    public void setTotalUserPost(int totalUserPost) {
+//
+//
+//        mtotalUserPost = totalUserPost;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

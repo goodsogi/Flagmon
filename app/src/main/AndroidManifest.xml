@@ -138,6 +138,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/noTheme"/>
         <activity
+            android:name=".setting.NotiActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/noTheme"/>
+        <activity
+            android:name=".setting.AlarmSettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/noTheme"/>
+        <activity
             android:name=".myalbum.DetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/noTheme"/>

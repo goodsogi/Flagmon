@@ -65,7 +65,7 @@
         android:src="@drawable/reply" />
 
     <TextView
-        android:id="@+id/reply"
+        android:id="@+id/replyAlarm"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:layout_alignTop="@id/reply_icon"
@@ -79,9 +79,9 @@
         android:id="@+id/pin_icon"
         android:layout_width="18dp"
         android:layout_height="18dp"
-        android:layout_alignTop="@id/reply"
+        android:layout_alignTop="@id/replyAlarm"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/reply"
+        android:layout_toRightOf="@id/replyAlarm"
         android:src="@drawable/pin" />
 
     <TextView

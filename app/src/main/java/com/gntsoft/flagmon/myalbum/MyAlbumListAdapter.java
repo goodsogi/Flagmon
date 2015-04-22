@@ -46,7 +46,7 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
         final FMModel data = mDatas.get(position);
         TextView content = PlusViewHolder.get(convertView, R.id.content);
         TextView date = PlusViewHolder.get(convertView, R.id.date);
-        TextView reply = PlusViewHolder.get(convertView, R.id.reply);
+        TextView reply = PlusViewHolder.get(convertView, R.id.replyAlarm);
         TextView pin = PlusViewHolder.get(convertView, R.id.pin);
         TextView distance = PlusViewHolder.get(convertView, R.id.distance);
 //큰이미지 url 필요!!

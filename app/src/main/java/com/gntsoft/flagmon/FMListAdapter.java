@@ -43,7 +43,7 @@ public class FMListAdapter extends FMCommonAdapter<FMModel> {
         TextView title = PlusViewHolder.get(convertView, R.id.title);
         TextView content = PlusViewHolder.get(convertView, R.id.content);
         TextView distance = PlusViewHolder.get(convertView, R.id.distance);
-        TextView reply = PlusViewHolder.get(convertView, R.id.reply);
+        TextView reply = PlusViewHolder.get(convertView, R.id.replyAlarm);
         TextView pin = PlusViewHolder.get(convertView, R.id.pin);
         TextView registerDate = PlusViewHolder.get(convertView, R.id.registerDate);
 

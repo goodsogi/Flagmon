@@ -31,7 +31,7 @@
             android:src="@drawable/p05_box_icon_0001" />
 
         <TextView
-            android:id="@+id/reply"
+            android:id="@+id/postCount"
             android:layout_width="wrap_content"
             android:layout_height="26dp"
             android:layout_marginLeft="2dp"
@@ -49,7 +49,7 @@
             android:src="@drawable/p05_box_icon_0002" />
 
         <TextView
-            android:id="@+id/pin"
+            android:id="@+id/pinCount"
             android:layout_width="wrap_content"
             android:layout_height="26dp"
             android:layout_marginLeft="2dp"

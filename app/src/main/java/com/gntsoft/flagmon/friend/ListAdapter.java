@@ -61,7 +61,7 @@ public class ListAdapter extends FMCommonAdapter<FMModel> implements
         TextView name = PlusViewHolder.get(convertView, R.id.name);
         TextView content = PlusViewHolder.get(convertView, R.id.content);
         TextView date = PlusViewHolder.get(convertView, R.id.date);
-        TextView reply = PlusViewHolder.get(convertView, R.id.reply);
+        TextView reply = PlusViewHolder.get(convertView, R.id.replyAlarm);
         TextView pin = PlusViewHolder.get(convertView, R.id.pin);
         TextView distance = PlusViewHolder.get(convertView, R.id.distance);
 

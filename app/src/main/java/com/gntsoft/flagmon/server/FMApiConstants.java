@@ -5,6 +5,8 @@ package com.gntsoft.flagmon.server;
  */
 public class FMApiConstants {
     private static final String API_MAIN = "http://flagaround.com/site/json/";
+    public static final String GET_USER_MON = null;
+    public static final String GET_NOTI_DATA = API_MAIN + "bulletin.php";
     public static final String GET_MON_INFO = API_MAIN + "get_myinfo.php";
     public static final String EDIT_POST = API_MAIN + "posting_edit_ok.php";
     public static final String DELETE_POST = API_MAIN + "posting_del_ok.php";
@@ -18,7 +20,7 @@ public class FMApiConstants {
     public static final String GET_COMMENTS = API_MAIN + "commentlist.php";
     public static final String SEND_COMMENT = API_MAIN + "comment_ok.php";
     public static final String PERFORM_PIN = API_MAIN + "pinup.php";
-    public static final String GET_PHOTOS_NEARBY = API_MAIN + "postlist.php";
+    public static final String GET_PHOTOS_NEARBY = API_MAIN + "postlist_near.php";
     public static final String GET_TOTAL_REPLY_PIN = API_MAIN + "";
     public static final String ADD_FRIEND = API_MAIN + "friend_request.php";
     public static final String REPORT_POST = API_MAIN + "";

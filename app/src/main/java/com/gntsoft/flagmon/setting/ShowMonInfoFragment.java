@@ -90,23 +90,7 @@ public class ShowMonInfoFragment extends FMCommonFragment implements PlusOnGetDa
     }
 
 
-    private void makeList(ArrayList<MonInfoModel> models) {
-
-        ListView list = (ListView) mActivity.findViewById(R.id.listMonInfo);
-        if (list == null || models == null) return;
-        list.setAdapter(new MonListAdapter(mActivity,
-                models));
-
-        View header = mActivity.getLayoutInflater().inflate(R.layout.header, null, false);
-        list.addHeaderView(header);
-
-        list.setVisibility(View.VISIBLE);
-//        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            }
-//        });
-    }    @Override
+      @Override
     protected void addListenerToButton() {
 
         final LinearLayout showMonList = (LinearLayout) mActivity.findViewById(R.id.showMonList);
