@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class UserMapParser {
 
-    public ArrayList<FMModel> doIt(String rawData) {
+     public ArrayList<FMModel> doIt(String rawData) {
         ArrayList<FMModel> model = new ArrayList<>();
 
         try {

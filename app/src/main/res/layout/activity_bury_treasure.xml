@@ -183,7 +183,11 @@
                 android:id="@+id/minusMon"
                 android:layout_width="match_parent"
                 android:layout_height="82dp"
-                android:background="@drawable/minus_mon_button_selector"
+                android:background="#29375f"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
                 />
 
 

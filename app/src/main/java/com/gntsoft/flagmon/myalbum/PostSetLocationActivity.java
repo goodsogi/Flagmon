@@ -258,6 +258,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
             @Override
             protected void doIt() {
                 checkboxShareAll.setChecked(true);
+                barChooseShareType.setVisibility(View.GONE);
             }
         });
 
@@ -265,6 +266,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
             @Override
             protected void doIt() {
                 checkboxShareFriend.setChecked(true);
+                barChooseShareType.setVisibility(View.GONE);
             }
         });
 
@@ -273,6 +275,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
             @Override
             protected void doIt() {
                 checkboxPrivate.setChecked(true);
+                barChooseShareType.setVisibility(View.GONE);
             }
         });
 
@@ -325,7 +328,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
                     if (checkboxShareFriend.isChecked()) checkboxShareFriend.setChecked(false);
                     if (checkboxPrivate.isChecked()) checkboxPrivate.setChecked(false);
                     if (!completePost.isEnabled()) completePost.setEnabled(true);
-                    barChooseShareType.setVisibility(View.GONE);
+
 
                 }
             }
@@ -339,7 +342,6 @@ public class PostSetLocationActivity extends FMCommonActivity implements
                     if (checkboxShareAll.isChecked()) checkboxShareAll.setChecked(false);
                     if (checkboxPrivate.isChecked()) checkboxPrivate.setChecked(false);
                     if (!completePost.isEnabled()) completePost.setEnabled(true);
-                    barChooseShareType.setVisibility(View.GONE);
                 }
             }
         });
@@ -352,7 +354,6 @@ public class PostSetLocationActivity extends FMCommonActivity implements
                     if (checkboxShareAll.isChecked()) checkboxShareAll.setChecked(false);
                     if (checkboxShareFriend.isChecked()) checkboxShareFriend.setChecked(false);
                     if (!completePost.isEnabled()) completePost.setEnabled(true);
-                    barChooseShareType.setVisibility(View.GONE);
                 }
             }
         });

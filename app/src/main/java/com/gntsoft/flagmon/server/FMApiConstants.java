@@ -5,7 +5,7 @@ package com.gntsoft.flagmon.server;
  */
 public class FMApiConstants {
     private static final String API_MAIN = "http://flagaround.com/site/json/";
-    public static final String GET_USER_MON = null;
+    public static final String GET_USER_MON = API_MAIN + "get_myinfo.php";;
     public static final String GET_NOTI_DATA = API_MAIN + "bulletin.php";
     public static final String GET_MON_INFO = API_MAIN + "get_myinfo.php";
     public static final String EDIT_POST = API_MAIN + "posting_edit_ok.php";

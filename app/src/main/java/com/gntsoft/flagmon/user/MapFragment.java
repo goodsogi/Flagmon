@@ -152,7 +152,6 @@ public class MapFragment extends FMCommonMapFragment implements
             case GET_TOTAL_REPLY_PIN:
                 //파서등 수정!!
                 showTotalUserPost(new FMMapParser().doIt((String) datas));
-                ((UserActivity) mActivity).setTotalUserPost(10);
                 break;
         }
 

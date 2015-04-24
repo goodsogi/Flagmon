@@ -16,11 +16,13 @@ import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
+import com.gntsoft.flagmon.server.UserMonParser;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusLogger;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 
@@ -71,15 +73,16 @@ public class BuryTreasureActivity extends FMCommonActivity implements
                 }
                 break;
             case GET_USER_MON:
-                mUserMonInt = 50;
-                showUserMon();
+                String mon = new UserMonParser().doIt((String) datas);
+                mUserMonInt = Integer.parseInt(mon);
+                showUserMon(mon);
         }
 
     }
 
-    private void showUserMon() {
+    private void showUserMon(String mon) {
         TextView userMon = (TextView) findViewById(R.id.userMon);
-        userMon.setText(String.valueOf(mUserMonInt));
+        userMon.setText(mon);
     }
 
     public String getShareType() {
@@ -137,8 +140,7 @@ public class BuryTreasureActivity extends FMCommonActivity implements
 
         initShareType();
 
-        //주석해제!!
-        //getUserMonOnServer();
+        getUserMonOnServer();
     }
 
     private void getUserMonOnServer() {
@@ -175,6 +177,7 @@ public class BuryTreasureActivity extends FMCommonActivity implements
             @Override
             protected void doIt() {
                 checkboxShareAll.setChecked(true);
+                barChooseShareType.setVisibility(View.GONE);
             }
         });
 
@@ -182,6 +185,7 @@ public class BuryTreasureActivity extends FMCommonActivity implements
             @Override
             protected void doIt() {
                 checkboxShareFriend.setChecked(true);
+                barChooseShareType.setVisibility(View.GONE);
             }
         });
 
@@ -192,7 +196,7 @@ public class BuryTreasureActivity extends FMCommonActivity implements
                     barShareBtn.setBackgroundResource(R.drawable.p32_bt_0001);
                     if (checkboxShareFriend.isChecked()) checkboxShareFriend.setChecked(false);
                     if (!completeBuryTreasure.isEnabled()) completeBuryTreasure.setEnabled(true);
-                    barChooseShareType.setVisibility(View.GONE);
+
 
                 }
             }
@@ -205,7 +209,7 @@ public class BuryTreasureActivity extends FMCommonActivity implements
                     barShareBtn.setBackgroundResource(R.drawable.p32_bt_0003);
                     if (checkboxShareAll.isChecked()) checkboxShareAll.setChecked(false);
                     if (!completeBuryTreasure.isEnabled()) completeBuryTreasure.setEnabled(true);
-                    barChooseShareType.setVisibility(View.GONE);
+
                 }
             }
         });
@@ -225,8 +229,8 @@ public class BuryTreasureActivity extends FMCommonActivity implements
         boxCountWeel.setViewAdapter(new NumericWheelAdapter(this, 1, 23));
         boxCountWeel.setCyclic(true);
 
-        monCountWheel.setCurrentItem(1);
-        boxCountWeel.setCurrentItem(1);
+        monCountWheel.setCurrentItem(0);
+        boxCountWeel.setCurrentItem(0);
 
         OnWheelScrollListener scrollListener = new OnWheelScrollListener() {
             @Override
@@ -236,14 +240,21 @@ public class BuryTreasureActivity extends FMCommonActivity implements
             @Override
             public void onScrollingFinished(WheelView wheel) {
                 //처리!!
-                mTotalMon = monCountWheel.getCurrentItem() * boxCountWeel.getCurrentItem();
+                mTotalMon = (monCountWheel.getCurrentItem() +1) * (boxCountWeel.getCurrentItem()+1);
+                PlusLogger.doIt("monCountWheel: " + monCountWheel.getCurrentItem() + " boxCountWeel: " + boxCountWeel.getCurrentItem());
                 setMinusMon();
 
             }
         };
 
+
+
         monCountWheel.addScrollingListener(scrollListener);
         boxCountWeel.addScrollingListener(scrollListener);
+
+        mTotalMon = (monCountWheel.getCurrentItem() +1) * (boxCountWeel.getCurrentItem()+1);
+        PlusLogger.doIt("monCountWheel: " + monCountWheel.getCurrentItem() + " boxCountWeel: " + boxCountWeel.getCurrentItem());
+        setMinusMon();
 
 
     }
