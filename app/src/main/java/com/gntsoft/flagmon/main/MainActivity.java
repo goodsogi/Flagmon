@@ -134,12 +134,8 @@ public class MainActivity extends FMCommonActivity {
         final Button neighbor = (Button) findViewById(R.id.tab_neighbor);
 
         //fragment not attached to activity 오류가 발생하여 약간 delay를 줌
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                changeTab(neighbor);
-            }
-        }, 1000);
+       changeTab(neighbor);
+
 
 
 

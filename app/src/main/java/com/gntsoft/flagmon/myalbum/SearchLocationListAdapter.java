@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.R;
-import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.PlaceModel;
 import com.pluslibrary.utils.PlusViewHolder;
 
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ import java.util.ArrayList;
 /**
  * Created by johnny on 15. 3. 17.
  */
-public class SearchLocationListAdapter extends FMCommonAdapter<FMModel> {
+public class SearchLocationListAdapter extends FMCommonAdapter<PlaceModel> {
 
 
-    public SearchLocationListAdapter(Context context, ArrayList<FMModel> datas) {
+    public SearchLocationListAdapter(Context context, ArrayList<PlaceModel> datas) {
         super(context, R.layout.search_location_list_item, datas);
 
     }
@@ -30,11 +30,10 @@ public class SearchLocationListAdapter extends FMCommonAdapter<FMModel> {
                     parent, false);
         }
 
-        FMModel data = mDatas.get(position);
+        PlaceModel data = mDatas.get(position);
         TextView locationName = PlusViewHolder.get(convertView, R.id.locationName);
 
-        //수정!!
-        locationName.setText(data.getUserName());
+        locationName.setText(data.getName() + "       " + data.getAddress());
 
 
         return convertView;

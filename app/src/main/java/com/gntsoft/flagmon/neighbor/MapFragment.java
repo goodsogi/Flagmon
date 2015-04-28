@@ -337,6 +337,7 @@ public class MapFragment extends FMCommonMapFragment implements
 
 
     private void handleMapData(ArrayList<FMModel> datas) {
+        if(datas == null)return;
         PlusLogger.doIt("data size: " + datas.size());
 
         mGoogleMap.clear();

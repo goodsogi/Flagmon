@@ -51,7 +51,7 @@ public class FindFriendActivity extends FMCommonActivity implements
     public void findFriendInContact(View v) {
         PlusClickGuard.doIt(v);
 
-        Intent intent = new Intent(this, FindFriendInContactActivity.class);
+        Intent intent = new Intent(this, FindFriendInContactActivity2.class);
 
         startActivity(intent);
     }

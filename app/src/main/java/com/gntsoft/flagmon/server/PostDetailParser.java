@@ -25,10 +25,10 @@ public class PostDetailParser {
                 data.setUserName(subJsonObject.optString("unm"));
                 data.setPostType(subJsonObject.optString("posttype"));
                 data.setAlbumName(subJsonObject.optString("album"));
-                data.setAlbumName(subJsonObject.optString("album_cnt"));
-                data.setAlbumName(subJsonObject.optString("album_seq"));
-                data.setAlbumName(subJsonObject.optString("album_prev"));
-                data.setAlbumName(subJsonObject.optString("album_next"));
+                data.setAlbumTotalPost(subJsonObject.optString("album_cnt"));
+                data.setAlbumCurrentPosition(subJsonObject.optString("album_seq"));
+                data.setAlbumPreviousPostId(subJsonObject.optString("album_prev"));
+                data.setAlbumNextPostId(subJsonObject.optString("album_next"));
                 data.setMemo(subJsonObject.optString("memo"));
                 data.setImgUrl("http://" + subJsonObject.optString("imgURL"));
                 data.setLat(subJsonObject.optString("lat"));

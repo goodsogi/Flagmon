@@ -53,18 +53,18 @@
         android:text="@string/find_friend_at_facebook"
         android:textColor="#000000" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="#ffffff"
-        android:clickable="true"
-        android:drawableLeft="@drawable/twitter"
-        android:drawablePadding="5dp"
-        android:gravity="center_vertical"
-        android:onClick="findFriendOnTwitter"
-        android:paddingLeft="10dp"
-        android:text="@string/find_friend_at_twitter"
-        android:textColor="#000000" />
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="44dp"-->
+        <!--android:background="#ffffff"-->
+        <!--android:clickable="true"-->
+        <!--android:drawableLeft="@drawable/twitter"-->
+        <!--android:drawablePadding="5dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:onClick="findFriendOnTwitter"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:text="@string/find_friend_at_twitter"-->
+        <!--android:textColor="#000000" />-->
 
     <TextView
         android:layout_width="match_parent"

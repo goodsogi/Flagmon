@@ -80,11 +80,6 @@ public class BuryTreasureActivity extends FMCommonActivity implements
 
     }
 
-    private void showUserMon(String mon) {
-        TextView userMon = (TextView) findViewById(R.id.userMon);
-        userMon.setText(mon);
-    }
-
     public String getShareType() {
         CheckBox checkboxShareAll = (CheckBox) findViewById(R.id.checkboxShareAll);
         CheckBox checkboxShareFriend = (CheckBox) findViewById(R.id.checkboxShareFriend);
@@ -95,9 +90,9 @@ public class BuryTreasureActivity extends FMCommonActivity implements
 
     public void completeBuryTreasure(View v) {
 
-        if(mTotalMon > mUserMonInt) {
+        if (mTotalMon > mUserMonInt) {
             showOverMonAlertdialog();
-                    return;
+            return;
 
         }
 
@@ -119,18 +114,6 @@ public class BuryTreasureActivity extends FMCommonActivity implements
 
     }
 
-    private void showOverMonAlertdialog() {
-        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-        ab.setTitle("보유한 mon 개수를 초과했습니다. 다시 선택해주세요");
-        ab.setNeutralButton("닫기",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                });
-        ab.show();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,13 +126,29 @@ public class BuryTreasureActivity extends FMCommonActivity implements
         getUserMonOnServer();
     }
 
+    private void showUserMon(String mon) {
+        TextView userMon = (TextView) findViewById(R.id.userMon);
+        userMon.setText(mon);
+    }
+
+    private void showOverMonAlertdialog() {
+        AlertDialog.Builder ab = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+        ab.setTitle("보유한 mon 개수를 초과했습니다. 다시 선택해주세요");
+        ab.setNeutralButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                });
+        ab.show();
+    }
+
     private void getUserMonOnServer() {
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 
         if (LoginChecker.isLogIn(this)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
         }
-
 
 
         new PlusHttpClient(this, this, false).execute(GET_USER_MON,
@@ -240,7 +239,7 @@ public class BuryTreasureActivity extends FMCommonActivity implements
             @Override
             public void onScrollingFinished(WheelView wheel) {
                 //처리!!
-                mTotalMon = (monCountWheel.getCurrentItem() +1) * (boxCountWeel.getCurrentItem()+1);
+                mTotalMon = (monCountWheel.getCurrentItem() + 1) * (boxCountWeel.getCurrentItem() + 1);
                 PlusLogger.doIt("monCountWheel: " + monCountWheel.getCurrentItem() + " boxCountWeel: " + boxCountWeel.getCurrentItem());
                 setMinusMon();
 
@@ -248,11 +247,10 @@ public class BuryTreasureActivity extends FMCommonActivity implements
         };
 
 
-
         monCountWheel.addScrollingListener(scrollListener);
         boxCountWeel.addScrollingListener(scrollListener);
 
-        mTotalMon = (monCountWheel.getCurrentItem() +1) * (boxCountWeel.getCurrentItem()+1);
+        mTotalMon = (monCountWheel.getCurrentItem() + 1) * (boxCountWeel.getCurrentItem() + 1);
         PlusLogger.doIt("monCountWheel: " + monCountWheel.getCurrentItem() + " boxCountWeel: " + boxCountWeel.getCurrentItem());
         setMinusMon();
 
@@ -261,10 +259,8 @@ public class BuryTreasureActivity extends FMCommonActivity implements
 
     private void setMinusMon() {
         TextView minusMon = (TextView) findViewById(R.id.minusMon);
-        minusMon.setText("몬 " + mTotalMon+"개 차감");
+        minusMon.setText("몬 " + mTotalMon + "개 차감");
     }
-
-
 
 
 }

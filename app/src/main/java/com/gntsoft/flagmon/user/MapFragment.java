@@ -144,7 +144,7 @@ public class MapFragment extends FMCommonMapFragment implements
         switch (from) {
             case GET_USER_MAP_DATA:
                 clearMap();
-                //showFlagPin(new UserParser().doIt((String) datas));
+                showFlagPin(new UserParser().doIt((String) datas));
                 handleMapData(new UserMapParser().doIt((String) datas));
                 setIsMapDrawnTrue();
                 getTotalUserPost();

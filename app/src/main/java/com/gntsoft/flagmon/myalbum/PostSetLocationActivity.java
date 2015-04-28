@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,36 +15,34 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
-import com.gntsoft.flagmon.server.FMListParser;
-import com.gntsoft.flagmon.server.FMModel;
 import com.gntsoft.flagmon.server.PhotoLocationModel;
+import com.gntsoft.flagmon.server.PlaceModel;
+import com.gntsoft.flagmon.server.PlaceParser;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
-import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusDpPixelConverter;
 import com.pluslibrary.utils.PlusImageByteConverter;
 import com.pluslibrary.utils.PlusLogger;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by johnny on 15. 3. 4.
@@ -51,23 +51,36 @@ public class PostSetLocationActivity extends FMCommonActivity implements
         PlusOnGetDataListener {
     private static final int SEND_POST = 0;
     private static final int SEARCH_LOCATION = 1;
+
+    private static final String TAG_MAP_POST_LOCATION = "mapPostLocation";
     private Double mPhotoLat;
     private Double mPhotoLon;
     private String shareType;
 
     public void performLocationSearch(View v) {
         PlusClickGuard.doIt(v);
-        //수정!!
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        if (LoginChecker.isLogIn(this)) {
-            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+
+        EditText keywordView = (EditText) findViewById(R.id.locationSearchInput);
+        String keyword = keywordView.getText().toString();
+
+        if (keyword.equals("")) {
+            PlusToaster.doIt(this, "장소명을 입력해주세요");
+            return;
         }
 
 
-        new PlusHttpClient(this, this, false).execute(SEARCH_LOCATION,
-                FMApiConstants.SEARCH_LOCATION, new PlusInputStreamStringConverter(),
-                postParams);
+        try {
+            new PlusHttpClient(this, this, false).execute(
+                    SEARCH_LOCATION,
+                    FMApiConstants.SEARCH_PLACE + "query="
+                            + URLEncoder.encode(keyword, "UTF-8")
+                            + "&sensor=true" + "&language=ko" + "&key="
+                            + FMApiConstants.GOOGLE_APP_KEY,
+                    new PlaceParser());
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
 
     }
@@ -101,7 +114,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
                 break;
 
             case SEARCH_LOCATION:
-                makeList(new FMListParser().doIt((String) datas));
+                makeList((ArrayList<PlaceModel>) datas);
                 break;
         }
 
@@ -299,6 +312,18 @@ public class PostSetLocationActivity extends FMCommonActivity implements
             }
         });
 
+        locationSearchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    performLocationSearch(v);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         EditText photoDescription = (EditText) findViewById(R.id.photoDescription);
         photoDescription.addTextChangedListener(new TextWatcher() {
             @Override
@@ -375,33 +400,45 @@ public class PostSetLocationActivity extends FMCommonActivity implements
 
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.container_post_location, fragment)
+                .replace(R.id.container_post_location, fragment, TAG_MAP_POST_LOCATION)
                 .commit();
 
     }
 
-    private void makeList(final ArrayList<FMModel> datas) {
+    private void makeList(final ArrayList<PlaceModel> datas) {
 
         ListView list = (ListView) findViewById(R.id.listSearchLocation);
 
         if (list == null || datas == null) return;
+        list.setVisibility(View.VISIBLE);
         list.setAdapter(new SearchLocationListAdapter(this,
                 datas));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                moveMarkerToPostion();
+                moveMarkerToPostion(datas.get(position).getLat(), datas.get(position).getLng());
             }
         });
 
+
         //리스트 크기 제한(50dp??)
+        if (datas.size() > 2) {
+            //listview를 감싸고 있는 부모 view(컨테이너) 사용
+            list.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, PlusDpPixelConverter.doIt(this, 72)));
+        }
     }
 
-    private void moveMarkerToPostion() {
-        //구현!!
+    private void moveMarkerToPostion(String lat, String lng) {
+
+        mPhotoLat = Double.parseDouble(lat);
+        mPhotoLon = Double.parseDouble(lng);
+
+        MapPostLocationFragment fragment = (MapPostLocationFragment) getFragmentManager().findFragmentByTag(TAG_MAP_POST_LOCATION);
+        fragment.moveMarkerToPostion(mPhotoLat, mPhotoLon);
+
+
     }
 
-    ;
 
     private String getPhotoTakenTime(String imgUrl) {
 

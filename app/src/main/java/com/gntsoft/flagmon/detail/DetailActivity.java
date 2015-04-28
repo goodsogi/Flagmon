@@ -3,6 +3,7 @@ package com.gntsoft.flagmon.detail;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
@@ -29,11 +31,16 @@ import com.gntsoft.flagmon.user.UserActivity;
 import com.gntsoft.flagmon.utils.LoginChecker;
 import com.gntsoft.flagmon.utils.ScrollViewExt;
 import com.gntsoft.flagmon.utils.ScrollViewListener;
+import com.kakao.AppActionBuilder;
+import com.kakao.KakaoLink;
+import com.kakao.KakaoParameterException;
+import com.kakao.KakaoTalkLinkMessageBuilder;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
 import com.pluslibrary.utils.PlusListHeightCalculator;
+import com.pluslibrary.utils.PlusLogger;
 import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
@@ -46,7 +53,7 @@ import java.util.List;
  * Created by johnny on 15. 2. 12.
  */
 public class DetailActivity extends FMCommonActivity implements
-        PlusOnGetDataListener, ScrollViewListener {
+        PlusOnGetDataListener, ScrollViewListener, PlusSwipeDetector {
 
     private static final int REPORT_POST = 2;
     private static final int PERFORM_PIN = 22;
@@ -62,6 +69,8 @@ public class DetailActivity extends FMCommonActivity implements
     private String mUserName;
     private String mPreviousPostId;
     private String mNextPostId;
+
+
 
     @Override
     public void onSuccess(Integer from, Object datas) {
@@ -170,11 +179,35 @@ public class DetailActivity extends FMCommonActivity implements
     }
 
     @Override
+    public void onLeftToRightSwiped() {
+        getPreviousAlbumPost();
+    }
+
+    @Override
+    public void onRightToLeftSwiped() {
+        getNextAlbumPost();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PlusLogger.doIt("detail activity onCreate");
         setContentView(R.layout.activity_detail);
+        String idx = null;
+        String isFromKakao = null;
+
+        Uri uri = getIntent().getData();
+        if(uri != null) isFromKakao = uri.getQueryParameter("fromKakao");
+        if (isFromKakao != null && Boolean.parseBoolean(isFromKakao)){
+             idx = getIntent().getData().getQueryParameter("idx");
+
+        }else{
+            idx= getIntent().getStringExtra(FMConstants.KEY_POST_IDX);
+        }
+
+
         initScrollView();
-        getDataFromServer(getIntent().getStringExtra(FMConstants.KEY_POST_IDX));
+        getDataFromServer(idx);
 
 
     }
@@ -283,8 +316,30 @@ public class DetailActivity extends FMCommonActivity implements
     }
 
     private void copyUrl() {
-        PlusToaster.doIt(this, "준비중...");
-        //구현!!
+
+        try {
+            final KakaoLink kakaoLink = KakaoLink.getKakaoLink();
+            final KakaoTalkLinkMessageBuilder kakaoTalkLinkMessageBuilder = kakaoLink
+                    .createKakaoTalkLinkMessageBuilder();
+            kakaoTalkLinkMessageBuilder.addText("테스트");
+            kakaoTalkLinkMessageBuilder.addAppButton(
+                    "앱으로 이동",
+                    new AppActionBuilder()
+                            .setAndroidExecuteURLParam("fromKakao=true&idx=" +getIntent().getStringExtra(FMConstants.KEY_POST_IDX))
+                            .build());
+
+            kakaoLink.sendMessage(kakaoTalkLinkMessageBuilder.build(),
+                    this);
+
+        } catch (KakaoParameterException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+//        Intent sendIntent = new Intent();
+//        sendIntent.setAction(Intent.ACTION_SEND);
+//        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+//        sendIntent.setType("text/plain");
+//        startActivity(sendIntent);
     }
 
     private void doReport() {
@@ -362,7 +417,8 @@ public class DetailActivity extends FMCommonActivity implements
             mPreviousPostId = model.getAlbumPreviousPostId();
             mNextPostId = model.getAlbumNextPostId();
             showAlbumTitle(model);
-            enableSwipe();
+            //onTouch가 호출안됨
+            //enableSwipe();
         }
 
 
@@ -412,11 +468,15 @@ public class DetailActivity extends FMCommonActivity implements
         });
     }
 
+
+
     private void getNextAlbumPost() {
+        if(mNextPostId == null || mNextPostId.equals("0")) return;
         getDataFromServer(mNextPostId);
     }
 
     private void getPreviousAlbumPost() {
+        if(mPreviousPostId == null|| mPreviousPostId.equals("0")) return;
         getDataFromServer(mPreviousPostId);
     }
 

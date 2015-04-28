@@ -58,7 +58,7 @@ public class FMCommonMapFragment extends FMCommonFragment {
 
         switch (GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity())) {
             case ConnectionResult.SUCCESS:
-                PlusToaster.doIt(mActivity, "SUCCESS");
+                //PlusToaster.doIt(mActivity, "SUCCESS");
                 mMapView = (MapView) mActivity.findViewById(R.id.mapview);
                 mMapView.onCreate(savedInstanceState);
                 // Gets to GoogleMap from the MapView and does initialization stuff
@@ -89,10 +89,10 @@ public class FMCommonMapFragment extends FMCommonFragment {
                 }
                 break;
             case ConnectionResult.SERVICE_MISSING:
-                PlusToaster.doIt(mActivity, "SERVICE MISSING");
+                //PlusToaster.doIt(mActivity, "SERVICE MISSING");
                 break;
             case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
-                PlusToaster.doIt(mActivity, "UPDATE REQUIRED");
+                //PlusToaster.doIt(mActivity, "UPDATE REQUIRED");
                 break;
             default:
         }

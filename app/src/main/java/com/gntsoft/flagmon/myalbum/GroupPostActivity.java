@@ -18,7 +18,6 @@ import com.gntsoft.flagmon.server.FMModel;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
 import com.gntsoft.flagmon.utils.LoginChecker;
-import com.google.gson.Gson;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -62,7 +61,7 @@ public class GroupPostActivity extends FMCommonActivity implements
         EditText albumNameInput = (EditText) findViewById(R.id.albumNameInput);
         String albumName = albumNameInput.getText().toString();
 
-        if(albumName.equals("")) {
+        if (albumName.equals("")) {
             PlusToaster.doIt(this, "앨범 제목을 입력해주세요");
             return;
         }
@@ -155,13 +154,12 @@ public class GroupPostActivity extends FMCommonActivity implements
 
         ArrayList<String> idxs = mAdapter.getSelectedPostIdxs();
         StringBuilder builder = new StringBuilder();
-        for (int i=0; i<idxs.size();i++) {
+        for (int i = 0; i < idxs.size(); i++) {
             builder.append(idxs.get(i));
-            if(i != idxs.size() -1) builder.append(",");
+            if (i != idxs.size() - 1) builder.append(",");
         }
 
         return builder.toString();
-
 
 
         //return new Gson().toJson(mAdapter.getSelectedPostIdxs());

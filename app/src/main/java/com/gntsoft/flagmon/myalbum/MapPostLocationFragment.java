@@ -27,7 +27,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapPostLocationFragment extends FMCommonMapFragment implements
         GoogleMap.OnMarkerDragListener {
-
+    private static final int MAP_ZOOM_LEVEL = 12;
+    private static final int MARKER_ANIMATION_DURATION = 2000;
+    private Marker mMarker;
 
     public MapPostLocationFragment() {
         // TODO Auto-generated constructor stub
@@ -68,6 +70,17 @@ public class MapPostLocationFragment extends FMCommonMapFragment implements
 
     }
 
+    public void moveMarkerToPostion(Double lat, Double lng) {
+
+        LatLng position = new LatLng(lat, lng);
+
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM_LEVEL);
+        mGoogleMap.animateCamera(cameraUpdate, MARKER_ANIMATION_DURATION, null);
+
+        mMarker.setPosition(position);
+    }
+
     @Override
     protected void addListenerToButton() {
         // TODO Auto-generated method stub
@@ -85,7 +98,7 @@ public class MapPostLocationFragment extends FMCommonMapFragment implements
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 13);
         mGoogleMap.animateCamera(cameraUpdate);
 
-        mGoogleMap.addMarker(new MarkerOptions().position(position)
+        mMarker = mGoogleMap.addMarker(new MarkerOptions().position(position)
                 .icon(getMarKerImg(filepath)).anchor(0f, 1.0f).draggable(true));
     }
 

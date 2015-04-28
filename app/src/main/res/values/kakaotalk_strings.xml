@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <!-- 카카오톡 -->
+    <string name="kakao_app_key">e64e88d4d23567d0992597a12f7bc1a8</string>
+    <string name="kakao_scheme">kakaoe64e88d4d23567d0992597a12f7bc1a8</string>
+    <string name="kakaolink_host">kakaolink</string>
+    
+</resources>

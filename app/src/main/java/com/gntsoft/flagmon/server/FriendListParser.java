@@ -23,8 +23,8 @@ public class FriendListParser {
                 data.setIdx(subJsonObject.optString("idx"));
                 data.setProfileImageUrl(subJsonObject.optString("profile_url"));
                 data.setName(subJsonObject.optString("friend_name"));
-                data.setUserEmail(subJsonObject.optString("is_favorite"));
-                data.setIsFavorite(subJsonObject.optString("friend_email"));
+                data.setIsFavorite(subJsonObject.optString("is_favorite"));
+                data.setUserEmail(subJsonObject.optString("friend_email"));
 
                 model.add(data);
             }

@@ -5,7 +5,13 @@ package com.gntsoft.flagmon.server;
  */
 public class FMApiConstants {
     private static final String API_MAIN = "http://flagaround.com/site/json/";
-    public static final String GET_USER_MON = API_MAIN + "get_myinfo.php";;
+    public static final String GOOGLE_APP_KEY = "AIzaSyDJLWdu3EL_f_PS7MSR7NtBSKdKrLPc4rE"; // 구글
+    // 목적지 검색(android key가 아니라 server key를 생성??해야함)
+    // Google places api for android라 android key를 사용해봄, 안될 수 있
+    public static final String SEARCH_PLACE = "https://maps.googleapis.com/maps/api/place/textsearch/xml?"; // 구글
+    public static final String GET_CONTACT_FRIEND = API_MAIN + "friend_searchcontacts.php";
+    public static final String SEND_USER_CONTACT = API_MAIN + "send_contacts.php";
+    public static final String GET_USER_MON = API_MAIN + "get_myinfo.php";
     public static final String GET_NOTI_DATA = API_MAIN + "bulletin.php";
     public static final String GET_MON_INFO = API_MAIN + "get_myinfo.php";
     public static final String EDIT_POST = API_MAIN + "posting_edit_ok.php";

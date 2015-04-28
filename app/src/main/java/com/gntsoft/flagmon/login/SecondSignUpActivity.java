@@ -3,7 +3,10 @@ package com.gntsoft.flagmon.login;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -21,12 +24,19 @@ import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusLogger;
 import com.pluslibrary.utils.PlusOnClickListener;
+import com.pluslibrary.utils.PlusPhoneNumberFinder;
 import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +45,13 @@ import java.util.List;
  */
 public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetDataListener {
     private static final int SIGN_UP = 11;
+    private static final int SEND_USER_CONTACT = 22;
     final int DRAWABLE_RIGHT = 2;
     String[] sexs = {"남", "여"};
     private EditText mUserSexView;
+    private String userPhone;
+    private String userContacts;
+    private String mAuthKey;
 
     public void showPolicy(View v) {
         PlusClickGuard.doIt(v);
@@ -62,6 +76,9 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
             return;
         }
 
+        String userPhone = PlusPhoneNumberFinder
+                .doIt(SecondSignUpActivity.this);
+
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("user_email", userEmail));
         postParams.add(new BasicNameValuePair("user_pw", userPassword));
@@ -70,6 +87,7 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         // postParams.add(new BasicNameValuePair("where", mArea));
         //생년월일에 나이??
         postParams.add(new BasicNameValuePair("user_birth", userAge));
+        postParams.add(new BasicNameValuePair("user_phone", userPhone));
 
 //        SharedPreferences sharedPreference = getSharedPreferences(
 //                PlusConstants.PREF_NAME, Context.MODE_PRIVATE);
@@ -93,12 +111,93 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
 
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
                 PlusToaster.doIt(this, model.getResult().equals("success") ? "회원가입되었습니다" : "회원가입되지 못했습니다");
-                if (model.getResult().equals("success")) finish();
+                if (model.getResult().equals("success")) {
+                    mAuthKey = model.getMsg();
+                    getuserContacts();
+                }
+                break;
+
+            case SEND_USER_CONTACT:
+
+                ServerResultModel model2 = new ServerResultParser().doIt((String) datas);
+                if (model2 != null && model2.getResult().equals("success")) {
+                    PlusLogger.doIt("연락처 서버 전송 성공!!");
+                    finish();
+                }
                 break;
 
         }
 
     }
+
+    public void getuserContacts() {
+       UserContactManager manager = new UserContactManager(this);
+        manager.run();
+
+    }
+
+    public void sendUserContact(Cursor cursor) {
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("key", mAuthKey));
+        //makeContactJson(cursor) 한번 더 호출(evaluate) 하면 cursor를 이미 close했기 때문에 오류발생
+        postParams.add(new BasicNameValuePair("user_contacts", makeContactJson(cursor)));
+
+
+        new PlusHttpClient(this, this, false).execute(SEND_USER_CONTACT,
+                FMApiConstants.SEND_USER_CONTACT, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    private String makeContactJson(Cursor cursor) {
+        JSONArray jsonArray = new JSONArray();
+
+         while(cursor.moveToNext()) {
+             JSONObject jsonObject = new JSONObject();
+             String name = cursor.getString(cursor.getColumnIndex(Build.VERSION.SDK_INT
+                     >= Build.VERSION_CODES.HONEYCOMB ?
+                     ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
+                     ContactsContract.Contacts.DISPLAY_NAME));
+
+
+             String phoneNo = "";
+
+             String contactId =
+                     cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+
+             Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                     ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
+
+             while ((phones.moveToNext())) {
+                 phoneNo = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+             }
+
+             phones.close();
+
+
+             try {
+                 jsonObject.put("addr_name", name);
+
+                 jsonObject.put("addr_phone", phoneNo);
+
+             } catch (JSONException e) {
+                 e.printStackTrace();
+             }
+
+             jsonArray.put(jsonObject);
+
+         }
+        cursor.close();
+
+        try {
+            return URLEncoder.encode(jsonArray.toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

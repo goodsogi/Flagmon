@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
@@ -17,6 +18,7 @@ import com.gntsoft.flagmon.comment.CommentActivity;
 import com.gntsoft.flagmon.detail.GridviewAdapter;
 import com.gntsoft.flagmon.detail.MapFragment;
 import com.gntsoft.flagmon.detail.PhotoFragment;
+import com.gntsoft.flagmon.detail.PlusSwipeDetector;
 import com.gntsoft.flagmon.login.LoginActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMListParser;
@@ -45,7 +47,7 @@ import java.util.List;
  * Created by johnny on 15. 2. 12.
  */
 public class DetailActivity extends FMCommonActivity implements
-        PlusOnGetDataListener, ScrollViewListener {
+        PlusOnGetDataListener, ScrollViewListener, PlusSwipeDetector {
 
     private static final int EDIT_POST = 2;
     private static final int DELETE_POST = 5;
@@ -60,6 +62,8 @@ public class DetailActivity extends FMCommonActivity implements
     private String mPhotoLon;
     private String mUserEmail;
     private String mUserName;
+    private String mPreviousPostId;
+    private String mNextPostId;
 
     @Override
     public void onSuccess(Integer from, Object datas) {
@@ -94,6 +98,16 @@ public class DetailActivity extends FMCommonActivity implements
                 makeGridView(new FMListParser().doIt((String) datas));
                 break;
         }
+    }
+
+    @Override
+    public void onLeftToRightSwiped() {
+        getPreviousAlbumPost();
+    }
+
+    @Override
+    public void onRightToLeftSwiped() {
+        getNextAlbumPost();
     }
 
     public void showMenuPopup(View v) {
@@ -132,7 +146,6 @@ public class DetailActivity extends FMCommonActivity implements
 
 
     }
-
 
     public void changeMapPhoto(View v) {
         PlusClickGuard.doIt(v);
@@ -194,9 +207,19 @@ public class DetailActivity extends FMCommonActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myalbum_detail);
         initScrollView();
-        getDataFromServer();
+        getDataFromServer(getIntent().getStringExtra(FMConstants.KEY_POST_IDX));
 
 
+    }
+
+    private void getNextAlbumPost() {
+        if (mNextPostId == null || mNextPostId.equals("0")) return;
+        getDataFromServer(mNextPostId);
+    }
+
+    private void getPreviousAlbumPost() {
+        if (mPreviousPostId == null || mPreviousPostId.equals("0")) return;
+        getDataFromServer(mPreviousPostId);
     }
 
     private String getShareType(int checkedRadioButtonId) {
@@ -213,13 +236,13 @@ public class DetailActivity extends FMCommonActivity implements
         return "0";
     }
 
-    private void getDataFromServer() {
+    private void getDataFromServer(String idx) {
 
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 
         postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        postParams.add(new BasicNameValuePair("idx", getIntent().getStringExtra(FMConstants.KEY_POST_IDX)));
+        postParams.add(new BasicNameValuePair("idx", idx));
 
 
         new PlusHttpClient(this, this, false).execute(GET_DETAIL,
@@ -314,6 +337,7 @@ public class DetailActivity extends FMCommonActivity implements
 
 
     private void makeGridView(final ArrayList<FMModel> fmModels) {
+        if (fmModels == null) return;
         GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setAdapter(new GridviewAdapter(this, fmModels));
 
@@ -347,13 +371,39 @@ public class DetailActivity extends FMCommonActivity implements
 
     private void handleData(ArrayList<FMModel> fmModels) {
 
-        showContent(fmModels);
+        FMModel model = fmModels.get(0);
+        showContent(model);
 
-        getPhotosNearBy(fmModels.get(0).getLat(), fmModels.get(0).getLon());
+        getPhotosNearBy(model.getLat(), model.getLon());
 
         showMainPhoto();
 
         checkLogin();
+
+        if (model.getPostType().equals("1")) {
+            mPreviousPostId = model.getAlbumPreviousPostId();
+            mNextPostId = model.getAlbumNextPostId();
+            showAlbumTitle(model);
+            //onTouch가 호출안됨
+            //enableSwipe();
+        }
+
+
+    }
+
+    private void showAlbumTitle(FMModel model) {
+        LinearLayout containerAlbumTitle = (LinearLayout) findViewById(R.id.containerAlbumTitle);
+        containerAlbumTitle.setVisibility(View.VISIBLE);
+
+
+        TextView albumName = (TextView) findViewById(R.id.albumName);
+        albumName.setText(model.getAlbumName());
+
+        TextView currentPage = (TextView) findViewById(R.id.currentPage);
+        currentPage.setText(model.getAlbumCurrentPosition());
+
+        TextView totalPage = (TextView) findViewById(R.id.totalPage);
+        totalPage.setText(model.getAlbumTotalPost());
 
 
     }
@@ -385,8 +435,7 @@ public class DetailActivity extends FMCommonActivity implements
 
     }
 
-    private void showContent(ArrayList<FMModel> fmModels) {
-        FMModel data = fmModels.get(0);
+    private void showContent(FMModel data) {
         //TextView userName = (TextView) findViewById(R.id.userName);
         TextView content = (TextView) findViewById(R.id.content);
         TextView date = (TextView) findViewById(R.id.date);

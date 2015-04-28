@@ -2,6 +2,7 @@ package com.gntsoft.flagmon.neighbor;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -52,7 +53,12 @@ public class NeighborManager implements FMTabManager {
     private void toggleMenu(View v) {
         if (v.isSelected()) {
             v.setSelected(false);
-            showMap();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    showMap();
+                }}, 1000);
         } else {
             v.setSelected(true);
             showList();
