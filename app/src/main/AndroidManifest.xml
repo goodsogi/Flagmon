@@ -95,6 +95,14 @@
             android:name=".gcm.GcmTreasurePopupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Dialog"/>
+        <activity
+            android:name=".gcm.SimpleMessageDialogActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dialog"/>
+        <activity
+            android:name=".gcm.PinPostPopupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Dialog"/>
 
         <activity
             android:name=".login.FindPasswordActivity"
@@ -115,6 +123,7 @@
         <activity
             android:name=".detail.DetailActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/noTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -147,6 +156,14 @@
             android:theme="@style/noTheme"/>
         <activity
             android:name=".setting.NotiActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/noTheme"/>
+        <activity
+            android:name=".setting.ChangeNameActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/noTheme"/>
+        <activity
+            android:name=".setting.ChangeStatusMessageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/noTheme"/>
         <activity

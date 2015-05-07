@@ -69,7 +69,7 @@ public class DetailActivity extends FMCommonActivity implements
     private String mUserName;
     private String mPreviousPostId;
     private String mNextPostId;
-
+    private String mKakaoMessage;
 
 
     @Override
@@ -98,6 +98,22 @@ public class DetailActivity extends FMCommonActivity implements
                 makeGridView(new FMListParser().doIt((String) datas));
                 break;
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        Uri uri = intent.getData();
+        String isFromKakao = null;
+        String idx = null;
+        if(uri != null) isFromKakao = uri.getQueryParameter("fromKakao");
+        if (isFromKakao != null && Boolean.parseBoolean(isFromKakao)){
+            idx = uri.getQueryParameter("idx");
+
+        }
+
+        getDataFromServer(idx);
     }
 
     public void showMenuPopup(View v) {
@@ -199,7 +215,7 @@ public class DetailActivity extends FMCommonActivity implements
         Uri uri = getIntent().getData();
         if(uri != null) isFromKakao = uri.getQueryParameter("fromKakao");
         if (isFromKakao != null && Boolean.parseBoolean(isFromKakao)){
-             idx = getIntent().getData().getQueryParameter("idx");
+             idx = uri.getQueryParameter("idx");
 
         }else{
             idx= getIntent().getStringExtra(FMConstants.KEY_POST_IDX);
@@ -321,7 +337,7 @@ public class DetailActivity extends FMCommonActivity implements
             final KakaoLink kakaoLink = KakaoLink.getKakaoLink();
             final KakaoTalkLinkMessageBuilder kakaoTalkLinkMessageBuilder = kakaoLink
                     .createKakaoTalkLinkMessageBuilder();
-            kakaoTalkLinkMessageBuilder.addText("테스트");
+            kakaoTalkLinkMessageBuilder.addText(mKakaoMessage);
             kakaoTalkLinkMessageBuilder.addAppButton(
                     "앱으로 이동",
                     new AppActionBuilder()
@@ -555,6 +571,9 @@ public class DetailActivity extends FMCommonActivity implements
         mPhotoLon = data.getLon();
         mUserEmail = data.getUserId();
         mUserName = data.getUserName();
+
+
+        mKakaoMessage = "[플래그몬] " + mUserName + " " + data.getMemo();
 
 
     }

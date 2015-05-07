@@ -4,6 +4,10 @@ package com.gntsoft.flagmon;
  * Created by johnny on 15. 2. 26.
  */
 public class FMConstants {
+    public static final String KEY_STATUS_MESSAGE = "statusMessage";
+    public static final String KEY_FIRST_NAME = "firstName";
+    public static final String KEY_LAST_NAME = "lastName";
+    public static final String KEY_TREASURE_FIND_ALARM = "treasureFindAlarm";
     public static final String KEY_VIBRATION_MODE = "vibrationMode";
     public static final String KEY_REPLY_ALARM = "replyAlarm";
     public static final String KEY_TREASURE_ALARM = "treasureAlarm";
@@ -28,7 +32,7 @@ public class FMConstants {
     public static final String DATA_TAB_FRIEND = "1";
     public static final String DATA_TAB_MYALBUM = "2";
     public static final String DATA_TAB_NEIGHBOR = "0";
-    public static final String KEY_TAB_NAME = "tabName";
+    public static final String KEY_TARGET = "target";
     public static final String KEY_MAIN_CONTENT_TYPE = "mainContentType";
     public static final int CONTENT_MAP = 0;
     public static final int CONTENT_LIST = 1;

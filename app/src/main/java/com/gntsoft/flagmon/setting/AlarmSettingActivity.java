@@ -127,7 +127,7 @@ public class AlarmSettingActivity extends FMCommonActivity{
         SharedPreferences sharedPreference = getSharedPreferences(
                 FMConstants.PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor e = sharedPreference.edit();
-        e.putBoolean(FMConstants.KEY_FLAG_ALARM, isChecked);
+        e.putBoolean(FMConstants.KEY_TREASURE_FIND_ALARM, isChecked);
         e.commit();
     }
 

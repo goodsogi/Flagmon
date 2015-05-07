@@ -25,6 +25,7 @@ import com.pluslibrary.utils.PlusClickGuard;
 public class MainActivity extends FMCommonActivity {
 
 
+    private static final int ACTIVITY_LOGIN = 23;
     private int mPressedTabId;
     private MyAlbumManager mMyAlbumManager;
     private FriendManager mFriendManager;
@@ -38,10 +39,10 @@ public class MainActivity extends FMCommonActivity {
 
     public void onResume() {
         super.onResume();
-        if (mSelectedTabManager != null && !mIsFirstRun) {
-            mSelectedTabManager.chooseFragment();
-        }
-        mIsFirstRun = false;
+//        if (mSelectedTabManager != null && !mIsFirstRun) {
+//            mSelectedTabManager.chooseFragment();
+//        }
+//        mIsFirstRun = false;
     }
 
     public void changeTab(View v) {
@@ -91,6 +92,20 @@ public class MainActivity extends FMCommonActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case ACTIVITY_LOGIN:
+                refreshActivity();
+        }
+    }
+
+    public void refreshActivity() {
+        mSelectedTabManager.chooseFragment();
+    }
+
     public void setOnKeyBackPressedListener(OnKeyBackPressedListener listener) {
         mOnKeyBackPressedListener = listener;
     }
@@ -99,7 +114,7 @@ public class MainActivity extends FMCommonActivity {
         PlusClickGuard.doIt(v);
 
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, ACTIVITY_LOGIN);
     }
 
     public void signUp(View v) {

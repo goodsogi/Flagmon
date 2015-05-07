@@ -20,6 +20,7 @@ import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.ServerResultModel;
 import com.gntsoft.flagmon.server.ServerResultParser;
+import com.gntsoft.flagmon.setting.PlusNumberPicker;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -148,6 +149,11 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
                 postParams);
     }
 
+    public void setUserAge(String userAge) {
+        EditText userAgeView = (EditText) findViewById(R.id.userAge);
+        userAgeView.setText(userAge);
+    }
+
     private String makeContactJson(Cursor cursor) {
         JSONArray jsonArray = new JSONArray();
 
@@ -257,6 +263,13 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
                 return false;
             }
         });
+        userAgeView.setOnClickListener(new PlusOnClickListener() {
+            @Override
+            protected void doIt() {
+                showAgePicker();
+            }
+        });
+
 
 
         final CheckBox servicePolicy = (CheckBox) findViewById(R.id.checkbox_service);
@@ -287,6 +300,11 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
                     enableFinishButton();
             }
         });
+    }
+
+    private void showAgePicker() {
+        PlusNumberPicker picker = new PlusNumberPicker(this, null);
+        picker.show();
     }
 
     private void enableFinishButton() {

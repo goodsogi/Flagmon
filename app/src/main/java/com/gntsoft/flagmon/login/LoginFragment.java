@@ -31,7 +31,7 @@ public class LoginFragment extends FMCommonFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login,
                 container, false);
-        int tabName = this.getArguments().getInt(FMConstants.KEY_TAB_NAME);
+        int tabName = this.getArguments().getInt(FMConstants.KEY_TARGET);
         setBackgound(rootView, tabName);
         return rootView;
     }

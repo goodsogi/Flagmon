@@ -5,6 +5,9 @@ package com.gntsoft.flagmon.server;
  */
 public class FMApiConstants {
     private static final String API_MAIN = "http://flagaround.com/site/json/";
+    public static final String UPDATE_PROFILE_PHOTO =  API_MAIN + "my_profile_ok.php";;
+    public static final String UPDATE_PROFILE = API_MAIN + "my_profile_ok.php";;
+    public static final String GET_PROFILE = API_MAIN + "my_profile.php";
     public static final String GOOGLE_APP_KEY = "AIzaSyDJLWdu3EL_f_PS7MSR7NtBSKdKrLPc4rE"; // 구글
     // 목적지 검색(android key가 아니라 server key를 생성??해야함)
     // Google places api for android라 android key를 사용해봄, 안될 수 있

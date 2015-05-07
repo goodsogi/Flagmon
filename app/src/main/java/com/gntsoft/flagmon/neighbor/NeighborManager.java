@@ -53,12 +53,13 @@ public class NeighborManager implements FMTabManager {
     private void toggleMenu(View v) {
         if (v.isSelected()) {
             v.setSelected(false);
+            //fragment가 activity에 attach 안되었다는 오류 발생해서 딜레이를 2초 줌
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
 
                     showMap();
-                }}, 1000);
+                }}, 2000);
         } else {
             v.setSelected(true);
             showList();

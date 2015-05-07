@@ -1,6 +1,7 @@
 package com.gntsoft.flagmon.gcm;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ public class GcmTreasurePopupActivity extends Activity {
      *
      * @param v
      */
-    public void doClose(View v) {
+    public void close(View v) {
         finish();
     }
 
@@ -33,12 +34,28 @@ public class GcmTreasurePopupActivity extends Activity {
 
     }
 
+    public void confirm(View v) {
+        launchPinPostPopup();
+    }
+
+    private void launchPinPostPopup() {
+        String postIdx = getIntent().getStringExtra(FMConstants.KEY_POST_IDX);
+        Intent intent = new Intent(getApplicationContext(),
+                PinPostPopupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(FMConstants.KEY_POST_IDX, postIdx);
+
+        getApplicationContext().startActivity(intent);
+        finish();
+    }
+
     private void showContents() {
 
         String msg = getIntent().getStringExtra(FMConstants.KEY_GCM_MSG);
 
         TextView pushMsg = (TextView) findViewById(R.id.pushMsg);
         pushMsg.setText(msg);
+
 
 
     }

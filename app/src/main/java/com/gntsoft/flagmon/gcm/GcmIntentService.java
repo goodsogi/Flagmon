@@ -24,6 +24,16 @@ public class GcmIntentService extends IntentService {
     private static final String TAG = GcmIntentService.class.getSimpleName();
     private static final String LOG_TAG = "FMPush";
     private static final int NOTIFICATION_ID = 11;
+    /**
+     * 친구 플래그 발견 : 푸쉬 target = 01
+     보물상자 발견 :    푸쉬 target = 05
+     보물상자 알림 :    푸쉬 target = 02
+     덧글 알림     :    푸쉬 target = 03
+     */
+    private static final String FIND_FRIEND_FLAG = "01";
+    private static final String FIND_TREASURE = "05";
+    private static final String TREASURE_ALARM = "02";
+    private static final String REPLAY_ALARM = "03";
     // id로 생성자를 만들 필요 없음
     public static final String PROJECT_ID = "268246742383";// 이전 버전과 달리 project
     private boolean mSoundEnabled;
@@ -33,6 +43,10 @@ public class GcmIntentService extends IntentService {
     private Vibrator mVibrator;
 
     private MediaPlayer mMediaPlayer;
+    private boolean mFlagAlarmEnabled;
+    private boolean mTreasureFindAlarmEnabled;
+    private boolean mReplayAlarmEnabled;
+    private boolean mTreasureAlarmEnabled;
 
     public GcmIntentService() {
         super(TAG);
@@ -52,6 +66,21 @@ public class GcmIntentService extends IntentService {
                 FMConstants.KEY_GCM_SOUND_ENABLED, true);
         mVibrationEnabled = sharedPreference.getBoolean(
                 FMConstants.KEY_GCM_VIBRATION_ENABLED, true);
+
+
+        mTreasureAlarmEnabled = sharedPreference.getBoolean(
+                FMConstants.KEY_TREASURE_ALARM, true);
+
+        mReplayAlarmEnabled = sharedPreference.getBoolean(
+                FMConstants.KEY_REPLY_ALARM, true);
+
+        mTreasureFindAlarmEnabled = sharedPreference.getBoolean(
+                FMConstants.KEY_TREASURE_FIND_ALARM, true);
+
+        mFlagAlarmEnabled = sharedPreference.getBoolean(
+                FMConstants.KEY_FLAG_ALARM, true);
+
+
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mMediaPlayer = MediaPlayer.create(getApplicationContext(),
                 R.raw.push_sound);
@@ -87,7 +116,7 @@ public class GcmIntentService extends IntentService {
 
 
                 // 푸시로 받은 쿠폰 인덱스 처리
-                launchGcmPopup(extras);
+                selectPopup(extras);
                 // showNotification(getApplicationContext(), encodedTitle);
             }
         }
@@ -96,11 +125,28 @@ public class GcmIntentService extends IntentService {
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
+    private void selectPopup(Bundle extras) {
 
-    private void launchGcmPopup(Bundle extras) {
+        String target = extras.get("target").toString();
+        if(target.equals(FIND_FRIEND_FLAG) && !mFlagAlarmEnabled) return;
+        if(target.equals(FIND_TREASURE) && !mTreasureFindAlarmEnabled) return;
+        if(target.equals(TREASURE_ALARM) && !mTreasureAlarmEnabled) return;
+        if(target.equals(REPLAY_ALARM) && !mReplayAlarmEnabled) return;
+
+        if(target.equals(FIND_FRIEND_FLAG)) launchGcmPopup(extras);
+        if(target.equals(FIND_TREASURE)) launchTreasurePopup(extras);
+        if(target.equals(TREASURE_ALARM)) launchGcmPopup(extras);
+        if(target.equals(REPLAY_ALARM)) launchGcmPopup(extras);
+
+
+    }
+
+
+    private void launchTreasurePopup(Bundle extras) {
+
 
         String postIdx = extras.get("index").toString();
-        String tabName = extras.get("target").toString();
+
         //디코딩 필요!!
         String message = extras.get("message").toString();
 
@@ -109,12 +155,32 @@ public class GcmIntentService extends IntentService {
                 GcmTreasurePopupActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(FMConstants.KEY_POST_IDX, postIdx);
-        intent.putExtra(FMConstants.KEY_TAB_NAME, tabName);
         intent.putExtra(FMConstants.KEY_GCM_MSG, message);
 
         getApplicationContext().startActivity(intent);
 
     }
+
+    private void launchGcmPopup(Bundle extras) {
+
+
+        String postIdx = extras.get("index").toString();
+
+        //디코딩 필요!!
+        String message = extras.get("message").toString();
+
+
+        Intent intent = new Intent(getApplicationContext(),
+                SimpleMessageDialogActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(FMConstants.KEY_POST_IDX, postIdx);
+        intent.putExtra(FMConstants.KEY_GCM_MSG, message);
+
+        getApplicationContext().startActivity(intent);
+
+    }
+
+
 
 //	private void showNotification(Context context, String message) {
 //		// 인텐트 수정 필요!!

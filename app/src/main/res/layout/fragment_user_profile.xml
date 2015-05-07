@@ -11,6 +11,7 @@
       android:layout_width="118dp"
       android:layout_height="118dp"
       android:layout_margin="8dp"
+      android:scaleType="centerCrop"
       android:background="@drawable/p41_picturebox"
       />
     <TextView
@@ -39,16 +40,16 @@
     <TextView
         android:id="@+id/authText"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:text="핸드폰 인증"  android:layout_marginLeft="12dp"
+        android:layout_height="wrap_content" android:text="핸드폰"  android:layout_marginLeft="12dp"
         android:layout_toRightOf="@id/userPic"
         android:layout_below="@id/userEmail"
         android:layout_marginTop="3dp"
         android:textColor="#999999"
         />
     
-    <Button
-        android:layout_width="65dp"
-        android:layout_height="26dp" android:background="@drawable/auth_btn_selector" android:layout_below="@id/userEmail" android:layout_alignParentRight="true" android:layout_marginRight="10dp"/>
+    <!--<Button-->
+        <!--android:layout_width="65dp"-->
+        <!--android:layout_height="26dp" android:background="@drawable/auth_btn_selector" android:layout_below="@id/userEmail" android:layout_alignParentRight="true" android:layout_marginRight="10dp"/>-->
     <EditText
         android:id="@+id/phoneNo"
         android:layout_width="match_parent"
@@ -71,7 +72,7 @@
     <TextView
         android:id="@+id/userName"
         android:layout_width="match_parent"
-        android:layout_height="56dp" android:text="박선우"
+        android:layout_height="56dp"
         android:layout_below="@id/line1"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -93,7 +94,7 @@
     <TextView
         android:id="@+id/userStatus"
         android:layout_width="match_parent"
-        android:layout_height="56dp" android:text="상태메시지"
+        android:layout_height="56dp"
         android:layout_below="@id/subline1"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -115,7 +116,7 @@
     <TextView
         android:id="@+id/sex"
         android:layout_width="match_parent"
-        android:layout_height="56dp" android:text="남"
+        android:layout_height="56dp"
         android:layout_below="@id/line2"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -138,7 +139,7 @@
     <TextView
         android:id="@+id/age"
         android:layout_width="match_parent"
-        android:layout_height="56dp" android:text="37세"
+        android:layout_height="56dp"
         android:layout_below="@id/subline2"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -175,7 +176,7 @@
     <TextView
         android:id="@+id/logoutHelp"
         android:layout_width="match_parent"
-        android:layout_height="40dp" android:text="swiss220@naver.com 계정을 로그아웃합니다"
+        android:layout_height="40dp"
         android:layout_below="@id/logout"
         android:textStyle="bold"
         android:gravity="center_vertical"

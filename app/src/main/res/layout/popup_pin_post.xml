@@ -68,7 +68,7 @@
         android:layout_height="41dp"
         android:layout_below="@+id/popupBackground"
         android:background="@drawable/p38_popup02_yes"
-        android:onClick="confirm"
+        android:onClick="pinPost"
         android:paddingLeft="10dp"
         android:text="핀꽂기"
         android:textColor="#ffffff"

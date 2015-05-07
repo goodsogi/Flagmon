@@ -121,7 +121,7 @@ public class FriendManager implements FMTabManager, PlusOnGetDataListener {
     private void showLogin(int tabName) {
 
         Bundle bundle = new Bundle();
-        bundle.putInt(FMConstants.KEY_TAB_NAME, tabName);
+        bundle.putInt(FMConstants.KEY_TARGET, tabName);
         LoginFragment fragment = new LoginFragment();
         fragment.setArguments(bundle);
         mActivity.getFragmentManager().beginTransaction()
