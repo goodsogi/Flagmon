@@ -8,6 +8,7 @@ public class MonInfoModel {
     private String reason;
     private String point;
     private String expireDate;
+    private String seq;
 
     public String getValueDate() {
         return valueDate;
@@ -39,5 +40,13 @@ public class MonInfoModel {
 
     public void setExpireDate(String expireDate) {
         this.expireDate = expireDate;
+    }
+
+    public String getSeq() {
+        return seq;
+    }
+
+    public void setSeq(String seq) {
+        this.seq = seq;
     }
 }

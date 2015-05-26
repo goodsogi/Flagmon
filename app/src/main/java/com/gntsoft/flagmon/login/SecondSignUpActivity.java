@@ -1,6 +1,7 @@
 package com.gntsoft.flagmon.login;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,7 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
@@ -35,6 +39,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -49,7 +54,7 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
     private static final int SEND_USER_CONTACT = 22;
     final int DRAWABLE_RIGHT = 2;
     String[] sexs = {"남", "여"};
-    private EditText mUserSexView;
+    private TextView mUserSexView;
     private String userPhone;
     private String userContacts;
     private String mAuthKey;
@@ -69,11 +74,11 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         String userName = getIntent().getStringExtra(FMConstants.KEY_USER_NAME);
 
 
-        EditText userAgeView = (EditText) findViewById(R.id.userAge);
-        String userAge = userAgeView.getText().toString();
+        TextView userBirthView = (TextView) findViewById(R.id.userBirth);
+       String userBirth = userBirthView.getText().toString();
 
-        if (userAge.equals("")) {
-            PlusToaster.doIt(this, "나이를 입력해주세요");
+        if (userBirth == null || userBirth.equals("")) {
+            PlusToaster.doIt(this, "생년월일을 입력해주세요");
             return;
         }
 
@@ -87,7 +92,7 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         postParams.add(new BasicNameValuePair("user_name", userName));
         // postParams.add(new BasicNameValuePair("where", mArea));
         //생년월일에 나이??
-        postParams.add(new BasicNameValuePair("user_birth", userAge));
+        postParams.add(new BasicNameValuePair("user_birth", userBirth));
         postParams.add(new BasicNameValuePair("user_phone", userPhone));
 
 //        SharedPreferences sharedPreference = getSharedPreferences(
@@ -149,10 +154,7 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
                 postParams);
     }
 
-    public void setUserAge(String userAge) {
-        EditText userAgeView = (EditText) findViewById(R.id.userAge);
-        userAgeView.setText(userAge);
-    }
+
 
     private String makeContactJson(Cursor cursor) {
         JSONArray jsonArray = new JSONArray();
@@ -216,7 +218,7 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
     }
 
     private void addListenerToButton() {
-        mUserSexView = (EditText) findViewById(R.id.userSex);
+        mUserSexView = (TextView) findViewById(R.id.userSex);
         mUserSexView.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
@@ -224,51 +226,82 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
             }
         });
 
-        mUserSexView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int leftEdgeOfRightDrawable = mUserSexView.getRight()
-                            - mUserSexView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-                    // when EditBox has padding, adjust leftEdge like
-                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
-                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
-                        // clicked on clear icon
-                        mUserSexView.setText("");
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-
-
-        final EditText userAgeView = (EditText) findViewById(R.id.userAge);
-        userAgeView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int leftEdgeOfRightDrawable = userAgeView.getRight()
-                            - userAgeView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-                    // when EditBox has padding, adjust leftEdge like
-                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
-                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
-                        // clicked on clear icon
-                        userAgeView.setText("");
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-        userAgeView.setOnClickListener(new PlusOnClickListener() {
+        final TextView userBirthView = (TextView) findViewById(R.id.userBirth);
+        userBirthView.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                showAgePicker();
+
+                showBirthPicker();
             }
         });
+
+
+
+        ImageView userSexDelete = (ImageView) findViewById(R.id.userSexDelete);
+        userSexDelete.setOnClickListener(new PlusOnClickListener() {
+            @Override
+            protected void doIt() {
+                mUserSexView.setText("");
+            }
+        });
+
+        ImageView userBirthDelete = (ImageView) findViewById(R.id.userBirthDelete);
+        userBirthDelete.setOnClickListener(new PlusOnClickListener() {
+            @Override
+            protected void doIt() {
+                userBirthView.setText("");
+            }
+        });
+
+
+
+//
+//        mUserSexView.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    int leftEdgeOfRightDrawable = mUserSexView.getRight()
+//                            - mUserSexView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+//                    // when EditBox has padding, adjust leftEdge like
+//                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
+//                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
+//                        // clicked on clear icon
+//                        mUserSexView.setText("");
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
+//
+//
+//        final TextView userBirthView = (TextView) findViewById(R.id.userBirth);
+//        userBirthView.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    int leftEdgeOfRightDrawable = userBirthView.getRight()
+//                            - userBirthView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+//                    // when EditBox has padding, adjust leftEdge like
+//                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
+//                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
+//                        // clicked on clear icon
+//                        userBirthView.setText("");
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
+//        userBirthView.setOnClickListener(new PlusOnClickListener() {
+//            @Override
+//            protected void doIt() {
+//
+//                showBirthPicker();
+//            }
+//        });
 
 
 
@@ -302,10 +335,33 @@ public class SecondSignUpActivity extends FMCommonActivity implements PlusOnGetD
         });
     }
 
-    private void showAgePicker() {
-        PlusNumberPicker picker = new PlusNumberPicker(this, null);
-        picker.show();
+    private void showBirthPicker() {
+//        PlusNumberPicker picker = new PlusNumberPicker(this, null);
+//        picker.show();
+        int year = 1990;
+        int month = 0;
+        int day = 1;
+        DatePickerDialog dialog = new DatePickerDialog(this, datePickerListener, year, month, day);
+        dialog.show();
+
+
     }
+
+    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+                // when dialog box is closed, below method will be called.
+        public void onDateSet(DatePicker view, int selectedYear,int selectedMonth, int selectedDay) {
+
+            // set selected date into Text View
+            final TextView userBirthView = (TextView) findViewById(R.id.userBirth);
+            String birthday = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay ;
+            userBirthView.setText(birthday);
+
+        }
+    };
+
+
+
+
 
     private void enableFinishButton() {
         Button finish = (Button) findViewById(R.id.finishSignup);

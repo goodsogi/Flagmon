@@ -44,6 +44,16 @@ public class ListAdapter extends FMCommonAdapter<FMModel> implements
         PlusOnGetDataListener {
 
     private static final int SCRAP_THIS = 0;
+    private static final int CONTENT_LINES = 6;
+    private static final int ELLIPSIZED_TEXT = 80;
+    private final String testText = "그 부분을 제 소스에 어느 부분에 넣어야 하는지 좀 알려주실수 있나요?\n" +
+            "위에 첨부된 소스를 한번 살펴봐주세요.\n" +
+            "\n" +
+            "protected void onDraw(Canvas canvas) {\n" +
+            "        if(stroke) {\n" +
+            "            ColorStateList states = getTextColors();\n" +
+            "            getPaint().setStyle(Style.STROKE);\n" +
+            "            getPaint().setStrokeWidth(strokeWidth);\n";
 
     public ListAdapter(Context context, ArrayList<FMModel> datas) {
         super(context, R.layout.friend_list_item, datas);
@@ -59,7 +69,7 @@ public class ListAdapter extends FMCommonAdapter<FMModel> implements
 
         final FMModel data = mDatas.get(position);
         TextView name = PlusViewHolder.get(convertView, R.id.name);
-        TextView content = PlusViewHolder.get(convertView, R.id.content);
+        final TextView content = PlusViewHolder.get(convertView, R.id.content);
         TextView date = PlusViewHolder.get(convertView, R.id.date);
         TextView reply = PlusViewHolder.get(convertView, R.id.replyAlarm);
         TextView pin = PlusViewHolder.get(convertView, R.id.pin);
@@ -84,12 +94,25 @@ public class ListAdapter extends FMCommonAdapter<FMModel> implements
         //myPost.setVisibility(View.VISIBLE);
 
         name.setText(data.getUserName());
-        content.setText(data.getMemo());
+       content.setText(data.getMemo());
+        //content.setText(testText);
         date.setText(data.getRegisterDate());
         reply.setText(data.getReplyCount());
         pin.setText(data.getScrapCount());
         //거리 처리!!
         //distance.setText(data.getDistance());
+
+        final TextView viewMore = PlusViewHolder.get(convertView, R.id.view_more);
+        if(isEllipsized(data.getMemo())) {
+            viewMore.setVisibility(View.VISIBLE);
+            viewMore.setOnClickListener(new PlusOnClickListener() {
+                @Override
+                protected void doIt() {
+                    viewMore.setVisibility(View.GONE);
+                    content.setLines(CONTENT_LINES);
+                }
+            });
+        }
 
         Button writeReply = PlusViewHolder.get(convertView, R.id.writeReply);
         writeReply.setOnClickListener(new PlusOnClickListener() {
@@ -113,6 +136,11 @@ public class ListAdapter extends FMCommonAdapter<FMModel> implements
 
 
         return convertView;
+    }
+
+    public boolean isEllipsized(String s) {
+        //layout이 null 오류발생
+        return s.length() > ELLIPSIZED_TEXT ;
     }
 
     @Override

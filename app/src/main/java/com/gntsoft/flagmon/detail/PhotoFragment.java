@@ -55,12 +55,12 @@ public class PhotoFragment extends FMCommonFragment implements
     protected void addListenerToButton() {
         ImageView mainImage = (ImageView) mActivity.findViewById(R.id.main_img);
         mImageLoader.displayImage(getArguments().getString(FMConstants.KEY_IMAGE_URL, ""), mainImage, mOption);
-        mainImage.setOnClickListener(new PlusOnClickListener() {
-            @Override
-            protected void doIt() {
-                goToImageViewer();
-            }
-        });
+//        mainImage.setOnClickListener(new PlusOnClickListener() {
+//            @Override
+//            protected void doIt() {
+//                goToImageViewer();
+//            }
+//        });
 
         mainImage.setOnTouchListener(new View.OnTouchListener() {
             public static final float MIN_DISTANCE = 150;
@@ -96,6 +96,8 @@ public class PhotoFragment extends FMCommonFragment implements
                         else
                         {
                             // consider as something else - a screen tap for example
+                            goToImageViewer();
+
                         }
                         break;
                 }

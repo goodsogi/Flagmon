@@ -16,6 +16,9 @@ import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FriendListParser;
 import com.gntsoft.flagmon.server.FriendModel;
+import com.gntsoft.flagmon.server.SearchFriendByNameListParser;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -57,7 +60,13 @@ public class SearchFriendByNameActivity extends FMCommonActivity implements
             return;
         switch (from) {
             case SEARCH_fRIENDS_BY_NAME:
-                makeList(new FriendListParser().doIt((String) datas));
+                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+                if(model != null &&model.getResult().equals("fail")) {
+                    PlusToaster.doIt(this, "검색 결과가 없습니다");
+                    return;
+                }
+
+                makeList(new SearchFriendByNameListParser().doIt((String) datas));
                 break;
         }
 

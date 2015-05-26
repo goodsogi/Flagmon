@@ -23,6 +23,7 @@ import com.pluslibrary.img.PlusImageConstants;
 import com.pluslibrary.server.PlusOnGetDataListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by johnny on 15. 3. 3.
@@ -111,6 +112,8 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
 
     private void launchPostSetLocationActivity(String imagePath) {
 
+        finish();
+
         Intent intent = new Intent(this, PostSetLocationActivity.class);
         intent.putExtra(FMConstants.KEY_IMAGE_PATH, imagePath);
         startActivity(intent);
@@ -169,6 +172,8 @@ public class PostChoosePhotoActivity extends FMCommonActivity implements
 
             model.add(data);
         }
+
+        Collections.reverse(model);
 
 
         return model;

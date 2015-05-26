@@ -1,9 +1,21 @@
 package com.gntsoft.flagmon;
 
+import com.pluslibrary.utils.PlusDpPixelConverter;
+
 /**
  * Created by johnny on 15. 2. 26.
  */
 public class FMConstants {
+    //푸시 타켓
+    public static final String VIEW_POST = "01";
+    public static final String VIEW_REPLY = "02";
+    public static final String USER_PROFILE = "03";
+    public static final String FRIEND_SETTING = "04";
+    public static final String TREASURE_POST = "05";
+    public static final String VIEW_NOTI = "06";
+    public static final String VIEW_ALARM = "07";
+
+    public static final String KEY_PUSH_TARGET = "pushTarget";
     public static final String KEY_STATUS_MESSAGE = "statusMessage";
     public static final String KEY_FIRST_NAME = "firstName";
     public static final String KEY_LAST_NAME = "lastName";
@@ -54,6 +66,6 @@ public class FMConstants {
     public static final String KEY_URL = "url";
     public static final String URL_TWITTER_OAUTH_VERIFIER = "oauth_verifier";
     public static final int TWITTER_OAUTH = 22;
-    public static final int REQUIRED_IMAGE_HEIGHT = 144;
-    public static final int REQUIRED_IMAGE_WIDTH = 144;
+    public static final int REQUIRED_IMAGE_HEIGHT_DP = 72;
+    public static final int REQUIRED_IMAGE_WIDTH_DP = 72;
 }

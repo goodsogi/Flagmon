@@ -30,10 +30,15 @@ public class GcmIntentService extends IntentService {
      보물상자 알림 :    푸쉬 target = 02
      덧글 알림     :    푸쉬 target = 03
      */
-    private static final String FIND_FRIEND_FLAG = "01";
-    private static final String FIND_TREASURE = "05";
-    private static final String TREASURE_ALARM = "02";
-    private static final String REPLAY_ALARM = "03";
+
+//    01 포스팅 -> 포스팅 조회 화면
+//    02 댓글 -> 해당 포스팅의 댓글 조회 화면
+//    03 사용자 -> 사용자 프로필 조회 화면
+//    04 친구설정 -> 친구 설정 화면
+//    05 보물발견 -> 친구가 보물을 묻은 포스팅 화면
+//    06 공지사항 -> 공지사항 화면
+//    07 개인알림 -> 알림목록 화면
+
     // id로 생성자를 만들 필요 없음
     public static final String PROJECT_ID = "268246742383";// 이전 버전과 달리 project
     private boolean mSoundEnabled;
@@ -127,16 +132,24 @@ public class GcmIntentService extends IntentService {
 
     private void selectPopup(Bundle extras) {
 
-        String target = extras.get("target").toString();
-        if(target.equals(FIND_FRIEND_FLAG) && !mFlagAlarmEnabled) return;
-        if(target.equals(FIND_TREASURE) && !mTreasureFindAlarmEnabled) return;
-        if(target.equals(TREASURE_ALARM) && !mTreasureAlarmEnabled) return;
-        if(target.equals(REPLAY_ALARM) && !mReplayAlarmEnabled) return;
+//        String target = extras.get("target").toString();
+//        if(target.equals(FIND_FRIEND_FLAG) && !mFlagAlarmEnabled) return;
+//        if(target.equals(FIND_TREASURE) && !mTreasureFindAlarmEnabled) return;
+//        if(target.equals(TREASURE_ALARM) && !mTreasureAlarmEnabled) return;
+//        if(target.equals(REPLAY_ALARM) && !mReplayAlarmEnabled) return;
+//
+//        if(target.equals(FIND_FRIEND_FLAG)) launchGcmPopup(extras);
+//        if(target.equals(FIND_TREASURE)) launchTreasurePopup(extras);
+//        if(target.equals(TREASURE_ALARM)) launchGcmPopup(extras);
+//        if(target.equals(REPLAY_ALARM)) launchGcmPopup(extras);
 
-        if(target.equals(FIND_FRIEND_FLAG)) launchGcmPopup(extras);
-        if(target.equals(FIND_TREASURE)) launchTreasurePopup(extras);
-        if(target.equals(TREASURE_ALARM)) launchGcmPopup(extras);
-        if(target.equals(REPLAY_ALARM)) launchGcmPopup(extras);
+
+        //알림 설정에 따른 처리(친구의 플래그 발견 등)!!
+        //보물 발견 팝업 처리!!
+
+
+        String target = extras.get("target").toString();
+        launchGcmPopup(extras);
 
 
     }
@@ -149,6 +162,7 @@ public class GcmIntentService extends IntentService {
 
         //디코딩 필요!!
         String message = extras.get("message").toString();
+
 
 
         Intent intent = new Intent(getApplicationContext(),
@@ -168,11 +182,12 @@ public class GcmIntentService extends IntentService {
 
         //디코딩 필요!!
         String message = extras.get("message").toString();
-
+        String target = extras.get("target").toString();
 
         Intent intent = new Intent(getApplicationContext(),
                 SimpleMessageDialogActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(FMConstants.KEY_PUSH_TARGET, target);
         intent.putExtra(FMConstants.KEY_POST_IDX, postIdx);
         intent.putExtra(FMConstants.KEY_GCM_MSG, message);
 

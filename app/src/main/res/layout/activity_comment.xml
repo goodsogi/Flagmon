@@ -44,6 +44,7 @@
         android:layout_height="54dp"
         android:background="@drawable/reply_box"
         android:gravity="center_vertical"
+        android:focusableInTouchMode="true"
         android:orientation="horizontal">
 
         <EditText

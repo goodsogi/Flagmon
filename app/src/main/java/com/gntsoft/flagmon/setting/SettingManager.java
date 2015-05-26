@@ -18,6 +18,7 @@ import com.gntsoft.flagmon.utils.LoginChecker;
 public class SettingManager implements FMTabManager {
 
     private final Activity mActivity;
+    private String mPushTarget;
 
     public SettingManager(Activity activity) {
         mActivity = activity;
@@ -31,6 +32,10 @@ public class SettingManager implements FMTabManager {
             showSettingTopBar(); //수정!!
             showSettingFragment();
         }
+    }
+
+    public void setPushTarget(String target) {
+        mPushTarget = target;
     }
 
     private void showLogin(int tabName) {
@@ -47,9 +52,19 @@ public class SettingManager implements FMTabManager {
 
 
     private void showSettingFragment() {
+//        mActivity.getFragmentManager().beginTransaction()
+//                .replace(R.id.container_main, new SettingFragment())
+//                .commit();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(FMConstants.KEY_TARGET, mPushTarget);
+        SettingFragment fragment = new SettingFragment();
+        fragment.setArguments(bundle);
         mActivity.getFragmentManager().beginTransaction()
-                .replace(R.id.container_main, new SettingFragment())
+                .replace(R.id.container_main, fragment)
                 .commit();
+
+        mPushTarget ="";
     }
 
 

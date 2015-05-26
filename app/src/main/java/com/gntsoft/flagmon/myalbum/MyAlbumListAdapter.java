@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.gntsoft.flagmon.FMCommonAdapter;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.comment.CommentActivity;
+import com.gntsoft.flagmon.main.MainActivity;
 import com.gntsoft.flagmon.server.FMModel;
 import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusViewHolder;
@@ -29,6 +31,18 @@ import java.util.ArrayList;
  * Created by johnny on 15. 3. 3.
  */
 public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
+
+
+    private static final int CONTENT_LINES = 6;
+    private static final int ELLIPSIZED_TEXT = 80;
+    private final String testText = "그 부분을 제 소스에 어느 부분에 넣어야 하는지 좀 알려주실수 있나요?\n" +
+            "위에 첨부된 소스를 한번 살펴봐주세요.\n" +
+            "\n" +
+            "protected void onDraw(Canvas canvas) {\n" +
+            "        if(stroke) {\n" +
+            "            ColorStateList states = getTextColors();\n" +
+            "            getPaint().setStyle(Style.STROKE);\n" +
+            "            getPaint().setStrokeWidth(strokeWidth);\n";
 
 
     public MyAlbumListAdapter(Context context, ArrayList<FMModel> datas) {
@@ -44,7 +58,7 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
         }
 
         final FMModel data = mDatas.get(position);
-        TextView content = PlusViewHolder.get(convertView, R.id.content);
+        final TextView content = PlusViewHolder.get(convertView, R.id.content);
         TextView date = PlusViewHolder.get(convertView, R.id.date);
         TextView reply = PlusViewHolder.get(convertView, R.id.replyAlarm);
         TextView pin = PlusViewHolder.get(convertView, R.id.pin);
@@ -59,6 +73,21 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
         date.setText(data.getRegisterDate());
         reply.setText(data.getReplyCount());
         pin.setText(data.getScrapCount());
+
+
+        final TextView viewMore = PlusViewHolder.get(convertView, R.id.view_more);
+        if(isEllipsized(data.getMemo())) {
+            viewMore.setVisibility(View.VISIBLE);
+            viewMore.setOnClickListener(new PlusOnClickListener() {
+                @Override
+                protected void doIt() {
+                    viewMore.setVisibility(View.GONE);
+                    content.setLines(CONTENT_LINES);
+                }
+            });
+        }
+
+
         //거리 처리!!
         //distance.setText(data.getDistance());
 
@@ -86,12 +115,26 @@ public class MyAlbumListAdapter extends FMCommonAdapter<FMModel> {
         return convertView;
     }
 
+//    public boolean isEllipsized(TextView textView) {
+//        //layout이 null 오류발생
+//        Layout layout = textView.getLayout();
+//        int ellipsisCount = layout.getEllipsisCount(CONTENT_LINES-1);
+//            return ellipsisCount > 0;
+//    }
+
+    public boolean isEllipsized(String s) {
+        //layout이 null 오류발생
+        return s.length() > ELLIPSIZED_TEXT ;
+    }
+
 
     private void buryTreasure(String idx) {
 
         Intent intent = new Intent(mContext, BuryTreasureActivity.class);
         intent.putExtra(FMConstants.KEY_POST_IDX, idx);
         mContext.startActivity(intent);
+
+        ((MainActivity)mContext).setBurryTreasureFlag(true);
 
 
     }

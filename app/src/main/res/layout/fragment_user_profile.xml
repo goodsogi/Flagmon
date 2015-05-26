@@ -24,18 +24,30 @@
         android:layout_marginTop="3dp"
         android:textColor="#999999"
         />
-    <EditText
+
+    <TextView
         android:id="@+id/userEmail"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_toRightOf="@id/userPic"
         android:layout_below="@id/accountText"
         android:layout_marginRight="10dp"
-        android:drawableRight="@drawable/p41_x"
         android:inputType="textEmailAddress"
         android:privateImeOptions="defaultInputmode=english;"
         android:textColor="#999999"
-         />
+        />
+    <!--<EditText-->
+        <!--android:id="@+id/userEmail"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_toRightOf="@id/userPic"-->
+        <!--android:layout_below="@id/accountText"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:drawableRight="@drawable/p41_x"-->
+        <!--android:inputType="textEmailAddress"-->
+        <!--android:privateImeOptions="defaultInputmode=english;"-->
+        <!--android:textColor="#999999"-->
+         <!--/>-->
 
     <TextView
         android:id="@+id/authText"
@@ -50,17 +62,28 @@
     <!--<Button-->
         <!--android:layout_width="65dp"-->
         <!--android:layout_height="26dp" android:background="@drawable/auth_btn_selector" android:layout_below="@id/userEmail" android:layout_alignParentRight="true" android:layout_marginRight="10dp"/>-->
-    <EditText
+
+    <TextView
         android:id="@+id/phoneNo"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_toRightOf="@id/userPic"
         android:layout_below="@id/authText"
         android:layout_marginRight="10dp"
-        android:drawableRight="@drawable/p41_x"
         android:inputType="number"
         android:textColor="#999999"
         />
+    <!--<EditText-->
+        <!--android:id="@+id/phoneNo"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_toRightOf="@id/userPic"-->
+        <!--android:layout_below="@id/authText"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:drawableRight="@drawable/p41_x"-->
+        <!--android:inputType="number"-->
+        <!--android:textColor="#999999"-->
+        <!--/>-->
     
     <View
         android:layout_width="match_parent"
@@ -137,7 +160,7 @@
         />
 
     <TextView
-        android:id="@+id/age"
+        android:id="@+id/birth"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_below="@id/subline2"
@@ -156,7 +179,7 @@
         android:layout_height="19dp"
         android:background="#eff1f3"
         android:id="@+id/line3"
-        android:layout_below="@id/age"
+        android:layout_below="@id/birth"
          />
 
     <TextView

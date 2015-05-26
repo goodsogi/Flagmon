@@ -1,5 +1,7 @@
 package com.gntsoft.flagmon.setting;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.MonInfoModel;
@@ -32,6 +35,7 @@ import java.util.List;
 public class ShowMonInfoFragment extends FMCommonFragment implements PlusOnGetDataListener{
 
     private  final int GET_MON_INFO = 77;
+    private  final int GET_INITIAL_MON_INFO = 88;
 
     public ShowMonInfoFragment() {
     }
@@ -39,6 +43,7 @@ public class ShowMonInfoFragment extends FMCommonFragment implements PlusOnGetDa
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getInitialMonInfoFromServer();
     }
 
     @Nullable
@@ -59,11 +64,28 @@ public class ShowMonInfoFragment extends FMCommonFragment implements PlusOnGetDa
         switch (from) {
 
             case GET_MON_INFO:
-                showTotalMon(new TotalMonParser().doIt((String) datas));
+               // showHelp();
+                //showTotalMon(new TotalMonParser().doIt((String) datas));
                 makeList(new MonInfoParser().doIt((String) datas));
                 break;
 
+            case GET_INITIAL_MON_INFO:
+                showHelp();
+                showTotalMon(new TotalMonParser().doIt((String) datas));
+                //makeList(new MonInfoParser().doIt((String) datas));
+                break;
+
         }
+    }
+
+    private void showHelp() {
+        SharedPreferences sharedPreferences = mActivity.getSharedPreferences(
+                FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        String userEmail = sharedPreferences.getString(FMConstants.KEY_USER_EMAIL, "");
+
+        TextView notiMonInfo = (TextView) mActivity.findViewById(R.id.notiMonInfo);
+        notiMonInfo.setText(userEmail + "님께 알려드립니다. 무료로 지급된 몬의 경우 유효기간이 존재하므로, 만료일 확인 후 사용해 주시기 바랍니다.");
+
     }
 
     private void showTotalMon(String totalMon) {
@@ -75,11 +97,13 @@ public class ShowMonInfoFragment extends FMCommonFragment implements PlusOnGetDa
 
         ListView list = (ListView) mActivity.findViewById(R.id.listMonInfo);
         if (list == null || models == null) return;
-        list.setAdapter(new MonListAdapter(mActivity,
-                models));
+
 
         View header = mActivity.getLayoutInflater().inflate(R.layout.header, null, false);
         list.addHeaderView(header);
+
+        list.setAdapter(new MonListAdapter(mActivity,
+                models));
 
         list.setVisibility(View.VISIBLE);
 //        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -110,6 +134,18 @@ public class ShowMonInfoFragment extends FMCommonFragment implements PlusOnGetDa
 
 
         new PlusHttpClient(mActivity, this, false).execute(GET_MON_INFO,
+                FMApiConstants.GET_MON_INFO, new PlusInputStreamStringConverter(),
+                postParams);
+    }
+
+    private void getInitialMonInfoFromServer() {
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+
+        postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        postParams.add(new BasicNameValuePair("page", "1"));
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_INITIAL_MON_INFO,
                 FMApiConstants.GET_MON_INFO, new PlusInputStreamStringConverter(),
                 postParams);
     }

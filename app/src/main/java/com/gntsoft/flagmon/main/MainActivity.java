@@ -1,10 +1,10 @@
 package com.gntsoft.flagmon.main;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 
@@ -12,6 +12,8 @@ import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.FMTabManager;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.comment.CommentActivity;
+import com.gntsoft.flagmon.detail.DetailActivity;
 import com.gntsoft.flagmon.friend.FriendManager;
 import com.gntsoft.flagmon.login.LoginActivity;
 import com.gntsoft.flagmon.login.SignUpActivity;
@@ -19,6 +21,7 @@ import com.gntsoft.flagmon.myalbum.MyAlbumManager;
 import com.gntsoft.flagmon.neighbor.NeighborManager;
 import com.gntsoft.flagmon.setting.OnKeyBackPressedListener;
 import com.gntsoft.flagmon.setting.SettingManager;
+import com.gntsoft.flagmon.utils.FMLocationFinder;
 import com.pluslibrary.utils.PlusClickGuard;
 
 
@@ -35,14 +38,40 @@ public class MainActivity extends FMCommonActivity {
     private boolean mIsFirstRun;
     private OnKeyBackPressedListener mOnKeyBackPressedListener;
 
+
     public static String activeTab= FMConstants.DATA_TAB_NEIGHBOR;
+    private boolean mIsUpdatingProfile;
+    private boolean mIsBurryTreasure;
 
     public void onResume() {
         super.onResume();
-//        if (mSelectedTabManager != null && !mIsFirstRun) {
+
+//        if(mIsUpdatingProfile) return;
+//
+//        if(mIsBurryTreasure) {
+//            mIsBurryTreasure = false;
+//            return;
+//        }
+//
+//
+//        if(mIsFirstRun) {
+//            showNeighborMapFragment();
+//            mIsFirstRun = false;
+//        } else {
 //            mSelectedTabManager.chooseFragment();
 //        }
-//        mIsFirstRun = false;
+
+
+
+
+
+    }
+
+    private void showNeighborMapFragment() {
+        final Button neighbor = (Button) findViewById(R.id.tab_neighbor);
+
+        //fragment not attached to activity 오류가 발생하여 약간 delay를 줌
+        changeTab(neighbor);
     }
 
     public void changeTab(View v) {
@@ -92,9 +121,19 @@ public class MainActivity extends FMCommonActivity {
 
     }
 
+    public void setBurryTreasureFlag(boolean b) {
+        mIsBurryTreasure = b;
+    }
+
+    public void setUpdateProfileFlag(boolean isUpdating) {
+        mIsUpdatingProfile = isUpdating;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode != Activity.RESULT_OK) return;
 
         switch (requestCode) {
             case ACTIVITY_LOGIN:
@@ -143,17 +182,115 @@ public class MainActivity extends FMCommonActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mIsFirstRun = true;
-        //setLoginFalse();
-        createTabManagers();
-        final Button neighbor = (Button) findViewById(R.id.tab_neighbor);
 
-        //fragment not attached to activity 오류가 발생하여 약간 delay를 줌
-       changeTab(neighbor);
+        if(hasPushTaget(getIntent()))
+            moveToPushTarget(getIntent());
+
+            //mIsFirstRun = true;
+            //setLoginFalse();
+            createTabManagers();
+            startLocationFinder();
+        showNeighborMapFragment();
+
+        //원래 코드
+//        if(hasPushTaget()) {
+//            moveToPushTarget();
+//            return;
+//        } else {
+//
+//            mIsFirstRun = true;
+//            //setLoginFalse();
+//            createTabManagers();
+//            //final Button neighbor = (Button) findViewById(R.id.tab_neighbor);
+//
+//            //fragment not attached to activity 오류가 발생하여 약간 delay를 줌
+//            //changeTab(neighbor);
+//        }
 
 
 
 
+    }
+
+    private void startLocationFinder() {
+        FMLocationFinder locationFinder = FMLocationFinder.getInstance(this, null);
+        locationFinder.getCurrentLocation();
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if(hasPushTaget(intent))
+            moveToPushTarget(intent);
+    }
+
+    private void moveToPushTarget(Intent intent) {
+        String postIdx = intent.getStringExtra(FMConstants.KEY_POST_IDX);
+        String target = intent.getStringExtra(FMConstants.KEY_PUSH_TARGET);
+
+
+//        private static final String VIEW_POST = "01";
+//        private static final String VIEW_REPLY = "02";
+//        private static final String USER_PROFILE = "03";
+//        private static final String FRIEND_SETTING = "04";
+//        private static final String TREASURE_POST = "05";
+//        private static final String VIEW_NOTI = "06";
+//        private static final String VIEW_ALARM = "07";
+
+        if(target.equals(FMConstants.VIEW_POST)) viewDetailFromPush(postIdx);
+        else if(target.equals(FMConstants.VIEW_REPLY)) viewReplyFromPush(postIdx);
+        else if(target.equals(FMConstants.USER_PROFILE)) viewUserProfileFromPush(postIdx);
+        else if(target.equals(FMConstants.FRIEND_SETTING)) viewFriendSettingFromPush(postIdx);
+        else if(target.equals(FMConstants.TREASURE_POST)) viewDetailWithTreasure(postIdx);
+        else if(target.equals(FMConstants.VIEW_NOTI)) viewNotiFromPush(postIdx);
+        else if(target.equals(FMConstants.VIEW_ALARM)) viewAlarmFromPush(postIdx);
+    }
+
+    private void viewAlarmFromPush(String postIdx) {
+        mSettingManager.setPushTarget(FMConstants.VIEW_ALARM);
+        mSettingManager.chooseFragment();
+    }
+
+    private void viewNotiFromPush(String postIdx) {
+        mSettingManager.setPushTarget(FMConstants.VIEW_NOTI);
+        mSettingManager.chooseFragment();
+    }
+
+    private void viewDetailWithTreasure(String postIdx) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, postIdx);
+
+        startActivity(intent);
+    }
+
+    private void viewFriendSettingFromPush(String postIdx) {
+        mSettingManager.setPushTarget(FMConstants.FRIEND_SETTING);
+        mSettingManager.chooseFragment();
+    }
+
+    private void viewUserProfileFromPush(String postIdx) {
+        mSettingManager.setPushTarget(FMConstants.USER_PROFILE);
+        mSettingManager.chooseFragment();
+    }
+
+    private void viewReplyFromPush(String postIdx) {
+        Intent intent = new Intent(this, CommentActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, postIdx);
+
+        startActivity(intent);
+    }
+
+    private void viewDetailFromPush(String postIdx) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(FMConstants.KEY_POST_IDX, postIdx);
+
+        startActivity(intent);
+    }
+
+    private boolean hasPushTaget(Intent intent) {
+        return intent.getStringExtra(FMConstants.KEY_PUSH_TARGET) != null;
     }
 
     private void createTabManagers() {

@@ -73,9 +73,9 @@ public class MapFragment extends FMCommonMapFragment implements
     private BitmapDescriptor getMarKerImg(Bitmap original) {
         //마스킹
         //Bitmap scaledOriginal = getScaledOriginal(original);
-        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
-        Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(mActivity,original);
+        Bitmap frame = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.thumbnail_1_0001);
+        Bitmap mask = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas mCanvas = new Canvas(result);
@@ -141,7 +141,7 @@ public class MapFragment extends FMCommonMapFragment implements
         LatLng position = new LatLng(lat, lon);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 13);
-        mGoogleMap.animateCamera(cameraUpdate);
+        mGoogleMap.moveCamera(cameraUpdate);
 
         mGoogleMap.addMarker(new MarkerOptions().position(position)
                 .icon(getMarKerImg(bitmap)).anchor(0f, 1.0f));

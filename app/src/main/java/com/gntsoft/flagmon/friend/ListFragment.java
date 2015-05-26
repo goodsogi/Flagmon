@@ -14,12 +14,15 @@ import android.widget.ListView;
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonFragment;
 import com.gntsoft.flagmon.FMConstants;
+import com.gntsoft.flagmon.FMListAdapter;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMListParser;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.utils.ListScrollBottomListener;
 import com.gntsoft.flagmon.utils.LoginChecker;
+import com.gntsoft.flagmon.utils.PlusListScrollListener;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -35,10 +38,13 @@ import java.util.List;
  * Created by johnny on 15. 3. 3.
  */
 public class ListFragment extends FMCommonFragment implements
-        PlusOnGetDataListener {
+        PlusOnGetDataListener, ListScrollBottomListener {
 
     private static final int GET_LIST_DATA = 0;
+    private static final int GET_MORE_LIST_DATA = 22;
     String[] listFriendOptionDatas = {"인기순", "최근 등록순", "퍼간 날짜", "거리순"};
+    private String mActiveSortType = FMConstants.SORT_BY_POPULAR;
+    private ArrayList<FMModel> mListDatas;
 
     public ListFragment() {
         // TODO Auto-generated constructor stub
@@ -48,7 +54,7 @@ public class ListFragment extends FMCommonFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getDataFromServer(FMConstants.SORT_BY_POPULAR);
+        getDataFromServer(FMConstants.SORT_BY_POPULAR, "0");
     }
 
     @Override
@@ -78,6 +84,11 @@ public class ListFragment extends FMCommonFragment implements
     }
 
     @Override
+    public void onScrollBottom(int pageNo) {
+        getMoreDataFromServer(mActiveSortType, String.valueOf(pageNo));
+    }
+
+    @Override
     public void onSuccess(Integer from, Object datas) {
         if (datas == null)
             return;
@@ -85,8 +96,36 @@ public class ListFragment extends FMCommonFragment implements
             case GET_LIST_DATA:
                 makeList(new FMListParser().doIt((String) datas));
                 break;
+
+            case GET_MORE_LIST_DATA:
+                refreshList(new FMListParser().doIt((String) datas));
+                break;
         }
 
+    }
+
+    private void getMoreDataFromServer(String sortType, String pageNo) {
+        double latUL = ((FMCommonActivity) mActivity).getLatUL();
+        double lonUL = ((FMCommonActivity) mActivity).getLonUL();
+        double latLR = ((FMCommonActivity) mActivity).getLatLR();
+        double lonLR = ((FMCommonActivity) mActivity).getLonLR();
+
+        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+        postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_FRIEND));
+        postParams.add(new BasicNameValuePair("sort", sortType));
+        postParams.add(new BasicNameValuePair("latUL", String.valueOf(latUL)));
+        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(lonUL)));
+        postParams.add(new BasicNameValuePair("latLR", String.valueOf(latLR)));
+        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(lonLR)));
+        postParams.add(new BasicNameValuePair("more_page", pageNo));
+        if (LoginChecker.isLogIn(mActivity)) {
+            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+        }
+
+
+        new PlusHttpClient(mActivity, this, false).execute(GET_MORE_LIST_DATA,
+                FMApiConstants.GET_LIST_DATA, new PlusInputStreamStringConverter(),
+                postParams);
     }
 
     @Override
@@ -101,7 +140,7 @@ public class ListFragment extends FMCommonFragment implements
 
     }
 
-    private void getDataFromServer(String sortType) {
+    private void getDataFromServer(String sortType, String pageNo) {
         double latUL = ((FMCommonActivity) mActivity).getLatUL();
         double lonUL = ((FMCommonActivity) mActivity).getLonUL();
         double latLR = ((FMCommonActivity) mActivity).getLatLR();
@@ -114,6 +153,7 @@ public class ListFragment extends FMCommonFragment implements
         postParams.add(new BasicNameValuePair("lonUL", String.valueOf(lonUL)));
         postParams.add(new BasicNameValuePair("latLR", String.valueOf(latLR)));
         postParams.add(new BasicNameValuePair("lonLR", String.valueOf(lonLR)));
+        postParams.add(new BasicNameValuePair("more_page", pageNo));
         if (LoginChecker.isLogIn(mActivity)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
         }
@@ -134,16 +174,20 @@ public class ListFragment extends FMCommonFragment implements
     private void doSortFriend(int whichButton) {
         switch (whichButton) {
             case 0:
+                mActiveSortType = FMConstants.SORT_BY_POPULAR;
                 sortByPopular();
                 break;
 
             case 1:
+                mActiveSortType = FMConstants.SORT_BY_RECENT;
                 sortByRecent();
                 break;
             case 2:
+                mActiveSortType = FMConstants.SORT_BY_PIN;
                 sortByPin();
                 break;
             case 3:
+                mActiveSortType = FMConstants.SORT_BY_DISTANCE;
                 sortByDistance();
                 break;
 
@@ -152,25 +196,25 @@ public class ListFragment extends FMCommonFragment implements
 
     private void sortByDistance() {
         //sort 값 수정!!
-        getDataFromServer(FMConstants.SORT_BY_DISTANCE);
+        getDataFromServer(FMConstants.SORT_BY_DISTANCE, "0");
     }
 
     private void sortByPin() {
         //sort 값 수정!!
-        getDataFromServer(FMConstants.SORT_BY_PIN);
+        getDataFromServer(FMConstants.SORT_BY_PIN, "0");
     }
 
     private void sortByRecent() {
-        getDataFromServer(FMConstants.SORT_BY_RECENT);
+        getDataFromServer(FMConstants.SORT_BY_RECENT, "0");
     }
 
     private void sortByPopular() {
 
-        getDataFromServer(FMConstants.SORT_BY_POPULAR);
+        getDataFromServer(FMConstants.SORT_BY_POPULAR, "0");
     }
 
     private void makeList(final ArrayList<FMModel> datas) {
-
+        mListDatas = datas;
         ListView list = (ListView) mActivity
                 .findViewById(R.id.list_friend);
 
@@ -183,6 +227,26 @@ public class ListFragment extends FMCommonFragment implements
                 launchDetailActivity(datas.get(position).getIdx());
             }
         });
+
+        list.setOnScrollListener(new PlusListScrollListener(this));
+    }
+
+    private void refreshList(final ArrayList<FMModel> datas) {
+
+
+        mListDatas.addAll(datas);
+
+        ListView list = (ListView) mActivity
+                .findViewById(R.id.list_friend);
+
+        if (list == null || datas == null) return;
+
+        ListAdapter adapter = (ListAdapter) list.getAdapter();
+        adapter.notifyDataSetChanged();
+
+        //list.setTranscriptMode()를 사용하면(always, normal) 계속 리로딩하는 문제 발생, 아래 코드는 필요없음.
+        // list.setSelection(mListDatas.size() -10);
+
     }
 
 

@@ -86,7 +86,7 @@ public class SearchFriendListAdapter extends FMCommonAdapter<FriendModel> implem
 
     private void addFriend(String userEmail) {
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("user_email", userEmail));
+        postParams.add(new BasicNameValuePair("friend_email", userEmail));
         postParams.add(new BasicNameValuePair("key", ((FMCommonActivity) mContext).getUserAuthKey()));
 
 

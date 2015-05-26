@@ -1,6 +1,7 @@
 package com.gntsoft.flagmon.detail;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,7 +14,6 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
@@ -59,7 +59,7 @@ public class DetailActivity extends FMCommonActivity implements
     private static final int PERFORM_PIN = 22;
     private static final int GET_PHOTOS_NEARBY = 3;
     private static final int GET_DETAIL = 0;
-    String[] menuItems = {"신고하기", "URL 복사"};
+    String[] menuItems = {"URL 복사"};
 
     private ScrollViewExt mScrollView;
     private String mImageUrl;
@@ -70,20 +70,22 @@ public class DetailActivity extends FMCommonActivity implements
     private String mPreviousPostId;
     private String mNextPostId;
     private String mKakaoMessage;
+    private  String mIdx;
 
 
     @Override
     public void onSuccess(Integer from, Object datas) {
 
-        if (datas == null) return;
+        if (datas == null||datas.equals("")) return;
         switch (from) {
             case GET_DETAIL:
                 handleData(new PostDetailParser().doIt((String) datas));
                 break;
             case PERFORM_PIN:
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this, model.getResult().contains("succes") ? "스크랩되었습니다" : "스크랩되지 못했습니다");
+                PlusToaster.doIt(this, model.getResult().contains("succes") ? "핀을 꽂았습니다" : "핀을 꽂지 못했습니다");
                 if (model.getResult().contains("succes")) {
+                    getDataFromServer(mIdx);
                     //추가 액션??
                 }
                 break;
@@ -106,14 +108,13 @@ public class DetailActivity extends FMCommonActivity implements
 
         Uri uri = intent.getData();
         String isFromKakao = null;
-        String idx = null;
         if(uri != null) isFromKakao = uri.getQueryParameter("fromKakao");
         if (isFromKakao != null && Boolean.parseBoolean(isFromKakao)){
-            idx = uri.getQueryParameter("idx");
+            mIdx = uri.getQueryParameter("idx");
 
         }
 
-        getDataFromServer(idx);
+        getDataFromServer(mIdx);
     }
 
     public void showMenuPopup(View v) {
@@ -209,22 +210,50 @@ public class DetailActivity extends FMCommonActivity implements
         super.onCreate(savedInstanceState);
         PlusLogger.doIt("detail activity onCreate");
         setContentView(R.layout.activity_detail);
-        String idx = null;
+
+        initScrollView();
+
+//        String idx = null;
+//        String isFromKakao = null;
+//
+//        Uri uri = getIntent().getData();
+//        if(uri != null) isFromKakao = uri.getQueryParameter("fromKakao");
+//        if (isFromKakao != null && Boolean.parseBoolean(isFromKakao)){
+//             idx = uri.getQueryParameter("idx");
+//
+//        }else{
+//            idx= getIntent().getStringExtra(FMConstants.KEY_POST_IDX);
+//        }
+//
+//
+//        initScrollView();
+//        getDataFromServer(idx);
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        setIdx();
+        getDataFromServer(mIdx);
+
+    }
+
+    private void setIdx() {
         String isFromKakao = null;
+
 
         Uri uri = getIntent().getData();
         if(uri != null) isFromKakao = uri.getQueryParameter("fromKakao");
         if (isFromKakao != null && Boolean.parseBoolean(isFromKakao)){
-             idx = uri.getQueryParameter("idx");
+            mIdx = uri.getQueryParameter("idx");
 
         }else{
-            idx= getIntent().getStringExtra(FMConstants.KEY_POST_IDX);
+            mIdx= getIntent().getStringExtra(FMConstants.KEY_POST_IDX);
         }
-
-
-        initScrollView();
-        getDataFromServer(idx);
-
 
     }
 
@@ -321,17 +350,42 @@ public class DetailActivity extends FMCommonActivity implements
 
 
     private void doMenu(int whichButton) {
+
         switch (whichButton) {
+
             case 0:
-                doReport();
+                //shareKakaoTalk();
+                copyUrlToClipboard();
                 break;
-            case 1:
-                copyUrl();
-                break;
+        }
+
+//        switch (whichButton) {
+//            case 0:
+//                doReport();
+//                break;
+//            case 1:
+//                //shareKakaoTalk();
+//                copyUrlToClipboard();
+//                break;
+//        }
+    }
+
+    private void copyUrlToClipboard() {
+
+        PlusToaster.doIt(this, "URL이 복사되었습니다");
+        String textForCopy = "flagaround://path?&idx=" +getIntent().getStringExtra(FMConstants.KEY_POST_IDX);
+        //String textForCopy = getString(R.string.kakao_scheme) + "://" + getString(R.string.kakaolink_host) + "?" + "fromKakao=true&idx=" +getIntent().getStringExtra(FMConstants.KEY_POST_IDX);
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(textForCopy);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", textForCopy);
+            clipboard.setPrimaryClip(clip);
         }
     }
 
-    private void copyUrl() {
+    private void shareKakaoTalk() {
 
         try {
             final KakaoLink kakaoLink = KakaoLink.getKakaoLink();
@@ -358,20 +412,20 @@ public class DetailActivity extends FMCommonActivity implements
 //        startActivity(sendIntent);
     }
 
-    private void doReport() {
-        //특정 사용자 아이디등 처리!!
-        //수정!!
-        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        //postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
-        if (LoginChecker.isLogIn(this)) {
-            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
-        }
-
-
-        new PlusHttpClient(this, this, false).execute(REPORT_POST,
-                FMApiConstants.REPORT_POST, new PlusInputStreamStringConverter(),
-                postParams);
-    }
+//    private void doReport() {
+//        //특정 사용자 아이디등 처리!!
+//        //수정!!
+//        List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+//        //postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+//        if (LoginChecker.isLogIn(this)) {
+//            postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
+//        }
+//
+//
+//        new PlusHttpClient(this, this, false).execute(REPORT_POST,
+//                FMApiConstants.REPORT_POST, new PlusInputStreamStringConverter(),
+//                postParams);
+//    }
 
     private void launchLoginActivity() {
 

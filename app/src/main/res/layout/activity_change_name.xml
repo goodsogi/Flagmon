@@ -34,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
-            android:enabled="false"
             android:onClick="complete"
             android:text="완료"
             android:textColor="#ec644b"
@@ -64,7 +63,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/lastName"
+            android:id="@+id/userName"
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:layout_marginLeft="9dp"
@@ -73,14 +72,14 @@
             android:paddingLeft="15dp"
             android:background="#f0f0f0"/>
 
-        <EditText
-            android:id="@+id/firstName"
-            android:layout_width="0px"
-            android:layout_height="match_parent"
-            android:layout_marginRight="9dp"
-            android:layout_weight="1"
-            android:paddingLeft="15dp"
-            android:background="#f0f0f0"/>
+        <!--<EditText-->
+            <!--android:id="@+id/firstName"-->
+            <!--android:layout_width="0px"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginRight="9dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:paddingLeft="15dp"-->
+            <!--android:background="#f0f0f0"/>-->
     </LinearLayout>
 
 

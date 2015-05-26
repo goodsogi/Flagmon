@@ -2,6 +2,7 @@ package com.gntsoft.flagmon.setting;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,9 +13,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.gntsoft.flagmon.utils.LoginChecker;
 import com.pluslibrary.PlusConstants;
 import com.pluslibrary.img.CameraAlbumActivity;
 import com.pluslibrary.img.ImagePathFinder;
+import com.pluslibrary.img.PhotoResizer;
 import com.pluslibrary.img.PiccasaImageSaver;
 import com.pluslibrary.img.PlusImageConstants;
 import com.pluslibrary.server.PlusHttpClient;
@@ -40,6 +42,8 @@ import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusImageByteConverter;
 import com.pluslibrary.utils.PlusLogger;
 import com.pluslibrary.utils.PlusOnClickListener;
+import com.pluslibrary.utils.PlusScreenHeightFinder;
+import com.pluslibrary.utils.PlusScreenWidthFinder;
 import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
@@ -122,10 +126,7 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
 
     }
 
-    public void setUserAge(String userAge) {
-        TextView birth = (TextView) mActivity.findViewById(R.id.age);
-        birth.setText(formatBirth(userAge));
-    }
+
 
     private void showStatusMessage(String statusMessage) {
         final TextView status = (TextView) mActivity.findViewById(R.id.userStatus);
@@ -141,8 +142,13 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
         ImageView imageView = (ImageView) mActivity.findViewById(R.id.userPic);
         imageView.setTag(imgUri);
 
-        Bitmap bmp = BitmapFactory.decodeFile(imgUri);
+        //그냥 아래코드 사용하면 이미지가 안보임
+       // Bitmap bmp = BitmapFactory.decodeFile(imgUri);
+        Bitmap bmp = PhotoResizer.decodeFileForPhotoSize(imgUri,
+                imageView.getWidth(),imageView.getHeight());
         imageView.setImageBitmap(bmp);
+
+
 
 
     }
@@ -150,7 +156,7 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        setUpdateProfileFlag(true);
         //회원정보를 조회하여 화면에 표시!!
         if(LoginChecker.isLogIn(mActivity)) getProfileDataOnServer();
 
@@ -159,7 +165,7 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
 
     @Override
     public void onSuccess(Integer from, Object datas) {
-
+        PlusLogger.doIt("profile update onsucess datas: " +datas);
 
         if (datas == null)
             return;
@@ -220,49 +226,49 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
     }
 
     private void showProfile(ProfileModel profileModel) {
-        final EditText email = (EditText) mActivity.findViewById(R.id.userEmail);
+        final TextView email = (TextView) mActivity.findViewById(R.id.userEmail);
         email.setText(profileModel.getEmail());
 
-        email.setOnTouchListener(new View.OnTouchListener() {
+//        email.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    int leftEdgeOfRightDrawable = email.getRight()
+//                            - email.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+//                    // when EditBox has padding, adjust leftEdge like
+//                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
+//                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
+//                        // clicked on clear icon
+//                        email.setText("");
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int leftEdgeOfRightDrawable = email.getRight()
-                            - email.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-                    // when EditBox has padding, adjust leftEdge like
-                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
-                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
-                        // clicked on clear icon
-                        email.setText("");
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-
-        final EditText phone = (EditText) mActivity.findViewById(R.id.phoneNo);
+        final TextView phone = (TextView) mActivity.findViewById(R.id.phoneNo);
         phone.setText(profileModel.getPhone());
 
-        phone.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int leftEdgeOfRightDrawable = phone.getRight()
-                            - phone.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-                    // when EditBox has padding, adjust leftEdge like
-                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
-                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
-                        // clicked on clear icon
-                        phone.setText("");
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+//        phone.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    int leftEdgeOfRightDrawable = phone.getRight()
+//                            - phone.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+//                    // when EditBox has padding, adjust leftEdge like
+//                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
+//                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
+//                        // clicked on clear icon
+//                        phone.setText("");
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
 
         final TextView name = (TextView) mActivity.findViewById(R.id.userName);
         name.setText(profileModel.getName());
@@ -292,12 +298,12 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
             }
         });
 
-        TextView birth = (TextView) mActivity.findViewById(R.id.age);
+        TextView birth = (TextView) mActivity.findViewById(R.id.birth);
         birth.setText(formatBirth(profileModel.getBirth()));
         birth.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-               showAgePicker();
+                showBirthPicker();
             }
         });
 
@@ -317,10 +323,30 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
 
     }
 
-    private void showAgePicker() {
-        PlusNumberPicker picker = new PlusNumberPicker(mActivity, this);
-        picker.show();
+    private void showBirthPicker() {
+//        PlusNumberPicker picker = new PlusNumberPicker(this, null);
+//        picker.show();
+        int year = 1990;
+        int month = 0;
+        int day = 1;
+        DatePickerDialog dialog = new DatePickerDialog(mActivity, datePickerListener, year, month, day);
+        dialog.show();
+
+
     }
+
+    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+        // when dialog box is closed, below method will be called.
+        public void onDateSet(DatePicker view, int selectedYear,int selectedMonth, int selectedDay) {
+
+            // set selected date into Text View
+            final TextView userBirthView = (TextView) mActivity.findViewById(R.id.birth);
+            String birthday = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDay ;
+            userBirthView.setText(birthday);
+
+        }
+    };
+
 
     private void showSexDialog() {
 
@@ -347,15 +373,13 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
     private void startChangeStatusMessageActivity(String statusMessage) {
         Intent intent = new Intent(mActivity, ChangeStatusMessageActivity.class);
         intent.putExtra(FMConstants.KEY_STATUS_MESSAGE, statusMessage);
-        startActivityForResult(intent,ACITIVITY_CHANGE_STATUS_MESSAGE);
+        startActivityForResult(intent, ACITIVITY_CHANGE_STATUS_MESSAGE);
     }
 
     private void startChangeNameActivity(String fullName) {
-        String lastName = fullName.substring(0,1);
-        String firstName = fullName.substring(1,3);
+
         Intent intent = new Intent(mActivity, ChangeNameActivity.class);
-        intent.putExtra(FMConstants.KEY_LAST_NAME, lastName);
-        intent.putExtra(FMConstants.KEY_FIRST_NAME, firstName);
+        intent.putExtra(FMConstants.KEY_USER_NAME, fullName);
         startActivityForResult(intent, ACITIVITY_CHANGE_NAME);
 
     }
@@ -365,6 +389,7 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
         ab.setTitle("사진 선택");
         ab.setItems(menuItems, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+
                 doMenu(whichButton);
 
             }
@@ -375,6 +400,10 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
                     }
                 });
         ab.show();
+    }
+
+    private void setUpdateProfileFlag(boolean isUpdating) {
+        ((MainActivity) mActivity).setUpdateProfileFlag(isUpdating);
     }
 
     private void doMenu(int whichButton) {
@@ -425,12 +454,12 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
 
     private void updateProfile() {
 
-        EditText emailView = (EditText) mActivity.findViewById(R.id.userEmail);
+        TextView emailView = (TextView) mActivity.findViewById(R.id.userEmail);
         String email = emailView.getText().toString();
 
 
 
-        EditText phoneView = (EditText) mActivity.findViewById(R.id.phoneNo);
+        TextView phoneView = (TextView) mActivity.findViewById(R.id.phoneNo);
         String phone = phoneView.getText().toString();
 
 
@@ -449,7 +478,7 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
 
 
 
-        TextView birthView = (TextView) mActivity.findViewById(R.id.age);
+        TextView birthView = (TextView) mActivity.findViewById(R.id.birth);
         String birth = birthView.getText().toString();
 
 
@@ -489,8 +518,9 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-//나중에 api url 수정해야 함!!
-        new PlusHttpClient(mActivity, this, true).execute(UPDATE_PROFILE_PHOTO,
+        PlusLogger.doIt("UPDATE_PROFILE");
+
+        new PlusHttpClient(mActivity, this, false).execute(UPDATE_PROFILE_PHOTO,
                 FMApiConstants.UPDATE_PROFILE,
                 new PlusInputStreamStringConverter(), entity);
     }
@@ -534,6 +564,7 @@ public class UserProfileFragment extends FMCommonFragment implements PlusOnGetDa
     public void onBack() {
         PlusLogger.doIt("onBack");
         updateProfile();
+        setUpdateProfileFlag(false);
         mActivity.getFragmentManager().beginTransaction()
                 .replace(R.id.container_main, new SettingFragment())
                 .commit();

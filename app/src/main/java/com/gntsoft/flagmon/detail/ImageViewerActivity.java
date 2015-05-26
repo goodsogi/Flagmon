@@ -162,11 +162,11 @@ public class ImageViewerActivity extends FMCommonActivity implements OnTouchList
         final ImageView img = (ImageView) findViewById(R.id.img);
 
 
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT);
-
-        img.setLayoutParams(params);
+//        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+//                FrameLayout.LayoutParams.MATCH_PARENT,
+//                FrameLayout.LayoutParams.MATCH_PARENT);
+//
+//        img.setLayoutParams(params);
         img.setOnTouchListener(ImageViewerActivity.this);
 
 
@@ -190,13 +190,16 @@ public class ImageViewerActivity extends FMCommonActivity implements OnTouchList
                     public void onLoadingComplete(String arg0, View arg1,
                                                   Bitmap bitmap) {
 
-                        img.setImageBitmap(getScaledRatioBitmap(bitmap));
+                        img.setImageBitmap(bitmap);
 
-                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                                FrameLayout.LayoutParams.MATCH_PARENT,
-                                FrameLayout.LayoutParams.MATCH_PARENT);
 
-                        img.setLayoutParams(params);
+//                        img.setImageBitmap(getScaledRatioBitmap(bitmap));
+
+//                        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+//                                FrameLayout.LayoutParams.MATCH_PARENT,
+//                                FrameLayout.LayoutParams.MATCH_PARENT);
+//
+//                        img.setLayoutParams(params);
                         img.setOnTouchListener(ImageViewerActivity.this);
 
                     }

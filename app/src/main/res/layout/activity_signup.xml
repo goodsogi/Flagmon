@@ -11,44 +11,129 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1" />
-
-    <EditText
-        android:id="@+id/userEmail"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:drawableLeft="@drawable/p12_bg_icon0001"
-        android:drawableRight="@drawable/p12_bg_icon0003"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:privateImeOptions="defaultInputmode=english;"
-        android:textColor="#ffffff"
-        android:textColorHint="#ffffff" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical" >
 
-    <EditText
-        android:id="@+id/userPassword"
+        <EditText
+            android:id="@+id/userEmail"
+            android:layout_width="0px" android:layout_weight="1"
+            android:layout_height="40dp"
+            android:drawableLeft="@drawable/p12_bg_icon0001"
+            android:hint="@string/email"
+            android:background="@android:color/transparent"
+            android:inputType="textEmailAddress"
+            android:privateImeOptions="defaultInputmode=english;"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff" />
+        <ImageView android:id="@+id/userEmailDelete"
+                   android:layout_width="40dp"
+                   android:layout_height="40dp"
+                   android:src="@drawable/p12_bg_icon0003"
+                   android:scaleType="centerInside"
+            />
+
+
+    </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#000000" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:orientation="horizontal"
         android:layout_marginTop="20dp"
-        android:drawableLeft="@drawable/p12_bg_icon0002"
-        android:drawableRight="@drawable/p12_bg_icon0004"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:privateImeOptions="defaultInputmode=english;"
-        android:textColor="#ffffff"
-        android:textColorHint="#ffffff" />
+        android:gravity="center_vertical" >
 
-    <EditText
-        android:id="@+id/userName"
+        <EditText
+            android:id="@+id/userPassword"
+            android:layout_width="0px" android:layout_weight="1"
+            android:layout_height="40dp"
+            android:drawableLeft="@drawable/p12_bg_icon0002"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:background="@android:color/transparent"
+            android:privateImeOptions="defaultInputmode=english;"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff" />
+        <ImageView android:id="@+id/userPasswordDelete"
+                   android:layout_width="40dp"
+                   android:layout_height="40dp"
+                   android:src="@drawable/password_eye_selector"
+                   android:scaleType="centerInside"
+            />
+
+
+    </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#000000" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:orientation="horizontal"
         android:layout_marginTop="20dp"
-        android:drawableLeft="@drawable/p12_bg_icon0002"
-        android:drawableRight="@drawable/p12_bg_icon0003"
-        android:hint="@string/user_name"
-        android:inputType="text"
-        android:privateImeOptions="defaultInputmode=korean;"
-        android:textColor="#ffffff"
-        android:textColorHint="#ffffff" />
+        android:gravity="center_vertical" >
+
+        <EditText
+            android:id="@+id/userName"
+            android:layout_width="0px" android:layout_weight="1"
+            android:layout_height="40dp"
+            android:drawableLeft="@drawable/p12_bg_icon0002"
+            android:hint="@string/user_name"
+            android:inputType="text"
+            android:privateImeOptions="defaultInputmode=korean;"
+            android:background="@android:color/transparent"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff" />
+        <ImageView android:id="@+id/userNameDelete"
+                   android:layout_width="40dp"
+                   android:layout_height="40dp"
+                   android:src="@drawable/p12_bg_icon0003"
+                   android:scaleType="centerInside"
+            />
+
+
+    </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#000000" />
+
+    <!--<EditText-->
+        <!--android:id="@+id/userEmail"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:drawableLeft="@drawable/p12_bg_icon0001"-->
+        <!--android:drawableRight="@drawable/p12_bg_icon0003"-->
+        <!--android:hint="@string/email"-->
+        <!--android:inputType="textEmailAddress"-->
+        <!--android:privateImeOptions="defaultInputmode=english;"-->
+        <!--android:textColor="#ffffff"-->
+        <!--android:textColorHint="#ffffff" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/userPassword"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:drawableLeft="@drawable/p12_bg_icon0002"-->
+        <!--android:drawableRight="@drawable/password_eye_selector"-->
+        <!--android:hint="@string/password"-->
+        <!--android:inputType="textPassword"-->
+        <!--android:privateImeOptions="defaultInputmode=english;"-->
+        <!--android:textColor="#ffffff"-->
+        <!--android:textColorHint="#ffffff" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/userName"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:drawableLeft="@drawable/p12_bg_icon0002"-->
+        <!--android:drawableRight="@drawable/p12_bg_icon0003"-->
+        <!--android:hint="@string/user_name"-->
+        <!--android:inputType="text"-->
+        <!--android:privateImeOptions="defaultInputmode=korean;"-->
+        <!--android:textColor="#ffffff"-->
+        <!--android:textColorHint="#ffffff" />-->
 
     <Button
         android:layout_width="match_parent"

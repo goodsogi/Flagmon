@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.gntsoft.flagmon.FMCommonFragment;
+import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.neighbor.ListFragment;
 import com.pluslibrary.utils.PlusClickGuard;
@@ -26,6 +27,45 @@ public class SettingFragment extends FMCommonFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if(hasPushTaget())
+            moveToPushTarget();
+    }
+
+    private void moveToPushTarget() {
+
+        String target = getArguments().getString(FMConstants.KEY_TARGET);
+
+        if(target.equals(FMConstants.VIEW_ALARM)) viewAlarmFromPush();
+        else if(target.equals(FMConstants.VIEW_NOTI)) viewNotiFromPush();
+        else if(target.equals(FMConstants.FRIEND_SETTING)) viewFriendSettingFromPush();
+        else if(target.equals(FMConstants.USER_PROFILE)) viewUserProfileFromPush();
+
+    }
+
+    private void viewUserProfileFromPush() {
+        LinearLayout showUserInfo = (LinearLayout) mActivity.findViewById(R.id.showUserInfo);
+        showUserInfo(showUserInfo);
+    }
+
+    private void viewFriendSettingFromPush() {
+        LinearLayout manageFriend = (LinearLayout) mActivity.findViewById(R.id.manageFriend);
+        mananageFriend(manageFriend);
+    }
+
+    private void viewNotiFromPush() {
+        LinearLayout showNoti = (LinearLayout) mActivity.findViewById(R.id.showNoti);
+        showNoti(showNoti);
+    }
+
+    private void viewAlarmFromPush() {
+        LinearLayout setAlarm = (LinearLayout) mActivity.findViewById(R.id.setAlarm);
+        setAlarm(setAlarm);
+    }
+
+    private boolean hasPushTaget() {
+       return getArguments().getString(FMConstants.KEY_TARGET) != null && !getArguments().getString(FMConstants.KEY_TARGET).equals("");
+
     }
 
 

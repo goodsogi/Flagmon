@@ -1,10 +1,12 @@
 package com.gntsoft.flagmon.utils;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 
 import com.gntsoft.flagmon.FMConstants;
+import com.pluslibrary.utils.PlusDpPixelConverter;
 
 /**
  * 이미지 크기 축소
@@ -23,7 +25,7 @@ public class FMPhotoResizer {
      * @param imgUrl
      * @return
      */
-    public static Bitmap doIt(String imgUrl) {
+    public static Bitmap doIt(Activity activity, String imgUrl) {
 
 
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -33,17 +35,20 @@ public class FMPhotoResizer {
         final int srcWidth = options.outWidth;
         final int srcHeight = options.outHeight;
 
+        int requiredWidth = PlusDpPixelConverter.doIt(activity, FMConstants.REQUIRED_IMAGE_WIDTH_DP);
+        int requiredHeight = PlusDpPixelConverter.doIt(activity, FMConstants.REQUIRED_IMAGE_HEIGHT_DP);
+
         int inSampleSize = 1;
 
-        if (srcHeight > FMConstants.REQUIRED_IMAGE_HEIGHT || srcWidth > FMConstants.REQUIRED_IMAGE_WIDTH) {
+        if (srcHeight > requiredHeight || srcWidth > requiredWidth) {
 
             final int halfHeight = srcHeight / 2;
             final int halfWidth = srcWidth / 2;
 
             // Calculate the largest inSampleSize value that is a power of 2 and keeps both
             // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > FMConstants.REQUIRED_IMAGE_HEIGHT
-                    && (halfWidth / inSampleSize) > FMConstants.REQUIRED_IMAGE_WIDTH) {
+            while ((halfHeight / inSampleSize) > requiredHeight
+                    && (halfWidth / inSampleSize) > requiredWidth) {
                 inSampleSize *= 2;
             }
         }
@@ -71,7 +76,10 @@ public class FMPhotoResizer {
 
     }
 
-    public static Bitmap doIt(Bitmap originalBitmap) {
+    public static Bitmap doIt(Activity activity,Bitmap originalBitmap) {
+
+        int requiredWidth = PlusDpPixelConverter.doIt(activity, FMConstants.REQUIRED_IMAGE_WIDTH_DP);
+        int requiredHeight = PlusDpPixelConverter.doIt(activity, FMConstants.REQUIRED_IMAGE_HEIGHT_DP);
 
         int dimension = 0;
 
@@ -88,7 +96,7 @@ public class FMPhotoResizer {
 
         Bitmap croppedBitmap = ThumbnailUtils.extractThumbnail(originalBitmap, dimension, dimension, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
 
-        return Bitmap.createScaledBitmap(croppedBitmap, FMConstants.REQUIRED_IMAGE_WIDTH, FMConstants.REQUIRED_IMAGE_HEIGHT, false);
+        return Bitmap.createScaledBitmap(croppedBitmap, requiredWidth, requiredHeight, false);
 
     }
 

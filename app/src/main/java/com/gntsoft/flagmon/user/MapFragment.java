@@ -174,7 +174,7 @@ public class MapFragment extends FMCommonMapFragment implements
 
         MapView mapView = (MapView) mActivity.findViewById(R.id.mapview);
         GoogleMap googleMap = mapView.getMap();
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
 
     }
 
@@ -185,10 +185,12 @@ public class MapFragment extends FMCommonMapFragment implements
         mMyLocationButton.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                if (!mMyLocationButton.isSelected()) {
+                if (!mMyLocationButton.isSelected() && !isGpsActive()) {
+                    showGpsAlertDialog();
 
-                    showAlertDialog();
-
+                } else {
+                    mMyLocationButton.setSelected(false);
+                    moveToCurrentLocation();
                 }
             }
         });
@@ -202,12 +204,32 @@ public class MapFragment extends FMCommonMapFragment implements
         });
     }
 
+    private void moveToCurrentLocation() {
+        FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
+        locationFinder.setLocationListener(this);
+
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
+        locationFinder.setLocationListener(null);
+    }
+
+    public boolean isGpsActive() {
+
+        FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
+        return locationFinder.isGpsActive();
+    }
+
     private boolean isGPSCatched() {
         FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
         return locationFinder.isGpsCatched();
     }
 
-    private void showAlertDialog() {
+    private void showGpsAlertDialog() {
         AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
         ab.setTitle("GPS 기능을 활성화 하시겠습니까?");
         ab.setNegativeButton("아니오",
@@ -290,9 +312,10 @@ public class MapFragment extends FMCommonMapFragment implements
 
         //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
         //마스킹
-        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.marker_album_frame);//0: 포스팅, 1: 앨범
-        Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(mActivity,original);
+        //getResources()만 사용하면 fragment not attached to activity 오류발생, mActivity.getResources() 사용해야 함
+        Bitmap frame = BitmapFactory.decodeResource(mActivity.getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.marker_album_frame);//0: 포스팅, 1: 앨범
+        Bitmap mask = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas mCanvas = new Canvas(result);

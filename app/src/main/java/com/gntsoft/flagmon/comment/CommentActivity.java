@@ -1,8 +1,10 @@
 package com.gntsoft.flagmon.comment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -40,8 +42,25 @@ public class CommentActivity extends FMCommonActivity implements
 
     public void sendComment(View v) {
         PlusClickGuard.doIt(v);
-        if (LoginChecker.isLogIn(this)) sendCommentToServer();
+        if (LoginChecker.isLogIn(this)) {
+            sendCommentToServer();
+            hideKeyboard();
+            deleteComment();
+        }
         else launchLoginActivity(v);
+    }
+
+    private void deleteComment() {
+        EditText commentInput = (EditText) findViewById(R.id.commentInput);
+        commentInput.setText("");
+    }
+
+    private void hideKeyboard() {
+        EditText commentInput = (EditText) findViewById(R.id.commentInput);
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(commentInput.getWindowToken(), 0);
     }
 
     @Override
@@ -57,7 +76,8 @@ public class CommentActivity extends FMCommonActivity implements
 
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
                 PlusToaster.doIt(this, model.getResult().equals("success") ? "댓글을 달았습니다" : "댓글을 달지 못했습니다");
-                //if(model.getResult().equals("success")) finish();
+
+                if(model.getResult().equals("success")) getDataFromServer();
                 break;
 
         }
@@ -68,9 +88,15 @@ public class CommentActivity extends FMCommonActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
-
+        if(LoginChecker.isLogIn(this)) deleteHint();
         getDataFromServer();
     }
+
+    private void deleteHint() {
+        EditText commentInput = (EditText) findViewById(R.id.commentInput);
+        commentInput.setHint("");
+    }
+
 
     private void getDataFromServer() {
 

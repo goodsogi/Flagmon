@@ -8,26 +8,79 @@
     android:paddingLeft="27dp"
     android:paddingRight="27dp">
 
-
-    <EditText
-        android:id="@+id/userSex"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:drawableRight="@drawable/p12_bg_icon0003"
-        android:hint="@string/user_sex"
-        android:textColor="#ffffff"
-        android:textColorHint="#ffffff" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical" >
 
-    <EditText
-        android:id="@+id/userAge"
+        <TextView
+            android:id="@+id/userSex"
+            android:layout_width="0px" android:layout_weight="1"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:hint="@string/user_sex"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff" />
+        <ImageView android:id="@+id/userSexDelete"
+                   android:layout_width="40dp"
+                   android:layout_height="40dp"
+                   android:src="@drawable/p12_bg_icon0003"
+                   android:scaleType="centerInside"
+            />
+
+
+    </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#000000" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:orientation="horizontal"
         android:layout_marginTop="37dp"
-        android:drawableRight="@drawable/p12_bg_icon0003"
-        android:hint="@string/user_age"
-        android:inputType="number"
-        android:textColor="#ffffff"
-        android:textColorHint="#ffffff" />
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:id="@+id/userBirth"
+            android:layout_width="0px" android:layout_weight="1"
+            android:layout_height="40dp"
+            android:hint="회원님의 생년월일은?"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff" />
+        <ImageView android:id="@+id/userBirthDelete"
+                   android:layout_width="40dp"
+                   android:layout_height="40dp"
+                   android:src="@drawable/p12_bg_icon0003"
+                   android:scaleType="centerInside"
+            />
+
+
+    </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#000000" />
+
+
+    <!--<EditText-->
+        <!--android:id="@+id/userSex"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:drawableRight="@drawable/p12_bg_icon0003"-->
+        <!--android:hint="@string/user_sex"-->
+        <!--android:textColor="#ffffff"-->
+        <!--android:textColorHint="#ffffff" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/userBirth"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_marginTop="37dp"-->
+        <!--android:drawableRight="@drawable/p12_bg_icon0003"-->
+        <!--android:hint="회원님의 생년월일은?"-->
+        <!--android:inputType="text"-->
+        <!--android:textColor="#ffffff"-->
+        <!--android:textColorHint="#ffffff" />-->
+
 
     <LinearLayout
         android:layout_width="match_parent"

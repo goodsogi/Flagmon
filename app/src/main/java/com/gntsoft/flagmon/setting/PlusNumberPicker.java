@@ -43,8 +43,7 @@ public class PlusNumberPicker extends CommonDialog implements NumberPicker.OnVal
         setAge.setOnClickListener(new PlusOnClickListener() {
             @Override
             protected void doIt() {
-                if(mFragment!= null) ((UserProfileFragment) mFragment).setUserAge(String.valueOf(np.getValue()));
-                else ((SecondSignUpActivity) mActivity).setUserAge(String.valueOf(np.getValue()));
+
                 PlusNumberPicker.this.dismiss();
             }
 

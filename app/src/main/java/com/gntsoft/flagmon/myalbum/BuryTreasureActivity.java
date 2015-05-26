@@ -70,6 +70,7 @@ public class BuryTreasureActivity extends FMCommonActivity implements
                 PlusToaster.doIt(this, model.getResult().equals("success") ? "보물을 묻었습니다" : "보물을 묻지 못했습니다");
                 if (model.getResult().equals("success")) {
                     //추가 액션??
+                    finish();
                 }
                 break;
             case GET_USER_MON:

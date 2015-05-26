@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import com.gntsoft.flagmon.neighbor.MapFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.pluslibrary.PlusConstants;
@@ -29,6 +30,7 @@ public class FMLocationFinder implements android.location.LocationListener {
     private String mProvider;
     private boolean mIsGpsCatched;
     private FMLocationListener mListener;
+    private boolean gpsActive;
 
     private FMLocationFinder(Activity activity, FMLocationListener listener) {
         mActivity = activity;
@@ -133,9 +135,9 @@ public class FMLocationFinder implements android.location.LocationListener {
     @Override
     public void onLocationChanged(Location location) {
 
-        mLocationManager.removeUpdates(this);
+        //mLocationManager.removeUpdates(this);
         mIsGpsCatched = true;
-        mListener.onGPSCatched(location);
+        if(mListener != null) mListener.onGPSCatched(location);
 
 
     }
@@ -164,4 +166,13 @@ public class FMLocationFinder implements android.location.LocationListener {
     }
 
 
+    public boolean isGpsActive() {
+        return mIsGpsCatched;
+        //아래 코드 작동안함(gps가 잡힌 상태인지 알 수 없음)
+        //return mLocationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+    }
+
+    public void setLocationListener(FMLocationListener listener) {
+        mListener = listener;
+    }
 }

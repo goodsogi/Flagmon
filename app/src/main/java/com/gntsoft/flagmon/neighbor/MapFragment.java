@@ -65,6 +65,7 @@ public class MapFragment extends FMCommonMapFragment implements
 
     private Button mMyLocationButton;
     private boolean mIsMapDrawn;
+    private boolean gpsActive;
 
 
     public MapFragment() {
@@ -199,9 +200,15 @@ public class MapFragment extends FMCommonMapFragment implements
 
         MapView mapView = (MapView) mActivity.findViewById(R.id.mapview);
         GoogleMap googleMap = mapView.getMap();
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
 
 
+    }
+
+    public boolean isGpsActive() {
+
+        FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
+        return locationFinder.isGpsActive();
     }
 
 
@@ -213,11 +220,12 @@ public class MapFragment extends FMCommonMapFragment implements
             @Override
             protected void doIt() {
 
-                if (!mMyLocationButton.isSelected()) {
-                    showAlertDialog();
+                if (!mMyLocationButton.isSelected() && !isGpsActive()) {
+                    showGpsAlertDialog();
 
                 } else {
                     mMyLocationButton.setSelected(false);
+                    moveToCurrentLocation();
                 }
             }
         });
@@ -232,6 +240,20 @@ public class MapFragment extends FMCommonMapFragment implements
         });
 
 
+    }
+
+    private void moveToCurrentLocation() {
+        FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
+        locationFinder.setLocationListener(this);
+
+          }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
+        locationFinder.setLocationListener(null);
     }
 
     private void clearMap() {
@@ -405,9 +427,9 @@ public class MapFragment extends FMCommonMapFragment implements
 
         //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
         //마스킹
-        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.marker_album_frame);//0: 포스팅, 1: 앨범
-        Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(mActivity,original);
+        Bitmap frame = BitmapFactory.decodeResource(mActivity.getResources(), postType.equals("0") ? R.drawable.thumbnail_1_0001 : R.drawable.marker_album_frame);//0: 포스팅, 1: 앨범
+        Bitmap mask = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas mCanvas = new Canvas(result);
@@ -448,7 +470,7 @@ public class MapFragment extends FMCommonMapFragment implements
         getDataFromServer(FMConstants.SORT_BY_POPULAR);
     }
 
-    private void showAlertDialog() {
+    private void showGpsAlertDialog() {
         AlertDialog.Builder ab = new AlertDialog.Builder(mActivity, AlertDialog.THEME_HOLO_LIGHT);
         ab.setTitle("GPS 기능을 활성화 하시겠습니까?");
         ab.setNegativeButton("아니오",
@@ -466,7 +488,7 @@ public class MapFragment extends FMCommonMapFragment implements
 
     private void getCurrentLocation() {
         FMLocationFinder locationFinder = FMLocationFinder.getInstance(mActivity, this);
-        locationFinder.doIt();
+        locationFinder.getCurrentLocation();
     }
 
     private void showTreasures(ArrayList<TreasureModel> datas) {
@@ -490,7 +512,7 @@ public class MapFragment extends FMCommonMapFragment implements
     private void showTreasureMarkers(TreasureModel data) {
         LatLng latLng = new LatLng(Double.parseDouble(data.getLat()), Double.parseDouble(data.getLon()));
         mGoogleMap.addMarker(new MarkerOptions().position(latLng)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.treasure)).anchor(0f, 1.0f));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.treasure)).anchor(0f, 1.0f).snippet(data.getPhotoIdx()));
         //idx가 없음!!
 //        mGoogleMap.addMarker(new MarkerOptions().position(latLng).snippet(data.getIdx())
 //                .icon(BitmapDescriptorFactory.fromResource(R.drawable.treasure)).anchor(0f, 1.0f));

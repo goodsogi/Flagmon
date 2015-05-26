@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.R;
@@ -12,6 +13,8 @@ import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FriendModel;
 import com.gntsoft.flagmon.server.GotFriendRequestParser;
 import com.gntsoft.flagmon.server.SentFriendRequestParser;
+import com.gntsoft.flagmon.server.ServerResultModel;
+import com.gntsoft.flagmon.server.ServerResultParser;
 import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
@@ -66,18 +69,42 @@ public class FindFriendActivity extends FMCommonActivity implements
 
     @Override
     public void onSuccess(Integer from, Object datas) {
-        if (datas == null)
+
+        if (datas == null || isApiFail(datas)) {
             return;
+        }
         switch (from) {
             case GET_GOT_FRIEND_REQUEST:
+
+               showGotRequestTitle();
+
                 makeGotFriendRequestList(new GotFriendRequestParser().doIt((String) datas));
                 break;
             case GET_SENT_FRIEND_REQUEST:
+
+                showSentRequestTitle();
                 makeSentFriendRequestList(new SentFriendRequestParser().doIt((String) datas));
                 break;
         }
 
     }
+
+    private void showGotRequestTitle() {
+        TextView title = (TextView) findViewById(R.id.gotRequestTitle);
+        title.setVisibility(View.VISIBLE);
+    }
+
+    private void showSentRequestTitle() {
+        TextView title = (TextView) findViewById(R.id.sentRequestTitle);
+        title.setVisibility(View.VISIBLE);
+    }
+
+    private boolean isApiFail(Object datas) {
+        ServerResultModel model = new ServerResultParser().doIt((String) datas);
+        return model != null && model.getResult().equals("fail");
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

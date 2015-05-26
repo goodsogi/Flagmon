@@ -39,8 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:layout_alignTop="@id/name"
-        android:layout_marginLeft="200dp"
-        android:layout_toRightOf="@id/name"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
         android:textColor="#656565"
         android:textSize="12sp" />
 </RelativeLayout>

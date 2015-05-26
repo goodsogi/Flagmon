@@ -1,5 +1,6 @@
 package com.gntsoft.flagmon;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -127,10 +128,11 @@ public class FMListAdapter extends FMCommonAdapter<FMModel> {
 
     private Bitmap getFrameImg(Bitmap original, String postType) {
         //마스킹
-        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
+        Bitmap scaledOriginal = FMPhotoResizer.doIt((Activity) mContext, original);
         Bitmap frame = BitmapFactory.decodeResource(mContext.getResources(), postType.equals("0") ? R.drawable.thumbnail_2_0001 : R.drawable.thumbnail_2_0002);
         Bitmap mask = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.main_list_mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
+        Log.d("original", "image witdh: " + original.getWidth() + " height: " + original.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas mCanvas = new Canvas(result);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);

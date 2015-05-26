@@ -6,6 +6,9 @@ package com.gntsoft.flagmon.server;
 public class TreasureModel {
     private String lat;
     private String lon;
+    private String idx;
+    private String opencheck;
+    private String photoIdx;
 
     public String getLat() {
         return lat;
@@ -21,5 +24,29 @@ public class TreasureModel {
 
     public void setLon(String lon) {
         this.lon = lon;
+    }
+
+    public String getIdx() {
+        return idx;
+    }
+
+    public void setIdx(String idx) {
+        this.idx = idx;
+    }
+
+    public String getOpencheck() {
+        return opencheck;
+    }
+
+    public void setOpencheck(String opencheck) {
+        this.opencheck = opencheck;
+    }
+
+    public String getPhotoIdx() {
+        return photoIdx;
+    }
+
+    public void setPhotoIdx(String photoIdx) {
+        this.photoIdx = photoIdx;
     }
 }

@@ -110,6 +110,7 @@ public class PostSetLocationActivity extends FMCommonActivity implements
                 PlusToaster.doIt(this, model.getResult().equals("success") ? "포스팅되었습니다" : "포스팅되지 못했습니다");
                 if (model.getResult().equals("success")) {
                     //추가 처리??
+                    finish();
                 }
                 break;
 

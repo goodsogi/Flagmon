@@ -224,9 +224,9 @@ public class MapFragment extends FMCommonMapFragment implements
 
         //마스킹 이미지를 xxhdpi 폴더에 넣으면 마스킹이 안됨, xhdpi 폴더에 넣어야 함
         //마스킹
-        Bitmap scaledOriginal = FMPhotoResizer.doIt(original);
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
-        Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(mActivity,original);
+        Bitmap frame = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.thumbnail_1_0001);
+        Bitmap mask = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.mask);
         Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas mCanvas = new Canvas(result);

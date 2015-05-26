@@ -14,13 +14,12 @@ public class MonInfoParser {
         ArrayList<MonInfoModel> model = new ArrayList<>();
 
         try {
-
-            JSONArray jsonArray = new JSONArray(rawData);
+            JSONObject jsonObject = new JSONObject(rawData);
+            JSONArray jsonArray = jsonObject.getJSONArray("history");
             for (int i = 0; i < jsonArray.length(); i++) {
                 MonInfoModel data = new MonInfoModel();
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                JSONObject subJsonObject = (JSONObject) jsonObject.opt("history");
-
+                JSONObject subJsonObject = (JSONObject) jsonArray.get(i);
+                data.setSeq(subJsonObject.optString("seq"));
                 data.setValueDate(subJsonObject.optString("value_date"));
                 data.setReason(subJsonObject.optString("reason"));
                 data.setPoint(subJsonObject.optString("point"));

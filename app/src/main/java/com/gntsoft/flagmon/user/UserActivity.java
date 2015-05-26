@@ -118,7 +118,7 @@ public class UserActivity extends FMCommonActivity implements
 
     private void requestAddFriend() {
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-        postParams.add(new BasicNameValuePair("user_email", getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL)));
+        postParams.add(new BasicNameValuePair("friend_email", getIntent().getStringExtra(FMConstants.KEY_USER_EMAIL)));
         if (LoginChecker.isLogIn(this)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
         }

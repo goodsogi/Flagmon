@@ -15,6 +15,7 @@ public class FMModel {
     private String albumCurrentPosition;
     private String albumPreviousPostId;
     private String albumNextPostId;
+    private String distance;
 
 
 
@@ -189,5 +190,13 @@ public class FMModel {
 
     public void setAlbumNextPostId(String albumNextPostId) {
         this.albumNextPostId = albumNextPostId;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 }

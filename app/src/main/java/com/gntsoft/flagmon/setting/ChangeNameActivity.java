@@ -25,39 +25,30 @@ public class ChangeNameActivity extends FMCommonActivity {
     }
 
     private void showName() {
-        String lastName = getIntent().getStringExtra(FMConstants.KEY_LAST_NAME);
-        String firstName = getIntent().getStringExtra(FMConstants.KEY_FIRST_NAME);
+        String userName = getIntent().getStringExtra(FMConstants.KEY_USER_NAME);
 
-        EditText lastNameView = (EditText) findViewById(R.id.lastName);
-        EditText firstNameView = (EditText) findViewById(R.id.firstName);
+        EditText userNameView = (EditText) findViewById(R.id.userName);
 
-        lastNameView.setText(lastName);
-        firstNameView.setText(firstName);
+        userNameView.setText(userName);
 
 
     }
 
     public void complete(View v) {
-        EditText lastNameView = (EditText) findViewById(R.id.lastName);
-        EditText firstNameView = (EditText) findViewById(R.id.firstName);
+        EditText userNameView = (EditText) findViewById(R.id.userName);
 
-        String lastName = lastNameView.getText().toString();
-        String firstName = firstNameView.getText().toString();
+        String userName = userNameView.getText().toString();
 
-        if(lastName.equals("")) {
-            PlusToaster.doIt(this,"성을 입력해주세요");
-            return;
-        }
-
-        if(firstName.equals("")) {
+        if(userName.equals("")) {
             PlusToaster.doIt(this,"이름을 입력해주세요");
             return;
         }
 
 
+
         Intent intent = new Intent();
 
-        intent.putExtra(FMConstants.KEY_USER_NAME, lastName+firstName);
+        intent.putExtra(FMConstants.KEY_USER_NAME, userName);
 
         setResult(RESULT_OK, intent);
 

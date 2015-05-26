@@ -35,8 +35,8 @@
     <string name="photo_description">사진설명</string>
     <string name="incorrect_location">좌표정보가 틀린가요?</string>
     <string name="drag_photo_for_correct_location">사진을 드래그 하여 정확한 위치를 선택해 주세요</string>
-    <string name="all_share">전체 공유</string>
-    <string name="friend_share">친구 공유</string>
+    <string name="all_share">전체공개</string>
+    <string name="friend_share">친구공개</string>
     <string name="no_share">비공개</string>
     <string name="search">검색</string>
     <string name="put_in_name_for_search">검색할 이름을 입력하세요</string>

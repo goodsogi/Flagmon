@@ -1,12 +1,14 @@
 package com.gntsoft.flagmon.gcm;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
+import com.gntsoft.flagmon.main.MainActivity;
 
 
 /**
@@ -41,8 +43,26 @@ public class SimpleMessageDialogActivity extends Activity {
 	}
 
 	public void doConfirm(View v) {
-
+        moveToRightPlace();
 		finish();
+
+	}
+
+	private void moveToRightPlace() {
+		String postIdx = getIntent().getStringExtra(FMConstants.KEY_POST_IDX);
+		String target = getIntent().getStringExtra(FMConstants.KEY_PUSH_TARGET);
+
+
+		Intent intent = new Intent(getApplicationContext(),
+				MainActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.putExtra(FMConstants.KEY_PUSH_TARGET, target);
+		intent.putExtra(FMConstants.KEY_POST_IDX, postIdx);
+
+		getApplicationContext().startActivity(intent);
+
+
+
 
 	}
 

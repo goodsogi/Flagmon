@@ -76,9 +76,9 @@ public class MapPostLocationFragment extends FMCommonMapFragment implements
 
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM_LEVEL);
-        mGoogleMap.animateCamera(cameraUpdate, MARKER_ANIMATION_DURATION, null);
-
-        mMarker.setPosition(position);
+        //mGoogleMap.moveCamera(cameraUpdate, MARKER_ANIMATION_DURATION, null);
+        mGoogleMap.moveCamera(cameraUpdate);
+                mMarker.setPosition(position);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class MapPostLocationFragment extends FMCommonMapFragment implements
         LatLng position = new LatLng(lat, lon);
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 13);
-        mGoogleMap.animateCamera(cameraUpdate);
+        mGoogleMap.moveCamera(cameraUpdate);
 
         mMarker = mGoogleMap.addMarker(new MarkerOptions().position(position)
                 .icon(getMarKerImg(filepath)).anchor(0f, 1.0f).draggable(true));
@@ -105,9 +105,9 @@ public class MapPostLocationFragment extends FMCommonMapFragment implements
     private BitmapDescriptor getMarKerImg(String filePath) {
         //마스킹
 
-        Bitmap scaledOriginal = FMPhotoResizer.doIt(filePath);
-        Bitmap frame = BitmapFactory.decodeResource(getResources(), R.drawable.thumbnail_1_0001);
-        Bitmap mask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
+        Bitmap scaledOriginal = FMPhotoResizer.doIt(mActivity,filePath);
+        Bitmap frame = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.thumbnail_1_0001);
+        Bitmap mask = BitmapFactory.decodeResource(mActivity.getResources(), R.drawable.mask);
         // Log.d("mask", "image witdh: " + mask.getWidth() + " height: " + mask.getHeight());
         Log.d("mask", "image witdh: " + scaledOriginal.getWidth() + " height: " + scaledOriginal.getHeight());
         Bitmap result = Bitmap.createBitmap(mask.getWidth(), mask.getHeight(), Bitmap.Config.ARGB_8888);

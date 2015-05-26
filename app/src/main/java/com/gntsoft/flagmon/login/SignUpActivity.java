@@ -6,6 +6,7 @@ import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
@@ -17,6 +18,7 @@ import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
@@ -72,9 +74,9 @@ public class SignUpActivity extends FMCommonActivity implements PlusOnGetDataLis
             case CHECK_EMAIL:
 
                 ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this, model.getResult().equals("success") ? "이메일을 사용할 수 있습니다" :
-                        model.getMsg().equals("not email") ? "이메일이 유효하지 않습니다" : "이미 사용중인 이메일입니다");
+
                 if (model.getResult().equals("success")) checkPasswordAndName();
+                else  PlusToaster.doIt(this, model.getMsg().equals("not email") ? "이메일이 유효하지 않습니다" : "이미 사용중인 이메일입니다");
                 break;
 
         }
@@ -91,65 +93,111 @@ public class SignUpActivity extends FMCommonActivity implements PlusOnGetDataLis
     }
 
     private void addListenerToButton() {
-        final EditText userEmailView = (EditText) findViewById(R.id.userEmail);
-        userEmailView.setOnTouchListener(new View.OnTouchListener() {
+//        final EditText userEmailView = (EditText) findViewById(R.id.userEmail);
+//        userEmailView.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    int leftEdgeOfRightDrawable = userEmailView.getRight()
+//                            - userEmailView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+//                    // when EditBox has padding, adjust leftEdge like
+//                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
+//                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
+//                        // clicked on clear icon
+//                        userEmailView.setText("");
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
+//
+//        final EditText userPasswordView = (EditText) findViewById(R.id.userPassword);
+//        userPasswordView.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    int leftEdgeOfRightDrawable = userPasswordView.getRight()
+//                            - userPasswordView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+//                    // when EditBox has padding, adjust leftEdge like
+//                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
+//                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
+//                        // clicked on clear icon
+//
+//                        if (!userPasswordView.isSelected()) {
+//                            userPasswordView.setSelected(true);
+//                            showPassword(userPasswordView);
+//                        } else {
+//                            userPasswordView.setSelected(false);
+//                            hidePassword(userPasswordView);
+//                        }
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
+//        final EditText userNameView = (EditText) findViewById(R.id.userName);
+//        userNameView.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    int leftEdgeOfRightDrawable = userNameView.getRight()
+//                            - userNameView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+//                    // when EditBox has padding, adjust leftEdge like
+//                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
+//                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
+//                        // clicked on clear icon
+//                        userNameView.setText("");
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
 
+        ImageView userEmailDelete = (ImageView) findViewById(R.id.userEmailDelete);
+        userEmailDelete.setOnClickListener(new PlusOnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int leftEdgeOfRightDrawable = userEmailView.getRight()
-                            - userEmailView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-                    // when EditBox has padding, adjust leftEdge like
-                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
-                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
-                        // clicked on clear icon
-                        userEmailView.setText("");
-                        return true;
-                    }
-                }
-                return false;
+            protected void doIt() {
+                EditText userEmailView = (EditText) findViewById(R.id.userEmail);
+                userEmailView.setText("");
             }
         });
 
-        final EditText userPasswordView = (EditText) findViewById(R.id.userPassword);
-        userPasswordView.setOnTouchListener(new View.OnTouchListener() {
-
+        final ImageView userPasswordDelete = (ImageView) findViewById(R.id.userPasswordDelete);
+        userPasswordDelete.setOnClickListener(new PlusOnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int leftEdgeOfRightDrawable = userPasswordView.getRight()
-                            - userPasswordView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-                    // when EditBox has padding, adjust leftEdge like
-                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
-                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
-                        // clicked on clear icon
-                        showPassword(userPasswordView);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-        final EditText userNameView = (EditText) findViewById(R.id.userName);
-        userNameView.setOnTouchListener(new View.OnTouchListener() {
+            protected void doIt() {
+                EditText userPasswordView = (EditText) findViewById(R.id.userPassword);
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int leftEdgeOfRightDrawable = userNameView.getRight()
-                            - userNameView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-                    // when EditBox has padding, adjust leftEdge like
-                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
-                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
-                        // clicked on clear icon
-                        userNameView.setText("");
-                        return true;
-                    }
+                if (!userPasswordDelete.isSelected()) {
+                    userPasswordDelete.setSelected(true);
+                    showPassword(userPasswordView);
+                } else {
+                    userPasswordDelete.setSelected(false);
+                    hidePassword(userPasswordView);
                 }
-                return false;
             }
         });
 
+        ImageView userNameDelete = (ImageView) findViewById(R.id.userNameDelete);
+        userNameDelete.setOnClickListener(new PlusOnClickListener() {
+            @Override
+            protected void doIt() {
+                EditText userNameView = (EditText) findViewById(R.id.userName);
+                userNameView.setText("");
+            }
+        });
+
+    }
+
+    private void hidePassword(EditText userPasswordView) {
+        //InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD 2개를 함께 사용해야 비밀번호가 안보임
+        userPasswordView.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
     }
 
     private boolean showPassword(EditText userPasswordView) {

@@ -82,7 +82,7 @@ public class ChooseFriendListFragment extends FMCommonFragment implements
     private void makeList(final ArrayList<FriendModel> datas) {
 
         ListView list = (ListView) mActivity
-                .findViewById(R.id.list_friend);
+                .findViewById(R.id.listChooseFriend);
 
         if (list == null || datas == null) return;
         list.setAdapter(new ChooseFriendListAdapter(mActivity,

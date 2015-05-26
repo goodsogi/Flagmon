@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMConstants;
@@ -16,6 +17,7 @@ import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusOnClickListener;
 import com.pluslibrary.utils.PlusStringEmailChecker;
 import com.pluslibrary.utils.PlusToaster;
 
@@ -39,11 +41,14 @@ public class FindPasswordActivity extends FMCommonActivity implements
             return;
         switch (from) {
             case REQUEST_PASSWORD:
-                ServerResultModel model = new ServerResultParser().doIt((String) datas);
-                PlusToaster.doIt(this, model.getResult().equals("success") ? "비밀번호 재설정 메일을 발송하였습니다." : "비밀번호 재설정 메일을 발송하지 못했습니다.");
-                if (model.getResult().equals("success")) {
-                    //추가 액션??
-                }
+
+                PlusToaster.doIt(this, "비밀번호 재설정 메일을 발송하였습니다.");
+
+//                ServerResultModel model = new ServerResultParser().doIt((String) datas);
+//                PlusToaster.doIt(this, model.getResult().equals("success") ? "비밀번호 재설정 메일을 발송하였습니다." : "비밀번호 재설정 메일을 발송하지 못했습니다.");
+//                if (model.getResult().equals("success")) {
+//                    //추가 액션??
+//                }
                 break;
 
         }
@@ -94,23 +99,32 @@ public class FindPasswordActivity extends FMCommonActivity implements
     }
 
     private void addButtonListener() {
-        final EditText userEmailView = (EditText) findViewById(R.id.userEmail);
-        userEmailView.setOnTouchListener(new View.OnTouchListener() {
+//        final EditText userEmailView = (EditText) findViewById(R.id.userEmail);
+//        userEmailView.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    int leftEdgeOfRightDrawable = userEmailView.getRight()
+//                            - userEmailView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
+//                    // when EditBox has padding, adjust leftEdge like
+//                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
+//                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
+//                        // clicked on clear icon
+//                        userEmailView.setText("");
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
 
+        ImageView userEmailDelete = (ImageView) findViewById(R.id.userEmailDelete);
+        userEmailDelete.setOnClickListener(new PlusOnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int leftEdgeOfRightDrawable = userEmailView.getRight()
-                            - userEmailView.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width();
-                    // when EditBox has padding, adjust leftEdge like
-                    // leftEdgeOfRightDrawable -= getResources().getDimension(R.dimen.edittext_padding_left_right);
-                    if (event.getRawX() >= leftEdgeOfRightDrawable) {
-                        // clicked on clear icon
-                        userEmailView.setText("");
-                        return true;
-                    }
-                }
-                return false;
+            protected void doIt() {
+                EditText userEmailView = (EditText) findViewById(R.id.userEmail);
+                userEmailView.setText("");
             }
         });
 
