@@ -70,6 +70,8 @@ public class MapFragment extends FMCommonMapFragment implements
     private Button mMyLocationButton;
     private boolean mIsMapDrawn;
 
+    private ArrayList<FMModel> mMarkerDatas;
+
     public MapFragment() {
         // TODO Auto-generated constructor stub
     }
@@ -79,7 +81,14 @@ public class MapFragment extends FMCommonMapFragment implements
         super.onActivityCreated(savedInstanceState);
 
         addListenerToMap();
+
+        initMarkerDatas();
     }
+
+    private void initMarkerDatas() {
+        mMarkerDatas = new ArrayList<>();
+    }
+
 
     public void getDataFromServer(String sortType) {
         LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
@@ -143,7 +152,7 @@ public class MapFragment extends FMCommonMapFragment implements
             return;
         switch (from) {
             case GET_USER_MAP_DATA:
-                clearMap();
+                //clearMap();
                 showFlagPin(new UserParser().doIt((String) datas));
                 handleMapData(new UserMapParser().doIt((String) datas));
                 setIsMapDrawnTrue();
@@ -390,13 +399,25 @@ public class MapFragment extends FMCommonMapFragment implements
 
     private void handleMapData(ArrayList<FMModel> datas) {
 
-        mGoogleMap.clear();
 
         for (int i = 0; i < datas.size(); i++) {
-            fetchImageFromServer(datas.get(i), i);
+            if(!isAlreadyDrawn(datas.get(i))) {
+                mMarkerDatas.add(datas.get(i));
+                fetchImageFromServer(datas.get(i),i);
+            }
 
 
         }
+
+    }
+
+    private boolean isAlreadyDrawn(FMModel fmModel) {
+        //같은 위치인 경우 문제 발생 가능성 있다 안카나
+        for(int i=0; i< mMarkerDatas.size(); i++) {
+            if(fmModel.getLat().equals(mMarkerDatas.get(i).getLat()) && fmModel.getLon().equals(mMarkerDatas.get(i).getLon())) return true;
+        }
+
+        return false;
     }
 
     private void fetchImageFromServer(final FMModel mapDataModel, final int position) {

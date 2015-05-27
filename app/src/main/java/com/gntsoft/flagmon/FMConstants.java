@@ -6,6 +6,7 @@ import com.pluslibrary.utils.PlusDpPixelConverter;
  * Created by johnny on 15. 2. 26.
  */
 public class FMConstants {
+    public static final String PREF_KEY_KEYWORD = "keyword";
     //푸시 타켓
     public static final String VIEW_POST = "01";
     public static final String VIEW_REPLY = "02";

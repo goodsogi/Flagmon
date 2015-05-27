@@ -14,21 +14,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
+import com.gntsoft.flagmon.FMCommonActivity;
 import com.gntsoft.flagmon.FMCommonMapFragment;
 import com.gntsoft.flagmon.FMConstants;
 import com.gntsoft.flagmon.R;
 import com.gntsoft.flagmon.detail.DetailActivity;
+import com.gntsoft.flagmon.myalbum.SearchLocationListAdapter;
 import com.gntsoft.flagmon.server.FMApiConstants;
 import com.gntsoft.flagmon.server.FMMapParser;
 import com.gntsoft.flagmon.server.FMModel;
+import com.gntsoft.flagmon.server.PlaceModel;
+import com.gntsoft.flagmon.server.PlaceParser;
 import com.gntsoft.flagmon.utils.FMPhotoResizer;
 import com.gntsoft.flagmon.utils.LoginChecker;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -37,17 +48,21 @@ import com.pluslibrary.server.PlusHttpClient;
 import com.pluslibrary.server.PlusInputStreamStringConverter;
 import com.pluslibrary.server.PlusOnGetDataListener;
 import com.pluslibrary.utils.PlusClickGuard;
+import com.pluslibrary.utils.PlusDpPixelConverter;
 import com.pluslibrary.utils.PlusToaster;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapFragment extends FMCommonMapFragment implements
         PlusOnGetDataListener {
     private static final int GET_MAP_DATA = 0;
+    private static final int SEARCH_LOCATION = 22;
     String[] mapOptionDatas = {"인기순", "최근 등록순"};
 
 
@@ -59,15 +74,47 @@ public class MapFragment extends FMCommonMapFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getDataFromServer(getArguments().getString(FMConstants.KEY_SORT_TYPE));
+        //getDataFromServer(getArguments().getString(FMConstants.KEY_SORT_TYPE));
+        performLocationSearch();
+    }
+
+    public void performLocationSearch() {
+
+        String keyword = getArguments().getString(FMConstants.KEY_KEYWORD);
+
+            new PlusHttpClient(mActivity, this, false).execute(
+                    SEARCH_LOCATION,
+                    FMApiConstants.SEARCH_PLACE + "query="
+                            + keyword
+                            + "&sensor=true" + "&language=ko" + "&key="
+                            + FMApiConstants.GOOGLE_APP_KEY,
+                    new PlaceParser());
+
+
+
     }
 
     public void getDataFromServer(String sortType) {
+        LatLngBounds bounds = mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+
+        double left = bounds.southwest.longitude;
+        double top = bounds.northeast.latitude;
+        double right = bounds.northeast.longitude;
+        double bottom = bounds.southwest.latitude;
+
+        ((FMCommonActivity) mActivity).setLatUL(bounds.northeast.latitude);
+        ((FMCommonActivity) mActivity).setLonUL(bounds.southwest.longitude);
+        ((FMCommonActivity) mActivity).setLatLR(bounds.southwest.latitude);
+        ((FMCommonActivity) mActivity).setLonLR(bounds.northeast.longitude);
+
 
         List<NameValuePair> postParams = new ArrayList<NameValuePair>();
         postParams.add(new BasicNameValuePair("list_menu", FMConstants.DATA_TAB_NEIGHBOR));
+        postParams.add(new BasicNameValuePair("latUL", String.valueOf(bounds.northeast.latitude)));
+        postParams.add(new BasicNameValuePair("lonUL", String.valueOf(bounds.southwest.longitude)));
+        postParams.add(new BasicNameValuePair("latLR", String.valueOf(bounds.southwest.latitude)));
+        postParams.add(new BasicNameValuePair("lonLR", String.valueOf(bounds.northeast.longitude)));
         postParams.add(new BasicNameValuePair("sort", sortType));
-        postParams.add(new BasicNameValuePair("srchPost", getArguments().getString(FMConstants.KEY_KEYWORD)));
         if (LoginChecker.isLogIn(mActivity)) {
             postParams.add(new BasicNameValuePair("key", getUserAuthKey()));
         }
@@ -77,6 +124,7 @@ public class MapFragment extends FMCommonMapFragment implements
                 FMApiConstants.GET_MAP_DATA, new PlusInputStreamStringConverter(),
                 postParams);
     }
+
 
 
     @Override
@@ -113,8 +161,44 @@ public class MapFragment extends FMCommonMapFragment implements
             case GET_MAP_DATA:
                 handleMapData(new FMMapParser().doIt((String) datas));
                 break;
+            case SEARCH_LOCATION:
+                makeList((ArrayList<PlaceModel>) datas);
+                break;
+
         }
 
+    }
+
+    private void makeList(final ArrayList<PlaceModel> datas) {
+
+        ListView list = (ListView) mActivity.findViewById(R.id.listSearchLocation);
+
+        if (list == null || datas == null) return;
+        list.setVisibility(View.VISIBLE);
+        list.setAdapter(new SearchLocationListAdapter(mActivity,
+                datas));
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                moveToPostion(datas.get(position).getLat(), datas.get(position).getLng());
+                getDataFromServer(getArguments().getString(FMConstants.KEY_SORT_TYPE));
+            }
+        });
+
+
+        //리스트 크기 제한(50dp??)
+        if (datas.size() > 2) {
+            //listview를 감싸고 있는 부모 view(컨테이너) 사용
+            list.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, PlusDpPixelConverter.doIt(mActivity, 72)));
+        }
+    }
+
+    private void moveToPostion(String lat, String lng) {
+        LatLng position = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, 14);
+        mGoogleMap.moveCamera(cameraUpdate);
     }
 
     @Override

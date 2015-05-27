@@ -1,6 +1,8 @@
 package com.gntsoft.flagmon.search;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -44,8 +46,16 @@ public class SearchActivity extends FMCommonActivity {
         }
 
 
+        saveKeyword(keyword);
         showSearchResult(FMConstants.SORT_BY_POPULAR);
 
+    }
+
+    private void saveKeyword(String keyword) {
+        SharedPreferences sharedPreferences = getSharedPreferences(FMConstants.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(FMConstants.PREF_KEY_KEYWORD, keyword);
+        editor.commit();
     }
 
     @Override
@@ -80,6 +90,13 @@ public class SearchActivity extends FMCommonActivity {
                 manager.showSoftInput(editText, 0);
             }
         }, 100);
+
+        editText.setText(getKeyword());
+    }
+
+    private String getKeyword() {
+        SharedPreferences sharedPreferences = getSharedPreferences(FMConstants.PREF_NAME,Context.MODE_PRIVATE);
+        return sharedPreferences.getString(FMConstants.PREF_KEY_KEYWORD,"");
     }
 
     private void searchMap(String sortType) {
